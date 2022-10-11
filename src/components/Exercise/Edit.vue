@@ -10,7 +10,8 @@
             
         </template>
         <template #description>
-            <v-textarea v-model="editExercise.description" height="50" label="Description"></v-textarea>
+            <editor v-model="editExercise.description" api-key="no-api-key"/>
+            <!-- <v-textarea v-model="editExercise.description" height="50" label="Description"></v-textarea> -->
             <v-file-input outlined v-model="editExercise.attachments" multiple>
                 <template v-slot:prepend>
                     <v-icon>mdi-content-save</v-icon>
@@ -23,14 +24,17 @@
 <script>
 import { defineComponent } from 'vue'
 
-import Layout from '@/components/Exercise/Layout.vue'
+import Layout from '@/components/Exercise/Layout.vue';
+import Editor from '@tinymce/tinymce-vue';
+
 export default defineComponent({
     name: 'Edit',
     props: {
         exercise: {}
     },
     components: {
-        Layout
+        Layout,
+        Editor
     },
     setup() {
         return {
