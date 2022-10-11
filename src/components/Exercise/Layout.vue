@@ -3,7 +3,7 @@
         <v-card-title>
             <slot name="name"><div class="text-h6 text-left text-capitalize">Name</div></slot>
         </v-card-title>
-        <!-- <v-divider inset></q-separator> -->
+        <v-divider></v-divider>
         <v-card-text>
             <slot name="description">Description</slot>
         </v-card-text>

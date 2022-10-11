@@ -45,7 +45,8 @@ export default {
       {
         title: 'Segments',
         props: {
-          prependIcon: 'mdi-view-agenda'
+          prependIcon: 'mdi-view-agenda',
+          to: { name: 'Segments' }
         }
       },
       {
