@@ -2,6 +2,7 @@ import axios from 'axios';
 import settings from '../../settings';
 import { getToken, setToken } from '@/services/jwt';
 import QS from 'qs';
+import sha256 from 'crypto-js/sha256';
 
 const deconstructSearchDictionary = (search) => {
   var searchKeys = [];

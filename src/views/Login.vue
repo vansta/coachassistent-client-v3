@@ -10,7 +10,7 @@
             </v-form>
         </v-card-text>
         <v-card-actions>
-            <v-btn @click="login">
+            <v-btn @click="login" :loading="loading">
                 Login
             </v-btn>
             <v-btn :to="{ name: 'Register' }">
@@ -27,13 +27,16 @@ export default {
     },
     data() {
         return {
+            loading: false,
             valid: false,
             credentials: {}
         }
     },
     methods: {
         login () {
-            this.$api.login(this.credentials);
+            this.loading = true;
+            this.$api.login(this.credentials)
+            .finally(() => this.loading = false);
         }
     }
 }
