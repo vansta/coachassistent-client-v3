@@ -6,8 +6,8 @@
         <template #description>
                 <div v-html="exercise.description"></div>
                 <!-- <q-img :src="getImgSource(exercise.attachments[0])"/> -->
-                <v-carousel v-model="slide" navigation arrows :autoplay="10000" @click.stop>
-                    <v-carousel-item v-for="attachment in exercise.attachments" :key="attachment" :name="attachment" :img-src="getImgSource(attachment)">
+                <v-carousel @click.stop>
+                    <v-carousel-item v-for="attachment in exercise.attachments" :key="attachment" :name="attachment" :src="getImgSource(attachment)">
                         <!-- <q-img :src="getImgSource(attachment)"/> -->
                     </v-carousel-item>
                 </v-carousel>
@@ -15,9 +15,8 @@
     </layout>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, toRefs, ref, reactive, toRef } from 'vue'
-import type { PropType } from 'vue'
 // import { IExercise } from '@/interfaces'
 
 import Layout from '@/components/Exercise/Layout.vue'
@@ -51,6 +50,7 @@ export default defineComponent({
     methods: {
         getImgSource(attachment) {
             if (attachment) {
+                console.log('get attachment', attachment)
                 return 'https://localhost:7210/api/' + attachment
             }
         }

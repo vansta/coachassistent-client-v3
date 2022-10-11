@@ -1,7 +1,7 @@
 <template>
     <v-table>
         <thead>
-            {{ itemsPerRow }}
+            <slot name="header"></slot>
         </thead>
         <tbody>
             <tr v-for="n in 5" :key="'row' + n">

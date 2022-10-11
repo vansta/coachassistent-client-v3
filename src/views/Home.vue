@@ -3,6 +3,10 @@
         :items="exercises"
         :cols="4"
     >
+        <template #header>
+            <v-spacer></v-spacer>
+            <v-btn @click="addRow">Add exercise</v-btn>
+        </template>
         <template #item="{ item }">
             <exercise-view v-if="!item.edit" class="q-ma-xs" :exercise="item" @click="editRow(item)"></exercise-view>
             <exercise-edit v-else class="q-ma-xs" :exercise="item" @save="saveRow(item)" @remove="removeRow(item)"></exercise-edit>
@@ -20,6 +24,9 @@ export default {
         CDataIterator,
         ExerciseEdit,
         ExerciseView
+    },
+    created () {
+        this.getExercises();
     },
     data() {
         return {
@@ -59,6 +66,10 @@ export default {
         }
     },
     methods: {
+        getExercises () {
+            this.$api.getAllExercises()
+                .then((data) => this.exercises = data.items)
+        },
         editRow (row) {
             row.edit = true;
         },

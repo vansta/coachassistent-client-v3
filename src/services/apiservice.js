@@ -88,7 +88,10 @@ const createApiService = (apiClient) => {
                 formData.append('attachments', a);
             })
     
-            const resp = await apiClient.post('Exercise', formData)
+            const resp = await apiClient.post('Exercise', formData, {
+              headers: {
+              'Content-type': 'multipart/form-date'
+            }})
             return resp.data
         },
     
@@ -97,16 +100,22 @@ const createApiService = (apiClient) => {
         },
     
         async login ({ userName, password}) {
-            
             const passwordHash = sha256(password).toString();
-    
-            console.log(passwordHash)
-            const resp = await apiClient.post('Authentication', {
+
+            try {
+              const resp = await apiClient.post('Authentication', {
                 userName,
                 passwordHash
-            });
-    
-            console.log(resp);
+              });
+              setToken(resp.data);
+              apiClient.defaults.headers.common["Authorization"] = 'Bearer ' + resp.data;
+              return resp.data;
+            } 
+            catch (err) {
+              setToken('');
+              apiClient.defaults.headers.common["Authorization"] = null;
+              throw err;
+            }
         },
 
         async register({ userName, email, password, groups}) {
@@ -133,7 +142,10 @@ const createApiService = (apiClient) => {
                 formData.append('attachments', a);
             })
     
-            const resp = await apiClient.put('Exercise', formData)
+            const resp = await apiClient.put('Exercise', formData, {
+              headers: {
+              'Content-type': 'multipart/form-date'
+            }})
             return resp.data
         },
         putSegment (segment) {

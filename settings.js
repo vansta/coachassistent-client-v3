@@ -1,5 +1,5 @@
 const settings = {
-    apiUrl: 'https://localhost:7260/api',
+    apiUrl: 'https://localhost:7210/api',
 }
 
 export default settings
