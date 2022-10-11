@@ -97,12 +97,26 @@ const createApiService = (apiClient) => {
     
         async login ({ userName, password}) {
             
-            const passwordHash = sha256(password).toString();// createHash('sha256').update(password).digest('hex');
+            const passwordHash = sha256(password).toString();
     
             console.log(passwordHash)
             const resp = await apiClient.post('Authentication', {
                 userName,
                 passwordHash
+            });
+    
+            console.log(resp);
+        },
+
+        async register({ userName, email, password, groups}) {
+          const passwordHash = sha256(password).toString();
+    
+            console.log(passwordHash)
+            const resp = await apiClient.post('Authentication/Register', {
+                userName,
+                email,
+                passwordHash,
+                groups
             });
     
             console.log(resp);
