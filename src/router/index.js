@@ -17,11 +17,11 @@ const routes = [
   //   name: 'Segments',
   //   component: () => import(/* webpackChunkName: "about" */ '../views/Segments.vue')
   // },
-  // {
-  //   path: '/exercises',
-  //   name: 'Exercises',
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/Exercises.vue')
-  // },
+  {
+    path: '/exercises',
+    name: 'Exercises',
+    component: () => import('@/views/Exercises.vue')
+  },
   {
     path: '/login',
     name: 'Login',
