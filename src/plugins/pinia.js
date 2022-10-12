@@ -1,5 +1,5 @@
 import { createPinia, defineStore } from "pinia";
-import { getToken, validateToken, getDecodedToken } from "@/services/jwt";
+import { getToken, validateToken, getDecodedToken, setToken } from "@/services/jwt";
 
 const pinia = createPinia();
 
@@ -25,6 +25,10 @@ const useAuthenticationStore = defineStore('main', {
     login(value) {
       this.token = value;
       this.user = getDecodedToken(value);
+    },
+    logout() {
+      this.token = '';
+      setToken('');
     }
   }
 });

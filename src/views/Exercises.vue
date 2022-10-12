@@ -4,12 +4,13 @@
         :cols="4"
     >
         <template #header>
-            <v-spacer></v-spacer>
-            <v-btn @click="addRow">Add exercise</v-btn>
+            <div class="d-flex justify-end">
+                <v-btn @click="addRow" color="primary">Add exercise</v-btn>
+            </div>
         </template>
         <template #item="{ item }">
-            <exercise-view v-if="!item.edit" class="q-ma-xs" :exercise="item" @click="editRow(item)"></exercise-view>
-            <exercise-edit v-else class="q-ma-xs" :exercise="item" @save="saveRow(item)" @remove="removeRow(item)"></exercise-edit>
+            <exercise-view v-if="!item.edit" :exercise="item" @click="editRow(item)"></exercise-view>
+            <exercise-edit v-else :exercise="item" @save="saveRow(item)" @remove="removeRow(item)"></exercise-edit>
         </template>
     </c-data-iterator>
 </template>
@@ -30,39 +31,7 @@ export default {
     },
     data() {
         return {
-            exercises: [
-                {
-                    id: '1',
-                    name: 'test',
-                    description: 'test description',
-                    attachments: []
-                },
-                {
-                    id: '2',
-                    name: 'test',
-                    attachments: []
-                },
-                {
-                    id: '3',
-                    name: 'test',
-                    attachments: []
-                },
-                {
-                    id: '4',
-                    name: 'test',
-                    attachments: []
-                },
-                {
-                    id: '5',
-                    name: 'test',
-                    attachments: []
-                },
-                {
-                    id: '6',
-                    name: 'test',
-                    attachments: []
-                }
-            ]
+            exercises: []
         }
     },
     methods: {

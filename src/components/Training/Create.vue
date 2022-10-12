@@ -4,20 +4,20 @@
             <v-card-title>
                 <div class="d-flex">
                     <div class="flex-grow-1">
-                        <v-text-field v-model="segment.name" label="Name" outlined dense></v-text-field>
+                        <v-text-field v-model="training.name" label="Name" outlined dense></v-text-field>
                     </div>
                     <v-btn icon="mdi-content-save" flat @click="save"></v-btn>
                 </div>
                 
             </v-card-title>
             <v-card-text>
-                <editor v-model="segment.description" api-key="no-api-key"/>
+                <editor v-model="training.description" api-key="no-api-key"/>
             </v-card-text>
         </v-card>
         <v-row>
             <v-col>
                 <div class="drop-zone" @drop="drop($event)" @dragover.prevent @dragenter.prevent>
-                    <exercise-view v-for="exercise in segment.exercises" :key="exercise.id" class="q-ma-xs" :exercise="exercise"  :draggable="true" @dragstart="startToDrag($event, exercise)"></exercise-view>
+                    <exercise-view v-for="exercise in training.exercises" :key="exercise.id" class="q-ma-xs" :exercise="exercise"  :draggable="true" @dragstart="startToDrag($event, exercise)"></exercise-view>
                 </div>
                 
             </v-col>
@@ -49,8 +49,8 @@ export default defineComponent({
     },
     created () {
         if (this.id) {
-            this.$api.getSegment(this.id)
-                .then((data) => this.segment = data)
+            this.$api.getTraining(this.id)
+                .then((data) => this.training = data)
         }
         this.getExercises();
     },
@@ -59,7 +59,7 @@ export default defineComponent({
     },
     data () {
         return {
-            segment: {
+            training: {
                 description: '',
                 exercises: []
             },
@@ -78,14 +78,14 @@ export default defineComponent({
         },
 
         save () {
-            if (!this.segment.id) {
-                this.$api.postSegment(this.segment)
+            if (!this.training.id) {
+                this.$api.postTraining(this.training)
                     .then(resp => {
-                        this.segment.id = resp;
+                        this.training.id = resp;
                     });
             }
             else {
-                this.$api.putSegment(this.segment);
+                this.$api.putTraining(this.training);
             }
         },
 
@@ -101,19 +101,19 @@ export default defineComponent({
         async drop (evt, remove) {
             const exerciseId = evt.dataTransfer?.getData('id');
             if (remove) {
-                const index = this.segment.exercises.findIndex(e => e.id === exerciseId);
-                this.segment.exercises.splice(index, 1);
+                const index = this.training.exercises.findIndex(e => e.id === exerciseId);
+                this.training.exercises.splice(index, 1);
             }
             else {
                 const exercise = this.exercises.find(e => e.id === exerciseId);
-                this.segment.exercises.push(exercise)
+                this.training.exercises.push(exercise)
             }
             
         }
     },
     computed: {
         availableExercises () {
-            return this.exercises.filter(e => this.segment.exercises.findIndex(x => x.id === e.id) < 0);
+            return this.exercises.filter(e => this.training.exercises.findIndex(x => x.id === e.id) < 0);
         }
     }
 })

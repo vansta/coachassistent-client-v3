@@ -5,7 +5,10 @@
       <v-app-bar-title>Coach Assistent</v-app-bar-title>
       <v-spacer></v-spacer>
       <v-btn v-if="!authenticationStore.isAuthenticated" :to="{ name: 'Login' }">Login</v-btn>
-      <span v-else>{{ authenticationStore.user.name }}</span>
+      <div v-else class="d-flex">
+        <v-chip class="flex-grow-1">{{ authenticationStore.user.name }}</v-chip>
+        <v-btn icon="mdi-logout" @click="logout"></v-btn>
+      </div>
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" rail expand-on-hover="">
@@ -43,6 +46,13 @@ export default {
         }
       },
       {
+        title: 'Trainings',
+        props: {
+          prependIcon: 'mdi-checkbox-blank',
+          to: { name: 'Trainings' }
+        }
+      },
+      {
         title: 'Segments',
         props: {
           prependIcon: 'mdi-view-agenda',
@@ -58,5 +68,11 @@ export default {
       }
     ]
   }),
+  methods: {
+    logout() {
+      this.authenticationStore.logout();
+      this.$router.push({ name: 'Login' });
+    },
+  }
 }
 </script>

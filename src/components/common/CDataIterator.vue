@@ -1,7 +1,12 @@
 <template>
     <v-table>
         <thead>
-            <slot name="header"></slot>
+            <tr>
+                <th :colspan="itemsPerRow">
+                    <slot name="header"></slot>
+                </th>
+            </tr>
+            
         </thead>
         <tbody>
             <tr v-for="n in 5" :key="'row' + n">

@@ -21,9 +21,13 @@
 </template>
 
 <script>
+import { useAuthenticationStore } from '@/plugins/pinia.js'
+
 export default {
-    setup() {
-        
+    setup () {
+        const authenticationStore = useAuthenticationStore();
+
+        return { authenticationStore }
     },
     data() {
         return {
@@ -36,7 +40,11 @@ export default {
         login () {
             this.loading = true;
             this.$api.login(this.credentials)
-            .finally(() => this.loading = false);
+                .then(token => {
+                    this.authenticationStore.login(token);
+                    this.$router.push({ name: 'Home' });
+                })
+                .finally(() => this.loading = false);
         }
     }
 }

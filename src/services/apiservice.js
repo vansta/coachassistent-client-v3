@@ -42,8 +42,7 @@ const createApiClient = (useAuthenticationStore) => {
     function (error) {
       if (error.response && error.response.status === 401) {
         console.log('Login timed out');
-        setToken('');
-        authenticationStore.login('');
+        authenticationStore.logout();
       }
 
       throw error;
@@ -78,6 +77,18 @@ const createApiService = (apiClient) => {
             })
                 .then(resp => resp.data)
         },
+
+        getAllTrainings () {
+          return apiClient.get('Training/Overview')
+          .then(resp => resp.data)
+        },
+    
+        getTraining (id) {
+            return apiClient.get('Training', {
+                params: { id }
+            })
+                .then(resp => resp.data)
+        },
     
         //POST
         async postExercise (exercise) {
@@ -97,6 +108,9 @@ const createApiService = (apiClient) => {
     
         postSegment (segment) {
             return apiClient.post('Segment', segment);
+        },
+        postTraining (training) {
+            return apiClient.post('Training', training);
         },
     
         async login ({ userName, password}) {
@@ -121,7 +135,6 @@ const createApiService = (apiClient) => {
         async register({ userName, email, password, groups}) {
           const passwordHash = sha256(password).toString();
     
-            console.log(passwordHash)
             const resp = await apiClient.post('Authentication/Register', {
                 userName,
                 email,
@@ -129,7 +142,9 @@ const createApiService = (apiClient) => {
                 groups
             });
     
-            console.log(resp);
+            setToken(resp.data);
+            apiClient.defaults.headers.common["Authorization"] = 'Bearer ' + resp.data;
+            return resp.data;
         },
     
         //PUT
@@ -151,6 +166,9 @@ const createApiService = (apiClient) => {
         putSegment (segment) {
             return apiClient.put('Segment', segment);
         },
+        putTraining (training) {
+            return apiClient.put('Training', training);
+        },
     
         //DELETE
         deleteExercise (id) {
@@ -162,6 +180,15 @@ const createApiService = (apiClient) => {
             return apiClient.delete('Segment', {
                 params: { id }
             })
+        },
+        deleteTraining (id) {
+          return apiClient.delete('Training', {
+              params: { id }
+          })
+        },
+
+        logout() {
+          apiClient.defaults.headers.common["Authorization"] = null;
         }
     }
   }
