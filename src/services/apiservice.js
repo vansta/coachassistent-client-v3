@@ -95,9 +95,11 @@ const createApiService = (apiClient) => {
             const formData = new FormData();
             formData.append('name', exercise.name);
             formData.append('description', exercise.description);
-            exercise.attachments.forEach(a => {
-                formData.append('attachments', a);
-            })
+            if (exercise.addedAttachments) {
+              exercise.addedAttachments.forEach(a => {
+                formData.append('addedAttachments', a);
+              })
+            }
     
             const resp = await apiClient.post('Exercise', formData, {
               headers: {
@@ -153,9 +155,16 @@ const createApiService = (apiClient) => {
             formData.append('id', exercise.id);
             formData.append('name', exercise.name);
             formData.append('description', exercise.description);
-            exercise.attachments.forEach(a => {
-                formData.append('attachments', a);
+            if (exercise.addedAttachments){
+                exercise.addedAttachments.forEach(a => {
+                  formData.append('addedAttachments', a);
+              })
+            }
+            if (exercise.selectedAttachments){
+              exercise.selectedAttachments.forEach(a => {
+                formData.append('selectedAttachments', a);
             })
+          }
     
             const resp = await apiClient.put('Exercise', formData, {
               headers: {
@@ -189,6 +198,11 @@ const createApiService = (apiClient) => {
 
         logout() {
           apiClient.defaults.headers.common["Authorization"] = null;
+        },
+        getAttachmentLink(attachmentId) {
+          if (attachmentId) {
+            return settings.apiUrl + '/Attachment?id=' + attachmentId;
+          }
         }
     }
   }

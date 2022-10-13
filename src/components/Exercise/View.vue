@@ -7,7 +7,7 @@
                 <div v-html="exercise.description"></div>
                 <!-- <q-img :src="getImgSource(exercise.attachments[0])"/> -->
                 <v-carousel @click.stop>
-                    <v-carousel-item v-for="attachment in exercise.attachments" :key="attachment" :name="attachment" :src="getImgSource(attachment)">
+                    <v-carousel-item v-for="attachment in exercise.attachments" :key="attachment" :name="attachment" :src="$api.getAttachmentLink(attachment)">
                         <!-- <q-img :src="getImgSource(attachment)"/> -->
                     </v-carousel-item>
                 </v-carousel>
@@ -48,12 +48,7 @@ export default defineComponent({
         }
     },
     methods: {
-        getImgSource(attachment) {
-            if (attachment) {
-                console.log('get attachment', attachment)
-                return 'https://localhost:7210/api/' + attachment
-            }
-        }
+        
     },
     watch: {
         exercise () {

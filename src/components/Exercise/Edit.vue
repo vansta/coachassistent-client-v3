@@ -12,9 +12,21 @@
         <template #description>
             <editor v-model="editExercise.description" api-key="no-api-key"/>
             <!-- <v-textarea v-model="editExercise.description" height="50" label="Description"></v-textarea> -->
-            <v-slide-group multiple v-model="editExercise.attachments">
-                <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment">
-                    <v-img :src="getImgSource(attachment)" heigth="50" cover></v-img>
+            <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
+                <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment" v-slot="{ isSelected, toggle }" :value="attachment">
+                    <v-img 
+                        :src="$api.getAttachmentLink(attachment)" 
+                        min-height="150" max-heigth="150" min-width="150" max-width="150" cover
+                        @click="toggle">
+                        <v-btn 
+                            :icon="isSelected ? 'mdi-link-off' : 'mdi-link-plus'"
+                            
+                            variant="flat"
+                            location="bottom left"
+                            position="absolute"
+                            :color="isSelected ? 'primary' : 'secondary'"
+                            ></v-btn>
+                    </v-img>
                 </v-slide-group-item>
             </v-slide-group>
             <v-file-input outlined v-model="editExercise.addedAttachments" multiple>
@@ -27,7 +39,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, reactive } from 'vue'
 
 import Layout from '@/components/Exercise/Layout.vue';
 import Editor from '@tinymce/tinymce-vue';
@@ -35,22 +47,30 @@ import Editor from '@tinymce/tinymce-vue';
 export default defineComponent({
     name: 'Edit',
     props: {
-        exercise: {}
+        exercise: Object
     },
     components: {
         Layout,
         Editor
     },
-    setup() {
+    setup(props) {
+        const editExercise = reactive({
+            ...props.exercise, 
+            selectedAttachments: props.exercise.attachments
+        })
+
         return {
-            
+            editExercise
         }
     },
-    data () {
-        return {
-            editExercise: this.exercise
-        }
-    },
+    // created() {
+    //     this.editExercise.selectedAttachments = this.exercise.attachments;
+    // },
+    // data () {
+    //     return {
+    //         editExercise: this.exercise
+    //     }
+    // },
     methods: {
         save () {
             if (!this.editExercise.id) {
@@ -77,7 +97,6 @@ export default defineComponent({
 
         getImgSource(attachment) {
             if (attachment) {
-                console.log('get attachment', attachment)
                 return 'https://localhost:7210/api/' + attachment
             }
         }
