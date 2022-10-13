@@ -1,5 +1,5 @@
 <template>
-    <c-data-iterator :cols="4" :items="trainings">
+    <c-data-iterator :cols="4" :items="trainings" :loading="loading">
         <template #header>
             <div class="d-flex justify-end">
                 <v-btn :to="{ name: 'EditTraining' }" color="primary">Create training</v-btn>
@@ -31,12 +31,15 @@ export default defineComponent({
     },
     data: () => ({
         readonly: true,
-        trainings: []
+        trainings: [],
+        loading: false
     }),
     methods: {
         getTrainings () {
+            this.loading = true;
             this.$api.getAllTrainings()
                 .then((data) => this.trainings = data.items)
+                .finally(() => this.loading = false);
         },
 
         remove () {

@@ -9,7 +9,12 @@
             
         </thead>
         <tbody>
-            <tr v-for="n in 5" :key="'row' + n">
+            <tr v-if="loading">
+                <td :colspan="itemsPerRow">
+                    <v-progress-linear indeterminate></v-progress-linear>
+                </td>
+            </tr>
+            <tr v-else v-for="n in 5" :key="'row' + n">
                 <td v-for="(item, index) in itemsPerRowGroup(n - 1)" :key="'col' + index">
                     <slot name="item" :item="item"></slot>
                 </td>
@@ -25,7 +30,8 @@ export default {
     },
     props: {
         items: Array,
-        cols: Number
+        cols: Number,
+        loading: Boolean
     },
     methods: {
         itemsPerRowGroup (rowIndex) {

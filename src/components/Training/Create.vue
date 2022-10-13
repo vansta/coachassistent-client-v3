@@ -17,15 +17,15 @@
         <v-row>
             <v-col>
                 <div class="drop-zone" @drop="drop($event)" @dragover.prevent @dragenter.prevent>
-                    <exercise-view v-for="exercise in training.exercises" :key="exercise.id" class="q-ma-xs" :exercise="exercise"  :draggable="true" @dragstart="startToDrag($event, exercise)"></exercise-view>
+                    <segment-view v-for="segment in training.segments" :key="segment.id" class="q-ma-xs" :segment="segment"  :draggable="true" @dragstart="startToDrag($event, segment)"></segment-view>
                 </div>
                 
             </v-col>
             <v-col>
                 <div class="drop-zone" @drop="drop($event, true)" @dragover.prevent @dragenter.prevent>
-                <c-data-iterator :cols="12" :items="availableExercises">
+                <c-data-iterator :cols="12" :items="availableSegments">
                     <template #item="{ item }">
-                        <exercise-view v-if="!item.edit" class="q-ma-xs" :exercise="item" :draggable="true" @dragstart="startToDrag($event, item)"></exercise-view>
+                        <segment-view v-if="!item.edit" class="q-ma-xs" :segment="item" :draggable="true" @dragstart="startToDrag($event, item)"></segment-view>
                     </template>
                 </c-data-iterator>
                 
@@ -36,14 +36,14 @@
 </template>
 
 <script>
-import ExerciseView from '@/components/Exercise/View.vue'
+import SegmentView from '@/components/Segment/OverviewItem.vue'
 import CDataIterator from '@/components/common/CDataIterator.vue'
 import Editor from '@tinymce/tinymce-vue';
 
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-    components: { ExerciseView, CDataIterator, Editor },
+    components: { SegmentView, CDataIterator, Editor },
     setup() {
         return {}
     },
@@ -52,7 +52,7 @@ export default defineComponent({
             this.$api.getTraining(this.id)
                 .then((data) => this.training = data)
         }
-        this.getExercises();
+        this.getSegments();
     },
     props: {
         id: String
@@ -61,19 +61,19 @@ export default defineComponent({
         return {
             training: {
                 description: '',
-                exercises: []
+                segments: []
             },
-            exercises: [],
+            segments: [],
 
             loading: false,
             splitterValue: 50,
         }
     },
     methods: {
-        getExercises () {
+        getSegments () {
             this.loading = true;
-            this.$api.getAllExercises()
-                .then((data) => this.exercises = data.items)
+            this.$api.getAllSegments()
+                .then((data) => this.segments = data.items)
                 .finally(() => this.loading = false)
         },
 
@@ -99,21 +99,21 @@ export default defineComponent({
             
         },
         async drop (evt, remove) {
-            const exerciseId = evt.dataTransfer?.getData('id');
+            const segmentId = evt.dataTransfer?.getData('id');
             if (remove) {
-                const index = this.training.exercises.findIndex(e => e.id === exerciseId);
-                this.training.exercises.splice(index, 1);
+                const index = this.training.segments.findIndex(e => e.id === segmentId);
+                this.training.segments.splice(index, 1);
             }
             else {
-                const exercise = this.exercises.find(e => e.id === exerciseId);
-                this.training.exercises.push(exercise)
+                const segment = this.segments.find(e => e.id === segmentId);
+                this.training.segments.push(segment)
             }
             
         }
     },
     computed: {
-        availableExercises () {
-            return this.exercises.filter(e => this.training.exercises.findIndex(x => x.id === e.id) < 0);
+        availableSegments () {
+            return this.segments.filter(e => this.training.segments.findIndex(x => x.id === e.id) < 0);
         }
     }
 })

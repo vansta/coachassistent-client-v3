@@ -12,7 +12,12 @@
         <template #description>
             <editor v-model="editExercise.description" api-key="no-api-key"/>
             <!-- <v-textarea v-model="editExercise.description" height="50" label="Description"></v-textarea> -->
-            <v-file-input outlined v-model="editExercise.attachments" multiple>
+            <v-slide-group multiple v-model="editExercise.attachments">
+                <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment">
+                    <v-img :src="getImgSource(attachment)" heigth="50" cover></v-img>
+                </v-slide-group-item>
+            </v-slide-group>
+            <v-file-input outlined v-model="editExercise.addedAttachments" multiple>
                 <template v-slot:prepend>
                     <v-icon>mdi-content-save</v-icon>
                 </template>
@@ -67,6 +72,13 @@ export default defineComponent({
             }
             else {
                 this.$emit('remove');
+            }
+        },
+
+        getImgSource(attachment) {
+            if (attachment) {
+                console.log('get attachment', attachment)
+                return 'https://localhost:7210/api/' + attachment
             }
         }
     }

@@ -1,5 +1,5 @@
 <template>
-    <c-data-iterator :cols="4" :items="segments">
+    <c-data-iterator :cols="4" :items="segments" :loading="loading">
         <template #header>
             <div class="d-flex justify-end">
                 <v-btn :to="{ name: 'EditSegment' }" color="primary">Create segment</v-btn>
@@ -31,12 +31,15 @@ export default defineComponent({
     },
     data: () => ({
         readonly: true,
-        segments: []
+        segments: [],
+        loading: false
     }),
     methods: {
         getSegments () {
+            this.loading = true;
             this.$api.getAllSegments()
                 .then((data) => this.segments = data.items)
+                .finally(() => this.loading = false);
         },
 
         remove () {

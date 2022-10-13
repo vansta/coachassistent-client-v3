@@ -14,11 +14,24 @@
         <v-divider></v-divider>
         <v-card-text>
             <v-list>
-                <v-list-item v-for="exercise in training.exercises" :key="exercise">
-                    <v-list-item-title>
-                        {{ exercise }}
-                    </v-list-item-title>
-                </v-list-item>
+                <v-list-group v-for="(segment, index) in training.segments" :key="segment.id" :value="segment.id">
+                    <template v-slot:activator="{ props }">
+                        <v-list-item
+                            v-bind="props"
+                        >
+                            <v-list-item-title>
+                                {{ index + 1 }} {{ segment.name }}
+                            </v-list-item-title>
+                        </v-list-item>
+                    </template>
+
+                    <v-list-item
+                        v-for="exercise in segment.exercises"
+                        :key="exercise"
+                        :title="exercise"
+                        :value="exercise"
+                    ></v-list-item>
+                </v-list-group>
             </v-list>
         </v-card-text>
     </v-card>

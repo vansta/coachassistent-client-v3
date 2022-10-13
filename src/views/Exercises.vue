@@ -2,6 +2,7 @@
     <c-data-iterator
         :items="exercises"
         :cols="4"
+        :loading="loading"
     >
         <template #header>
             <div class="d-flex justify-end">
@@ -31,13 +32,16 @@ export default {
     },
     data() {
         return {
-            exercises: []
+            exercises: [],
+            loading: false
         }
     },
     methods: {
         getExercises () {
+            this.loading = true;
             this.$api.getAllExercises()
                 .then((data) => this.exercises = data.items)
+                .then(() => this.loading = false);
         },
         editRow (row) {
             row.edit = true;
