@@ -41,11 +41,13 @@ import CDataIterator from '@/components/common/CDataIterator.vue'
 import Editor from '@tinymce/tinymce-vue';
 
 import { defineComponent } from 'vue'
+import { useToast } from 'vue-toastification'
 
 export default defineComponent({
     components: { ExerciseView, CDataIterator, Editor },
     setup() {
-        return {}
+        const toast = useToast();
+        return { toast }
     },
     created () {
         if (this.id) {
@@ -82,10 +84,16 @@ export default defineComponent({
                 this.$api.postSegment(this.segment)
                     .then(resp => {
                         this.segment.id = resp;
-                    });
+                        this.$router.push({ name: 'Segments' })
+                    })
+                    .catch(err => this.toast.error(err));
             }
             else {
-                this.$api.putSegment(this.segment);
+                this.$api.putSegment(this.segment)
+                    .then(() => {
+                        this.$router.push({ name: 'Segments' })
+                    })
+                    .catch(err => this.toast.error(err));
             }
         },
 

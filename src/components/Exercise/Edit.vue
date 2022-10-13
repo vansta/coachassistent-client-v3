@@ -40,7 +40,7 @@
 
 <script>
 import { defineComponent, reactive } from 'vue'
-
+import { useToast } from 'vue-toastification'
 import Layout from '@/components/Exercise/Layout.vue';
 import Editor from '@tinymce/tinymce-vue';
 
@@ -58,9 +58,10 @@ export default defineComponent({
             ...props.exercise, 
             selectedAttachments: props.exercise.attachments
         })
+        const toast = useToast();
 
         return {
-            editExercise
+            editExercise, toast
         }
     },
     // created() {
@@ -79,6 +80,9 @@ export default defineComponent({
                         this.editExercise.id = resp;
                         this.$emit('save');
                     })
+                    .catch(err => {
+                        this.toast.error(err)
+                    })
             }
             else {
                 this.$api.putExercise(this.editExercise)
@@ -89,6 +93,9 @@ export default defineComponent({
             if (this.editExercise.id) {
                 this.$api.deleteExercise(this.editExercise.id)
                     .then(() => this.$emit('remove'))
+                    .catch(err => {
+                        this.toast.error(err)
+                    })
             }
             else {
                 this.$emit('remove');

@@ -22,12 +22,12 @@
 
 <script>
 import { useAuthenticationStore } from '@/plugins/pinia.js'
-
+import { useToast } from 'vue-toastification';
 export default {
     setup () {
         const authenticationStore = useAuthenticationStore();
-
-        return { authenticationStore }
+        const toast = useToast();
+        return { authenticationStore, toast }
     },
     data() {
         return {
@@ -42,6 +42,7 @@ export default {
             this.$api.login(this.credentials)
                 .then(token => {
                     this.authenticationStore.login(token);
+                    this.toast.success('Welcome');
                     this.$router.push({ name: 'Home' });
                 })
                 .finally(() => this.loading = false);
