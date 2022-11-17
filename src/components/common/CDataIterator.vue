@@ -6,7 +6,11 @@
                     <slot name="header"></slot>
                 </th>
             </tr>
-            
+            <tr>
+                <th :colspan="itemsPerRow">
+                    <slot name="search"></slot>
+                </th>
+            </tr>
         </thead>
         <tbody>
             <tr v-if="loading">

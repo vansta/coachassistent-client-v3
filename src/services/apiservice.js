@@ -1,24 +1,29 @@
 import axios from 'axios';
 import settings from '../../settings';
 import { getToken, setToken } from '@/services/jwt';
-import QS from 'qs';
+import qs from 'qs';
+
 import sha256 from 'crypto-js/sha256';
 
-const deconstructSearchDictionary = (search) => {
-  var searchKeys = [];
-  var searchValues = []
-  if (search) {
-    searchKeys = Object.keys(search);
-    searchValues = Object.values(search)
-
-    searchValues.forEach((value, index) => {
-      if (value === undefined) {
-        searchValues[index] = null
+const toFormData = (data) => {
+  console.log(data);
+  var formData = new FormData();
+  const keys = Object.keys(data);
+  keys.forEach(k => {
+    const value = data[k];
+    if (value){
+      if (Array.isArray(value)){
+        value.forEach(v => {
+          formData.append(k, v);
+        })
       }
-    })
-  }
+      else {
+        formData.append(k, value);
+      }
+    }
+  })
 
-  return { searchKeys, searchValues };
+  return formData;
 }
 
 const createApiClient = (useAuthenticationStore) => {
@@ -30,7 +35,8 @@ const createApiClient = (useAuthenticationStore) => {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json'
-    }
+    },
+    paramsSerializer: (params) => { console.log('qs'); qs.stringify(params); }
   });
 
   apiClient.defaults.headers.common["Authorization"] = "Bearer " + getToken();
@@ -54,9 +60,11 @@ const createApiClient = (useAuthenticationStore) => {
 
 const createApiService = (apiClient) => {
     return {
-        getAllExercises: function () {
-            return apiClient.get('Exercise/Overview')
-                .then(resp => resp.data)
+        getAllExercises: function (search) {
+
+          return apiClient.get('Exercise/Overview', {
+            params: search
+          })
         },
     
         getExercise: function (id) {
@@ -89,17 +97,16 @@ const createApiService = (apiClient) => {
             })
                 .then(resp => resp.data)
         },
+
+        getTags(search) {
+          return apiClient.get('Tag', {
+            params: { search }
+          })
+        },
     
         //POST
         async postExercise (exercise) {
-            const formData = new FormData();
-            formData.append('name', exercise.name);
-            formData.append('description', exercise.description);
-            if (exercise.addedAttachments) {
-              exercise.addedAttachments.forEach(a => {
-                formData.append('addedAttachments', a);
-              })
-            }
+            const formData = toFormData(exercise);
     
             const resp = await apiClient.post('Exercise', formData, {
               headers: {
@@ -151,20 +158,7 @@ const createApiService = (apiClient) => {
     
         //PUT
         async putExercise (exercise) {
-            const formData = new FormData();
-            formData.append('id', exercise.id);
-            formData.append('name', exercise.name);
-            formData.append('description', exercise.description);
-            if (exercise.addedAttachments){
-                exercise.addedAttachments.forEach(a => {
-                  formData.append('addedAttachments', a);
-              })
-            }
-            if (exercise.selectedAttachments){
-              exercise.selectedAttachments.forEach(a => {
-                formData.append('selectedAttachments', a);
-            })
-          }
+          const formData = toFormData(exercise);
     
             const resp = await apiClient.put('Exercise', formData, {
               headers: {

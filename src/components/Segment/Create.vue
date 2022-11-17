@@ -75,7 +75,7 @@ export default defineComponent({
         getExercises () {
             this.loading = true;
             this.$api.getAllExercises()
-                .then((data) => this.exercises = data.items)
+                .then(resp => this.exercises = resp.data.items)
                 .finally(() => this.loading = false)
         },
 
@@ -121,7 +121,12 @@ export default defineComponent({
     },
     computed: {
         availableExercises () {
-            return this.exercises.filter(e => this.segment.exercises.findIndex(x => x.id === e.id) < 0);
+            if (this.exercises){
+                return this.exercises.filter(e => this.segment.exercises.findIndex(x => x.id === e.id) < 0);
+            }
+            else {
+                return [];
+            }
         }
     }
 })

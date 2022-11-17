@@ -11,6 +11,7 @@
         </template>
         <template #description>
             <editor v-model="editExercise.description" api-key="no-api-key"/>
+            <v-select v-model="editExercise.tags" label="Tags" :items="tags" item-value="title" variant="outlined" density="compact" multiple></v-select>
             <!-- <v-textarea v-model="editExercise.description" height="50" label="Description"></v-textarea> -->
             <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
                 <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment" v-slot="{ isSelected, toggle }" :value="attachment">
@@ -47,7 +48,8 @@ import Editor from '@tinymce/tinymce-vue';
 export default defineComponent({
     name: 'Edit',
     props: {
-        exercise: Object
+        exercise: Object,
+        tags: Array
     },
     components: {
         Layout,

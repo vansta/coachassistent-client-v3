@@ -2,6 +2,7 @@
     <layout>
         <template #name>
             <div class="text-h6 text-left text-capitalize">{{ exercise.name }}</div>
+            <slot name="actions"></slot>
         </template>
         <template #description>
                 <div v-html="exercise.description"></div>
