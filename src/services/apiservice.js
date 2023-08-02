@@ -114,6 +114,10 @@ const createApiService = (apiClient) => {
         getSharingLevels () {
           return apiClient.get('SharingLevel');
         },
+
+        getRoles() {
+          return apiClient.get('Role');
+        },
     
         //POST
         async postExercise (exercise) {
@@ -131,6 +135,9 @@ const createApiService = (apiClient) => {
         },
         postTraining (training) {
             return apiClient.post('Training', training);
+        },
+        postGroup(group) {
+          return apiClient.post('Group', group)
         },
     
         async login ({ userName, password}) {

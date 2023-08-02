@@ -65,6 +65,13 @@ export default {
             prependIcon: 'mdi-view-module',
             to: { name: 'Exercises' }
         }
+      },
+      {
+        title: 'Create group',
+        props: {
+            prependIcon: 'mdi-account-group',
+            to: { name: 'CreateGroup' }
+        }
       }
     ]
   }),
