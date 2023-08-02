@@ -69,6 +69,7 @@ export default {
         saveRow (row) {
             row.edit = false;
             this.getExercises();
+            this.getTags();
         },
         addRow () {
             this.exercises.push({

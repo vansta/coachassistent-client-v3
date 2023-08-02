@@ -110,6 +110,11 @@ const createApiService = (apiClient) => {
         getEditors() {
           return apiClient.get('User')
         },
+        getAssignedEditors(id, type) {
+          return apiClient.get('User/AssignedEditors', {
+            params: { id, type }
+          })
+        },
 
         getSharingLevels () {
           return apiClient.get('SharingLevel');

@@ -13,7 +13,7 @@
         </template>
         <template #description>
             <editor v-model="editExercise.description" api-key="no-api-key"/>
-            <v-select v-model="editExercise.tags" label="Tags" :items="tags" item-value="title" multiple></v-select>
+            <v-combobox v-model="editExercise.tags" label="Tags" :items="tags" item-value="title" multiple></v-combobox>
             <!-- <v-textarea v-model="editExercise.description" height="50" label="Description"></v-textarea> -->
             <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
                 <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment" v-slot="{ isSelected, toggle }" :value="attachment">
@@ -37,7 +37,7 @@
                     <v-icon>mdi-content-save</v-icon>
                 </template>
             </v-file-input>
-            <sharebility v-if="showSharebility" v-model="editExercise"></sharebility>
+            <sharebility v-if="showSharebility" v-model="editExercise" type="exercise"></sharebility>
         </template>
     </layout>
 </template>

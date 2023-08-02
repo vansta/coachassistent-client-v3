@@ -6,12 +6,16 @@
                     <div class="flex-grow-1">
                         <v-text-field v-model="segment.name" label="Name" outlined dense></v-text-field>
                     </div>
+                    <v-btn icon="mdi-cog" flat round @click="showSharebility = !showSharebility"></v-btn>
                     <v-btn icon="mdi-content-save" flat @click="save"></v-btn>
                 </div>
                 
             </v-card-title>
             <v-card-text>
                 <editor v-model="segment.description" api-key="no-api-key"/>
+            </v-card-text>
+            <v-card-text v-if="showSharebility">
+                <sharebility v-model="segment" type="segment"></sharebility>
             </v-card-text>
         </v-card>
         <v-row>
@@ -42,9 +46,10 @@ import Editor from '@tinymce/tinymce-vue';
 
 import { defineComponent } from 'vue'
 import { useToast } from 'vue-toastification'
+import Sharebility from '../common/Sharebility.vue';
 
 export default defineComponent({
-    components: { ExerciseView, CDataIterator, Editor },
+    components: { ExerciseView, CDataIterator, Editor, Sharebility },
     setup() {
         const toast = useToast();
         return { toast }
@@ -69,6 +74,7 @@ export default defineComponent({
 
             loading: false,
             splitterValue: 50,
+            showSharebility: false
         }
     },
     methods: {
