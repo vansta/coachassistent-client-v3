@@ -57,7 +57,13 @@ const routes = [
     path: '/trainings/edit/:id?',
     name: "EditTraining",
     props: true,
-    component: () => import('../components/Training/Create.vue')
+    component: () => import('../components/Training/Create2.vue')
+  },
+  {
+    path: '/exercises/edit/:id?',
+    name: 'EditExercise',
+    props: true,
+    component: () => import('../components/Exercise/EditFull.vue')
   }
 ];
 

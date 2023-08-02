@@ -2,7 +2,9 @@
     <layout>
         <template #name>
             <div class="d-flex">
-                <v-text-field class="flex-grow-1" v-model="editExercise.name" label="Name" variant="outlined" density="compact"></v-text-field>
+                <v-text-field class="flex-grow-1" v-model="editExercise.name" label="Name"></v-text-field>
+                <!-- <v-btn icon="mdi-open-in-new" flat round :to="{ name: 'EditExercise', params: { id: editExercise.id } }"></v-btn> -->
+                <v-btn icon="mdi-cog" flat round @click="showSharebility = !showSharebility"></v-btn>
                 <v-btn icon="mdi-content-save" flat round @click="save"></v-btn>
                 <v-btn icon="mdi-delete" color="negative" flat round @click="remove"></v-btn>
             </div>
@@ -11,7 +13,7 @@
         </template>
         <template #description>
             <editor v-model="editExercise.description" api-key="no-api-key"/>
-            <v-select v-model="editExercise.tags" label="Tags" :items="tags" item-value="title" variant="outlined" density="compact" multiple></v-select>
+            <v-select v-model="editExercise.tags" label="Tags" :items="tags" item-value="title" multiple></v-select>
             <!-- <v-textarea v-model="editExercise.description" height="50" label="Description"></v-textarea> -->
             <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
                 <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment" v-slot="{ isSelected, toggle }" :value="attachment">
@@ -35,6 +37,7 @@
                     <v-icon>mdi-content-save</v-icon>
                 </template>
             </v-file-input>
+            <sharebility v-if="showSharebility" v-model="editExercise"></sharebility>
         </template>
     </layout>
 </template>
@@ -44,6 +47,7 @@ import { defineComponent, reactive } from 'vue'
 import { useToast } from 'vue-toastification'
 import Layout from '@/components/Exercise/Layout.vue';
 import Editor from '@tinymce/tinymce-vue';
+import Sharebility from '../common/Sharebility.vue';
 
 export default defineComponent({
     name: 'Edit',
@@ -53,7 +57,8 @@ export default defineComponent({
     },
     components: {
         Layout,
-        Editor
+        Editor,
+        Sharebility
     },
     setup(props) {
         const editExercise = reactive({
@@ -69,11 +74,11 @@ export default defineComponent({
     // created() {
     //     this.editExercise.selectedAttachments = this.exercise.attachments;
     // },
-    // data () {
-    //     return {
-    //         editExercise: this.exercise
-    //     }
-    // },
+    data () {
+        return {
+            showSharebility: false
+        }
+    },
     methods: {
         save () {
             if (!this.editExercise.id) {

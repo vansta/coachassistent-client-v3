@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { useAuthenticationStore } from '@/plugins/pinia.js'
+import { useAuthenticationStore } from '@/plugins/pinia.js';
 
 export default {
   name: 'App',

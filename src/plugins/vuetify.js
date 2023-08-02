@@ -9,12 +9,20 @@ import { createVuetify } from 'vuetify'
 export default createVuetify(
   // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
   {
-    // defaults: {
-    //   global: {
-    //     variant: 'outlined',
-    //     density: 'compact'
-    //   }
-    // }
+    defaults: {
+      VTextField: {
+          variant: 'outlined',
+          density: 'compact'
+      },
+      VSelect: {
+          variant: 'outlined',
+          density: 'compact'
+      },
+      VFileInput: {
+          variant: 'outlined',
+          density: 'compact'
+      }
+  },
     theme: {
       themes: {
         light: {

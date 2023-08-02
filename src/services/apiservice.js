@@ -98,10 +98,21 @@ const createApiService = (apiClient) => {
                 .then(resp => resp.data)
         },
 
+        getGroupsForUser() {
+          return apiClient.get('Group')
+        },
+
         getTags(search) {
           return apiClient.get('Tag', {
             params: { search }
           })
+        },
+        getEditors() {
+          return apiClient.get('User')
+        },
+
+        getSharingLevels () {
+          return apiClient.get('SharingLevel');
         },
     
         //POST
