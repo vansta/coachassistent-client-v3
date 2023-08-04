@@ -10,7 +10,6 @@
             </div>
         </template>
         <template #description>
-            {{ editExercise }}
             <editor v-model="editExercise.description" api-key="no-api-key"/>
             <v-combobox v-model="editExercise.tags" label="Tags" :items="tags" item-value="title" multiple></v-combobox>
             <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">

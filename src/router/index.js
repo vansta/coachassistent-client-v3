@@ -60,12 +60,6 @@ const routes = [
     component: () => import('../components/Training/Create2.vue')
   },
   {
-    path: '/exercises/edit/:id?',
-    name: 'EditExercise',
-    props: true,
-    component: () => import('../components/Exercise/EditFull.vue')
-  },
-  {
     path: '/groups',
     name: 'Groups',
     props: true,

@@ -71,7 +71,6 @@ const createApiService = (apiClient) => {
             return apiClient.get('Exercise', {
                 params: { id }
             })
-            .then(resp => resp.data)
         },
     
         getAllSegments () {
@@ -137,6 +136,9 @@ const createApiService = (apiClient) => {
               'Content-type': 'multipart/form-date'
             }})
             return resp.data
+        },
+        copyExercise (exerciseId) {
+          return apiClient.post('Exercise/Copy', exerciseId);
         },
     
         postSegment (segment) {

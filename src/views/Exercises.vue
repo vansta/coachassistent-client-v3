@@ -14,7 +14,7 @@
             <search ref="search" @search="getExercises"></search>
         </template>
         <template #item="{ item }">
-            <exercise-view v-if="!item.edit" :exercise="item" @edit="editRow(item)"></exercise-view>
+            <exercise-view v-if="!item.edit" :exercise="item" @edit="editRow(item)" @copy="onCopy"></exercise-view>
             <exercise-edit v-else :exercise="item" @save="saveRow(item)" @remove="removeRow(item)" :tags="tags"></exercise-edit>
         </template>
     </c-data-iterator>
@@ -82,6 +82,15 @@ export default {
         },
         removeRow() {
             this.getExercises();
+        },
+        onCopy(id) {
+            this.$api.getExercise(id)
+                .then(resp => {
+                    var copy = resp.data;
+                    copy.edit = true;
+                    this.exercises.unshift(copy);
+                });
+            
         }
     }
 }

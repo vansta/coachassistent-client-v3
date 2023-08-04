@@ -3,7 +3,7 @@
         <template #name>
             <div class="d-flex">
                 <div class="text-h6 text-left text-capitalize flex-grow-1">{{ exercise.name }}</div>
-                <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-content-copy" flat round @click="$emit('copy')"></v-btn>
+                <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-content-copy" flat round @click="onCopy"></v-btn>
                 <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-pencil" flat round @click="$emit('edit')"></v-btn>
             </div>
         </template>
@@ -48,7 +48,10 @@ export default defineComponent({
         }
     },
     methods: {
-        
+        onCopy() {
+            this.$api.copyExercise(this.exercise.id)
+                .then(resp => this.$emit('copy', resp.data));
+        }
     },
     watch: {
         exercise () {
