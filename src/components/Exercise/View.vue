@@ -1,8 +1,11 @@
 <template>
     <layout>
         <template #name>
-            <div class="text-h6 text-left text-capitalize">{{ exercise.name }}</div>
-            <slot name="actions"></slot>
+            <div class="d-flex">
+                <div class="text-h6 text-left text-capitalize flex-grow-1">{{ exercise.name }}</div>
+                <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-content-copy" flat round @click="$emit('copy')"></v-btn>
+                <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-pencil" flat round @click="$emit('edit')"></v-btn>
+            </div>
         </template>
         <template #description>
                 <div v-html="exercise.description"></div>
@@ -17,8 +20,9 @@
 </template>
 
 <script>
-import { defineComponent, toRefs, ref, reactive, toRef } from 'vue'
+import { defineComponent } from 'vue';
 // import { IExercise } from '@/interfaces'
+import { useAuthenticationStore } from '@/plugins/pinia';
 
 import Layout from '@/components/Exercise/Layout.vue'
 export default defineComponent({
@@ -32,17 +36,12 @@ export default defineComponent({
     components: {
         Layout
     },
-    // setup(props) {
-    //     const { exercise } = toRefs(props)
-    //     var slide;
-    //     if (exercise) {
-    //         slide = ref(exercise.attachments[0]);
-    //     } 
-    //     return {
-            
-    //         slide
-    //     }
-    // },
+    setup() {
+        const authStore = useAuthenticationStore();
+        return {
+            authStore
+        }
+    },
     data () {
         return {
             slide: this.exercise.attachments[0]

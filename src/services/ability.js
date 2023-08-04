@@ -18,14 +18,6 @@ const buildRules = (permissions) => {
         }
 
         return rule;
-        // return {
-        //     action: p.action,
-        //     subject: p.subject,
-        //     fields: p.fields,
-        //     conditions: {
-        //         groupIds: { $in: p.groupIds}
-        //     }
-        // }
     })
 }
 export { buildRules };
