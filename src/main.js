@@ -8,8 +8,12 @@ import 'vue-toastification/dist/index.css';
 
 loadFonts()
 
+import { abilitiesPlugin } from '@casl/vue';
+import ability from '@/services/ability';
+
 const Vue = createApp(App)
-  .use(vuetify);
+  .use(vuetify)
+  .use(abilitiesPlugin, ability);
 
 
 import { pinia, useAuthenticationStore } from '@/plugins/pinia.js';
@@ -24,6 +28,8 @@ import api from '@/plugins/apiplugin.js';
 Vue.use(Toast, {
   position: POSITION.BOTTOM_CENTER
 })
+
+
 
 Vue
   .mount('#app');

@@ -15,8 +15,7 @@ import { useAuthenticationStore } from '@/plugins/pinia.js';
 
 export default {
     props: {
-        modelValue: Object,
-        type: String
+        modelValue: Object
     },
     setup() {
         const authenticationStore = useAuthenticationStore();
@@ -46,8 +45,8 @@ export default {
                 .then(resp => this.groups = resp.data);
         },
         getAssignedEditors() {
-            if (this.modelValue.id) {
-                this.$api.getAssignedEditors(this.modelValue.id, this.type)
+            if (this.modelValue.shareableId) {
+                this.$api.getAssignedEditors(this.modelValue.shareableId)
                     .then(resp => this.modelValue.editors = resp.data);
             }
             else {

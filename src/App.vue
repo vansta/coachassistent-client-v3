@@ -67,6 +67,13 @@ export default {
         }
       },
       {
+        title: 'Groups',
+        props: {
+            prependIcon: 'mdi-account-group',
+            to: { name: 'Groups' }
+        }
+      },
+      {
         title: 'Create group',
         props: {
             prependIcon: 'mdi-account-group',

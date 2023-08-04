@@ -110,9 +110,9 @@ const createApiService = (apiClient) => {
         getEditors() {
           return apiClient.get('User')
         },
-        getAssignedEditors(id, type) {
+        getAssignedEditors(shareableId) {
           return apiClient.get('User/AssignedEditors', {
-            params: { id, type }
+            params: { shareableId }
           })
         },
 
@@ -122,6 +122,10 @@ const createApiService = (apiClient) => {
 
         getRoles() {
           return apiClient.get('Role');
+        },
+
+        getPermissions() {
+          return apiClient.get('User/Permissions');
         },
     
         //POST

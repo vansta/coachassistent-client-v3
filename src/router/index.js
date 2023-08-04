@@ -66,6 +66,12 @@ const routes = [
     component: () => import('../components/Exercise/EditFull.vue')
   },
   {
+    path: '/groups',
+    name: 'Groups',
+    props: true,
+    component: () => import('../views/Groups/Overview.vue')
+  },
+  {
     path: '/groups/create',
     name: 'CreateGroup',
     props: true,

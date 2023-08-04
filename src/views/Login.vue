@@ -23,11 +23,14 @@
 <script>
 import { useAuthenticationStore } from '@/plugins/pinia.js'
 import { useToast } from 'vue-toastification';
+import { useAbility } from '@casl/vue';
+import { buildRules } from '@/services/ability';
 export default {
     setup () {
         const authenticationStore = useAuthenticationStore();
         const toast = useToast();
-        return { authenticationStore, toast }
+        const ability = useAbility();
+        return { authenticationStore, toast, ability }
     },
     data() {
         return {
@@ -41,11 +44,20 @@ export default {
             this.loading = true;
             this.$api.login(this.credentials)
                 .then(token => {
+                    this.getPermissions();
                     this.authenticationStore.login(token);
                     this.toast.success('Welcome');
                     this.$router.push({ name: 'Home' });
                 })
                 .finally(() => this.loading = false);
+        },
+
+        getPermissions() {
+            this.$api.getPermissions()
+                .then(resp => {
+                    console.log(buildRules(resp.data));
+                    this.ability.update(buildRules(resp.data));
+                })
         }
     }
 }

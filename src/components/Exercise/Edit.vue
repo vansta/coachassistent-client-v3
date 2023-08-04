@@ -6,15 +6,13 @@
                 <!-- <v-btn icon="mdi-open-in-new" flat round :to="{ name: 'EditExercise', params: { id: editExercise.id } }"></v-btn> -->
                 <v-btn icon="mdi-cog" flat round @click="showSharebility = !showSharebility"></v-btn>
                 <v-btn icon="mdi-content-save" flat round @click="save"></v-btn>
-                <v-btn icon="mdi-delete" color="negative" flat round @click="remove"></v-btn>
+                <v-btn v-if="can('delete', editExercise)" icon="mdi-delete" color="negative" flat round @click="remove"></v-btn>
             </div>
-            
-            
         </template>
         <template #description>
+            {{ editExercise }}
             <editor v-model="editExercise.description" api-key="no-api-key"/>
             <v-combobox v-model="editExercise.tags" label="Tags" :items="tags" item-value="title" multiple></v-combobox>
-            <!-- <v-textarea v-model="editExercise.description" height="50" label="Description"></v-textarea> -->
             <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
                 <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment" v-slot="{ isSelected, toggle }" :value="attachment">
                     <v-img 
@@ -48,6 +46,7 @@ import { useToast } from 'vue-toastification'
 import Layout from '@/components/Exercise/Layout.vue';
 import Editor from '@tinymce/tinymce-vue';
 import Sharebility from '../common/Sharebility.vue';
+import { useAbility } from '@casl/vue';
 
 export default defineComponent({
     name: 'Edit',
@@ -66,9 +65,10 @@ export default defineComponent({
             selectedAttachments: props.exercise.attachments
         })
         const toast = useToast();
+        const { can } = useAbility();
 
         return {
-            editExercise, toast
+            editExercise, toast, can
         }
     },
     // created() {
