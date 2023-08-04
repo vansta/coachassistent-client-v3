@@ -4,10 +4,14 @@
             <v-form>
                 <v-row>
                     <v-col>
-                        <v-text-field v-model="search.search" label="Name" variant="outlined" density="compact" @input="emitSearch"></v-text-field>
+                        <v-text-field v-model="search.search" label="Name" @input="emitSearch"></v-text-field>
                     </v-col>
                     <v-col>
-                        <v-select v-model="search.tagIds" label="Tags" :items="tags" variant="outlined" density="compact" multiple></v-select>
+                        <v-select v-model="search.tags" label="Tags" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch">
+                            <!-- <template v-slot:append>
+                                <v-btn icon="mdi-refresh" size="30"></v-btn>
+                            </template> -->
+                        </v-select>
                     </v-col>
                 </v-row>
             </v-form>
@@ -32,7 +36,7 @@ export default {
 
     data() {
         return {
-            search: { search: 'test', tagIds: [] },
+            search: { search: '', tags: [] },
             tags: []
         }
     },

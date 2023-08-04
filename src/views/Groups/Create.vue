@@ -9,7 +9,7 @@
                     </div>
                     
                     <v-text-field v-model="group.description" label="Description"></v-text-field>
-                    <v-select v-model="group.tags" label="Tags" :items="tags" item-value="title" multiple></v-select>
+                    <v-select v-model="group.tags" label="Tags" :items="tags" multiple></v-select>
                 </v-form>
             </v-card-text>
         </v-card>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import settings from '../../settings';
 import { getToken, setToken } from '@/services/jwt';
-import qs from 'qs';
+import QS from 'qs';
 
 import sha256 from 'crypto-js/sha256';
 
@@ -36,7 +36,7 @@ const createApiClient = (useAuthenticationStore) => {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    paramsSerializer: (params) => { console.log('qs'); qs.stringify(params); }
+    // paramsSerializer: (params) => { QS.stringify(params); }
   });
 
   apiClient.defaults.headers.common["Authorization"] = "Bearer " + getToken();
@@ -60,10 +60,16 @@ const createApiClient = (useAuthenticationStore) => {
 
 const createApiService = (apiClient) => {
     return {
-        getAllExercises: function (search) {
-
+        getAllExercises: function ({ search, tags }) {
+          console.log(search)
           return apiClient.get('Exercise/Overview', {
-            params: search
+            paramsSerializer: function (params) {
+              return QS.stringify(params)
+            },
+            params: {
+              search,
+              tags
+            }
           })
         },
     

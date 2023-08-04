@@ -4,7 +4,7 @@
             <v-select v-model="modelValue.sharingLevel" :items="sharingLevels" label="Share with"></v-select>
         </v-card-title>
         <v-card-text>
-            <v-select v-if="modelValue.sharingLevel == 1" multiple :items="groups" label="Groups"></v-select>
+            <v-select v-if="modelValue.sharingLevel == 1" v-model="modelValue.groupIds" multiple :items="groups" label="Groups"></v-select>
             <v-autocomplete v-model="modelValue.editors" multiple :items="editors" label="Editors"></v-autocomplete>
         </v-card-text>
     </v-card>

@@ -11,7 +11,7 @@
         </template>
         <template #description>
             <editor v-model="editExercise.description" api-key="no-api-key"/>
-            <v-combobox v-model="editExercise.tags" label="Tags" :items="tags" item-value="title" multiple></v-combobox>
+            <v-combobox v-model="editExercise.tags" label="Tags" :items="tags" multiple></v-combobox>
             <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
                 <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment" v-slot="{ isSelected, toggle }" :value="attachment">
                     <v-img 
