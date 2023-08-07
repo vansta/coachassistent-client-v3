@@ -57,6 +57,7 @@ export default {
                 .then(resp => {
                     console.log(buildRules(resp.data));
                     this.ability.update(buildRules(resp.data));
+                    this.authenticationStore.setPermissions(resp.data);
                 })
         }
     }

@@ -4,9 +4,9 @@
             <div class="d-flex">
                 <v-text-field class="flex-grow-1" v-model="editExercise.name" label="Name"></v-text-field>
                 <!-- <v-btn icon="mdi-open-in-new" flat round :to="{ name: 'EditExercise', params: { id: editExercise.id } }"></v-btn> -->
-                <v-btn icon="mdi-cog" flat round @click="showSharebility = !showSharebility"></v-btn>
-                <v-btn icon="mdi-content-save" flat round @click="save"></v-btn>
-                <v-btn v-if="can('delete', editExercise)" icon="mdi-delete" color="negative" flat round @click="remove"></v-btn>
+                <v-btn :disabled="!can('editShareability', editExercise)" icon="mdi-cog" flat round @click="showSharebility = !showSharebility"></v-btn>
+                <v-btn :disabled="!(can('update', editExercise) || can('create', editExercise))" icon="mdi-content-save" flat round @click="save"></v-btn>
+                <v-btn :disabled="!can('delete', editExercise)" icon="mdi-delete" color="negative" flat round @click="remove"></v-btn>
             </div>
         </template>
         <template #description>
@@ -17,19 +17,19 @@
                     <v-img 
                         :src="$api.getAttachmentLink(attachment)" 
                         min-height="150" max-heigth="150" min-width="150" max-width="150" cover
-                        @click="toggle">
+                        @click="toggle" class="mx-2">
                         <v-btn 
-                            :icon="isSelected ? 'mdi-link-off' : 'mdi-link-plus'"
+                            :icon="isSelected ? 'mdi-delete' : 'mdi-undo'"
                             
-                            variant="flat"
-                            location="bottom left"
+                            variant="text"
+                            location="top right"
                             position="absolute"
-                            :color="isSelected ? 'primary' : 'secondary'"
+                            :color="isSelected ? 'error' : 'default'"
                             ></v-btn>
                     </v-img>
                 </v-slide-group-item>
             </v-slide-group>
-            <v-file-input outlined v-model="editExercise.addedAttachments" multiple>
+            <v-file-input outlined v-model="editExercise.addedAttachments" multiple label="Add images">
                 <template v-slot:prepend>
                     <v-icon>mdi-content-save</v-icon>
                 </template>

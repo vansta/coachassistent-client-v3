@@ -25,6 +25,7 @@ import CDataIterator from '@/components/common/CDataIterator.vue';
 import ExerciseView from '@/components/Exercise/View.vue'
 import ExerciseEdit from '@/components/Exercise/Edit.vue'
 import Search from '@/components/Exercise/Search.vue';
+import { useAuthenticationStore } from '@/plugins/pinia';
 
 export default {
     components: {
@@ -36,6 +37,11 @@ export default {
     created () {
         this.getExercises();
         this.getTags();
+    },
+    setup() {
+        const authStore = useAuthenticationStore();
+
+        return { authStore };
     },
     data() {
         return {
@@ -77,7 +83,9 @@ export default {
                 name: '',
                 description: '',
                 edit: true,
-                attachments: []
+                attachments: [],
+                editorIds: [this.authStore.user.id],
+                constructor: { modelName: 'shareable' }
             })
         },
         removeRow() {

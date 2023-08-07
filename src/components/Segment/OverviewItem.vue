@@ -3,8 +3,8 @@
         <v-card-title>
             <div class="d-flex">
                 <div class="flex-grow-1 text-h6 text-left text-capitalize">{{ segment.name }}</div>
-                <v-btn icon="mdi-pencil" flat :to="{ name: 'EditSegment', params: { id: segment.id }}"></v-btn>
-                <v-btn icon="mdi-delete" flat @click="remove"></v-btn>
+                <v-btn :disabled="!can('update', segment)" icon="mdi-pencil" flat :to="{ name: 'EditSegment', params: { id: segment.id }}"></v-btn>
+                <v-btn :disabled="!can('delete', segment)" icon="mdi-delete" flat @click="remove"></v-btn>
             </div>
             
         </v-card-title>
@@ -26,6 +26,8 @@
 
 <script>
 import { defineComponent } from 'vue'
+import { defineAbility } from '@casl/ability';
+import { useAbility } from '@casl/vue';
 
 export default defineComponent({
     name: 'OverviewItem',
@@ -38,8 +40,9 @@ export default defineComponent({
         
     },
     setup() {
+        const { can } = useAbility();
         return {
-            
+            can
         }
     },
     methods: {

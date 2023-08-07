@@ -1,12 +1,14 @@
 import { createPinia, defineStore } from "pinia";
 import { getToken, validateToken, getDecodedToken, setToken } from "@/services/jwt";
+import { setPermissions, getPermissions } from "@/services/ability";
 
 const pinia = createPinia();
 
 const useAuthenticationStore = defineStore('main', {
   state: () => ({
     token: getToken(),
-    user: getDecodedToken()
+    user: getDecodedToken(),
+    permissions: getPermissions()
   }),
   getters: {
     isAuthenticated: (state) => validateToken(state.token),
@@ -28,7 +30,13 @@ const useAuthenticationStore = defineStore('main', {
     },
     logout() {
       this.token = '';
+      this.permissions = '[]';
       setToken('');
+      setPermissions('[]');
+    },
+    setPermissions(permissions) {
+      this.permissions = permissions;
+      setPermissions(permissions);
     }
   }
 });

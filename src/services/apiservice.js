@@ -60,16 +60,12 @@ const createApiClient = (useAuthenticationStore) => {
 
 const createApiService = (apiClient) => {
     return {
-        getAllExercises: function ({ search, tags }) {
-          console.log(search)
+        getAllExercises: function (search) {
           return apiClient.get('Exercise/Overview', {
-            paramsSerializer: function (params) {
-              return QS.stringify(params)
-            },
-            params: {
-              search,
-              tags
-            }
+            // paramsSerializer: function (params) {
+            //   return QS.stringify(params)
+            // },
+            params: search
           })
         },
     

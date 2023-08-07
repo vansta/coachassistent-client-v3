@@ -4,7 +4,7 @@
             <div class="d-flex">
                 <div class="text-h6 text-left text-capitalize flex-grow-1">{{ exercise.name }}</div>
                 <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-content-copy" flat round @click="onCopy"></v-btn>
-                <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-pencil" flat round @click="$emit('edit')"></v-btn>
+                <v-btn :disabled="!(authStore.isAuthenticated && can('update', exercise))" icon="mdi-pencil" flat round @click="$emit('edit')"></v-btn>
             </div>
         </template>
         <template #description>
@@ -23,6 +23,7 @@
 import { defineComponent } from 'vue';
 // import { IExercise } from '@/interfaces'
 import { useAuthenticationStore } from '@/plugins/pinia';
+import { useAbility } from '@casl/vue';
 
 import Layout from '@/components/Exercise/Layout.vue'
 export default defineComponent({
@@ -38,8 +39,10 @@ export default defineComponent({
     },
     setup() {
         const authStore = useAuthenticationStore();
+        const { can } = useAbility();
         return {
-            authStore
+            authStore,
+            can
         }
     },
     data () {
