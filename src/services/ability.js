@@ -15,7 +15,7 @@ const buildRules = (permissions) => {
     if(!permissions || permissions.length == 0) {
         permissions = getPermissions();
         if (!permissions || permissions.length == 0) {
-            return [];
+            return [{}];
         }
     }
     return permissions.map(p => {

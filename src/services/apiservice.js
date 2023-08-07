@@ -124,6 +124,9 @@ const createApiService = (apiClient) => {
         getRoles() {
           return apiClient.get('Role');
         },
+        getRolesOverview() {
+          return apiClient.get('Role/Overview')
+        },
 
         getPermissions() {
           return apiClient.get('User/Permissions');
@@ -135,6 +138,12 @@ const createApiService = (apiClient) => {
           return apiClient.get('Group/Details', {
             params: { id }
           })
+        },
+        getActions() {
+          return apiClient.get('Permission/Actions');
+        },
+        getSubjects() {
+          return apiClient.get('Permission/Subjects');
         },
     
         //POST
@@ -213,6 +222,9 @@ const createApiService = (apiClient) => {
         },
         putGroup (group) {
           return apiClient.put('Group', group);
+        },
+        putRole(role) {
+          return apiClient.put('Role', role);
         },
     
         //DELETE

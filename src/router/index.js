@@ -76,6 +76,11 @@ const routes = [
     name: 'EditGroup',
     props: true,
     component: () => import('../views/Groups/Create.vue')
+  },
+  {
+    path: '/roles',
+    name: 'Roles',
+    component: () => import('../views/Roles/Overview.vue')
   }
 ];
 

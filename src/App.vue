@@ -79,6 +79,13 @@ export default {
             prependIcon: 'mdi-account-group',
             to: { name: 'CreateGroup' }
         }
+      },
+      {
+        title: 'Roles',
+        props: {
+            prependIcon: 'mdi-security',
+            to: { name: 'Roles' }
+        }
       }
     ]
   }),
