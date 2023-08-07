@@ -128,6 +128,14 @@ const createApiService = (apiClient) => {
         getPermissions() {
           return apiClient.get('User/Permissions');
         },
+        getGroups() {
+          return apiClient.get('Group/Overview');
+        },
+        getGroup(id) {
+          return apiClient.get('Group/Details', {
+            params: { id }
+          })
+        },
     
         //POST
         async postExercise (exercise) {
@@ -202,6 +210,9 @@ const createApiService = (apiClient) => {
         },
         putTraining (training) {
             return apiClient.put('Training', training);
+        },
+        putGroup (group) {
+          return apiClient.put('Group', group);
         },
     
         //DELETE

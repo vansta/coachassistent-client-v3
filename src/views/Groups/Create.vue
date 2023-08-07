@@ -20,7 +20,7 @@
             <v-card-text>
                 <v-row v-for="(member, index) in group.members" :key="index">
                     <v-col>
-                        <edit-membership v-model="group.members[index]" :roles="roles" :users="users"></edit-membership>
+                        <edit-membership v-model="group.members[index]" :roles="roles" :users="users" @delete="onDeleteRow(index)"></edit-membership>
                     </v-col>
                 </v-row>
                 <v-row>
@@ -69,7 +69,8 @@ export default {
     methods: {
         getGroup () {
             if (this.id) {
-
+                this.$api.getGroup(this.id)
+                    .then(resp => this.group = resp.data);
             }
         },
         getTags() {
@@ -90,9 +91,18 @@ export default {
             this.group.members.push({ })
         },
 
+        onDeleteRow (index) {
+            this.group.members.splice(index, 1);
+        },
+
         save() {
-            this.$api.postGroup(this.group)
+            if (this.group.id) {
+                this.$api.putGroup(this.group);
+            }
+            else {
+                this.$api.postGroup(this.group)
                 .then(resp => this.$router.push({ name: 'EditGroup', params: { id: resp.data }}));
+            }
         }
     }
 }
