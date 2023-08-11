@@ -1,7 +1,11 @@
 <template>
-    <c-data-table :items="groups" :headers="headers" @click:row="onRowClick">
+    <v-container>
+        <v-btn :to="{ name: 'CreateGroup' }">Create</v-btn>
+        <c-data-table :items="groups" :headers="headers" @click:row="onRowClick">
 
     </c-data-table>
+    </v-container>
+    
 </template>
 
 <script>

@@ -91,7 +91,7 @@ export default {
         onToggle(action, subject) {
             var permissionIndex = this.permissions.findIndex(p => p.subjectId == subject.value && p.actionId == action.value);
             if (permissionIndex < 0) {
-                this.permissions.push({ actionId: action.value, subjectId: subject.value });
+                this.permissions.push({ actionId: action.value, subjectId: subject.value, fields: subject.fields });
             }
             else{
                 this.permissions.splice(permissionIndex, 1);

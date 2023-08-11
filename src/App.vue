@@ -12,8 +12,29 @@
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" rail expand-on-hover="">
-      <v-list :items="navDrawerItems">
-      </v-list>
+      <v-list :items="filteredNavbar" nav></v-list>
+      <!-- <v-list>
+        <div v-for="(item, index) in navDrawerItems" :key="index">
+          <v-list-item :prepend-icon=""
+        </div>
+      </v-list> -->
+      <!-- <v-list>
+        <v-list-item prepend-icon="mdi-checkbox-blank" title="Trainings" :to="{ name: 'Trainings' }"></v-list-item>
+        <v-list-item prepend-icon="mdi-view-agenda" title="Segments" :to="{ name: 'Segments' }"></v-list-item>
+        <v-list-item prepend-icon="mdi-view-module" title="Exercises" :to="{ name: 'Exercises' }"></v-list-item>
+
+        <v-list-group value="Administration">
+          <template v-slot:activator="{ props }">
+            <v-list-item
+              v-bind="props"
+              prepend-icon="mdi-account-circle"
+              title="Administration"
+            ></v-list-item>
+          </template>
+          <v-list-item v-if="can('read', 'group')" prepend-icon="mdi-account-group" title="Groups" :to="{ name: 'Groups' }"></v-list-item>
+          <v-list-item v-if="can('read', 'role')" prepend-icon="mdi-security" title="Roles" :to="{ name: 'Roles' }"></v-list-item>
+        </v-list-group>
+      </v-list> -->
     </v-navigation-drawer>
 
     <v-main>
@@ -26,13 +47,15 @@
 
 <script>
 import { useAuthenticationStore } from '@/plugins/pinia.js';
+import { useAbility } from '@casl/vue';
 
 export default {
   name: 'App',
   setup () {
     const authenticationStore = useAuthenticationStore();
+    const { can } = useAbility();
 
-    return { authenticationStore }
+    return { authenticationStore, can }
   },
 
   data: () => ({
@@ -43,6 +66,10 @@ export default {
         props: {
             prependIcon: 'mdi-home',
             to: { name: 'Home' }
+        },
+        meta: {
+          action: 'read',
+          subject: 'shareable'
         }
       },
       {
@@ -50,6 +77,10 @@ export default {
         props: {
           prependIcon: 'mdi-checkbox-blank',
           to: { name: 'Trainings' }
+        },
+        meta: {
+          action: 'read',
+          subject: 'shareable'
         }
       },
       {
@@ -57,6 +88,10 @@ export default {
         props: {
           prependIcon: 'mdi-view-agenda',
           to: { name: 'Segments' }
+        },
+        meta: {
+          action: 'read',
+          subject: 'shareable'
         }
       },
       {
@@ -64,29 +99,43 @@ export default {
         props: {
             prependIcon: 'mdi-view-module',
             to: { name: 'Exercises' }
+        },
+        meta: {
+          action: 'read',
+          subject: 'shareable'
         }
       },
       {
-        title: 'Groups',
+        title: 'Administration',
         props: {
-            prependIcon: 'mdi-account-group',
-            to: { name: 'Groups' }
+          prependIcon: 'mdi-office-building'
+        },
+        children: [
+        {
+          title: 'Groups',
+          props: {
+              prependIcon: 'mdi-account-group',
+              to: { name: 'Groups' }
+          },
+          meta: {
+            action: 'read',
+            subject: 'group'
+          }
+        },
+        {
+          title: 'Roles',
+          props: {
+              prependIcon: 'mdi-security',
+              to: { name: 'Roles' }
+          },
+          meta: {
+            action: 'read',
+            subject: 'role'
+          }
         }
+        ]
       },
-      {
-        title: 'Create group',
-        props: {
-            prependIcon: 'mdi-account-group',
-            to: { name: 'CreateGroup' }
-        }
-      },
-      {
-        title: 'Roles',
-        props: {
-            prependIcon: 'mdi-security',
-            to: { name: 'Roles' }
-        }
-      }
+      
     ]
   }),
   methods: {
@@ -94,6 +143,26 @@ export default {
       this.authenticationStore.logout();
       this.$router.push({ name: 'Login' });
     },
+
+    filterItems(items) {
+      return items.filter(i => {
+        if (i.children){
+          i.children = this.filterItems(i.children);
+          if (i.children.length === 0) {
+            return false;
+          }
+        }
+        if (i.meta) {
+          return this.can(i.meta.action, i.meta.subject);
+        }
+        return true;
+      })
+    }
+  },
+  computed: {
+    filteredNavbar () {
+      return this.filterItems(this.navDrawerItems);
+    }
   }
 }
 </script>

@@ -1,13 +1,13 @@
 <template>
     <v-row>
         <v-col>
-            <v-select v-model="modelValue.userId" label="User" :items="users"></v-select>
+            <v-select v-model="modelValue.userId" :readonly="readonly" label="User" :items="users"></v-select>
         </v-col>
         <v-col>
-            <v-select v-model="modelValue.roleId" label="Role" :items="roles"></v-select>
+            <v-select v-model="modelValue.roleId" :readonly="readonly" label="Role" :items="roles"></v-select>
         </v-col>
         <v-col cols="1">
-            <v-btn icon="mdi-delete" color="negative" flat round @click="$emit('delete')"></v-btn>
+            <v-btn v-if="!readonly" icon="mdi-delete" color="negative" flat round @click="$emit('delete')"></v-btn>
         </v-col>
     </v-row>
 </template>
@@ -20,7 +20,8 @@ export default {
     props: {
         modelValue: Object,
         roles: Array,
-        users: Array
+        users: Array,
+        readonly: Boolean
     }
 }
 </script>

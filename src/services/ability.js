@@ -15,9 +15,10 @@ const buildRules = (permissions) => {
     if(!permissions || permissions.length == 0) {
         permissions = getPermissions();
         if (!permissions || permissions.length == 0) {
-            return [{}];
+            return [];
         }
     }
+    console.log(permissions, !permissions, permissions.length, typeof permissions);
     return permissions.map(p => {
         var rule = {
             action: p.action,
@@ -27,12 +28,16 @@ const buildRules = (permissions) => {
         if (p.fields && p.fields.lenght > 0) {
             rule.fields = p.fields;
         }
+
         var conditions = {};
-        if (p.groupIds && p.groupIds.length > 0) {
-            conditions.groupIds = { $in: p.groupIds }
+        if (p.condition === 'groupIds' && p.groupIds && p.groupIds.length > 0) {
+            conditions.groupIds = { "$in": p.ids };
         }
-        if (p.userId) {
-            conditions.editorIds = { $in: [p.userId] }
+        if (p.condition === 'id' && p.ids) {
+            conditions.id = { "$in": p.ids };
+        }
+        if (p.condition === 'editors' && p.userId){
+            conditions.editorIds = { $in: [p.userId] };
         }
         
         if (conditions) {

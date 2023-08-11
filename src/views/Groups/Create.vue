@@ -4,12 +4,12 @@
             <v-card-text>
                 <v-form>
                     <div class="d-flex">
-                        <v-text-field :readonly="!can('update', group, 'name')" v-model="group.name" label="Name" class="flex-grow-1"></v-text-field>
-                        <v-btn icon="mdi-content-save" flat round @click="save"></v-btn>
+                        <v-text-field v-model="group.name" :readonly="!can(action, group, 'name')" label="Name" class="flex-grow-1"></v-text-field>
+                        <v-btn v-if="can(action, group)" icon="mdi-content-save" flat round @click="save"></v-btn>
                     </div>
                     
-                    <v-text-field v-model="group.description" label="Description"></v-text-field>
-                    <v-select v-model="group.tags" label="Tags" :items="tags" multiple></v-select>
+                    <v-text-field v-model="group.description" :readonly="!can(action, group, 'name')" label="Description"></v-text-field>
+                    <v-select v-model="group.tags" :readonly="!can(action, group, 'tags')" label="Tags" :items="tags" multiple></v-select>
                 </v-form>
             </v-card-text>
         </v-card>
@@ -20,10 +20,10 @@
             <v-card-text>
                 <v-row v-for="(member, index) in group.members" :key="index">
                     <v-col>
-                        <edit-membership v-model="group.members[index]" :roles="roles" :users="users" @delete="onDeleteRow(index)"></edit-membership>
+                        <edit-membership v-model="group.members[index]" :readonly="!can(action, group, 'members')" :roles="roles" :users="users" @delete="onDeleteRow(index)"></edit-membership>
                     </v-col>
                 </v-row>
-                <v-row>
+                <v-row v-if="can(action, group, 'members')">
                     <v-col>
                         <v-btn block @click="addMember">Add</v-btn>
                     </v-col>
@@ -59,18 +59,21 @@ export default {
     data () {
         return {
             group: {
+                constructor: { modelName: 'group' },
                 members: [
                     {  }
                 ]
             },
             tags: [],
             roles: [],
-            users: []
+            users: [],
+            action: 'create'
         }
     },
     methods: {
         getGroup () {
             if (this.id) {
+                this.action = 'update';
                 this.$api.getGroup(this.id)
                     .then(resp => this.group = resp.data);
             }
