@@ -3,11 +3,13 @@
         <template #name>
             <div class="d-flex">
                 <div class="text-h6 text-left text-capitalize flex-grow-1">{{ exercise.name }}</div>
-                <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-content-copy" flat round @click="onCopy"></v-btn>
+                <v-btn v-if="mode == 'edit'" :disabled="!authStore.isAuthenticated" icon="mdi-content-copy" flat round @click="onCopy"></v-btn>
                 <v-btn :disabled="!(authStore.isAuthenticated && can('update', exercise))" icon="mdi-pencil" flat round @click="$emit('edit')"></v-btn>
+                <v-btn :icon="collapse ? 'mdi-chevron-down' : 'mdi-chevron-up'" variant="text" @click="collapse = !collapse"></v-btn>
             </div>
         </template>
         <template #description>
+            <div v-show="!collapse">
                 <div v-html="exercise.description"></div>
                 <!-- <q-img :src="getImgSource(exercise.attachments[0])"/> -->
                 <v-carousel @click.stop>
@@ -15,6 +17,8 @@
                         <!-- <q-img :src="getImgSource(attachment)"/> -->
                     </v-carousel-item>
                 </v-carousel>
+            </div>
+                
         </template>
     </layout>
 </template>
@@ -32,6 +36,10 @@ export default defineComponent({
         exercise: {
             required: true,
             type: Object
+        },
+        mode: {
+            type: String,
+            default: 'edit'
         }
     },
     components: {
@@ -47,7 +55,8 @@ export default defineComponent({
     },
     data () {
         return {
-            slide: this.exercise.attachments[0]
+            slide: this.exercise.attachments[0],
+            collapse: this.mode !== 'edit'
         }
     },
     methods: {

@@ -20,7 +20,7 @@
             </v-card-text>
         </v-card>
         <v-row>
-            <v-col>
+            <!-- <v-col>
                 <v-card class="drop-zone" @drop="drop($event)" @dragover.prevent @dragenter.prevent>
                     <v-card-title>
                         Drop your exercises here
@@ -39,16 +39,45 @@
                 </c-data-iterator>
                 
                 </div>
+            </v-col> -->
+            <v-col>
+                <draggable v-model="segment.exercises" group="exercises" item-key="id">
+                    <template #header>
+                        <v-alert type="info" variant="tonal">
+                            Drag your exercises here
+                        </v-alert>
+                        
+                    </template>
+                    <template #item="{ element }">
+                        <exercise-view v-if="!element.edit" :exercise="element" mode="select" @edit="element.edit = true"></exercise-view>
+                        <exercise-edit v-else :exercise="element" mode="select" @save="onSaveExercise(element)" @cancel="element.edit = false" :tags="tags"></exercise-edit>
+                    </template>
+                </draggable>
+            </v-col>
+            <v-col>
+                <draggable v-model="exercises" group="exercises" item-key="id">
+                    <template #header>
+                        <v-alert variant="tonal">Drag the exercises you want to include</v-alert>
+                        <exercise-search @search="getExercises"></exercise-search>
+                    </template>
+                    <template #item="{ element }">
+                        <exercise-view v-if="!element.edit" :exercise="element" mode="select" @edit="element.edit = true"></exercise-view>
+                        <exercise-edit v-else :exercise="element" mode="select" @save="onSaveExercise(element)" @cancel="element.edit = false" :tags="tags"></exercise-edit>
+                    </template>
+                </draggable>
             </v-col>
         </v-row>
     </v-container>
 </template>
 
 <script>
-import ExerciseView from '@/components/Exercise/View.vue'
+import ExerciseView from '@/components/Exercise/View.vue';
+import ExerciseEdit from '@/components/Exercise/Edit.vue';
+import ExerciseSearch from '@/components/Exercise/Search.vue';
 import CDataIterator from '@/components/common/CDataIterator.vue'
 import Editor from '@tinymce/tinymce-vue';
 import Sharebility from '@/components/common/Sharebility.vue';
+import Draggable from 'vuedraggable';
 
 import { defineComponent } from 'vue'
 import { useToast } from 'vue-toastification'
@@ -56,7 +85,7 @@ import { useAbility } from '@casl/vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 
 export default defineComponent({
-    components: { ExerciseView, CDataIterator, Editor, Sharebility },
+    components: { ExerciseView, ExerciseEdit, ExerciseSearch, CDataIterator, Editor, Sharebility, Draggable },
     setup() {
         const toast = useToast();
         const { can } = useAbility();
@@ -84,6 +113,7 @@ export default defineComponent({
                 constructor: { modelName: 'shareable' }
             },
             exercises: [],
+            tags: [],
 
             loading: false,
             splitterValue: 50,
@@ -91,10 +121,10 @@ export default defineComponent({
         }
     },
     methods: {
-        getExercises () {
+        getExercises (search) {
             this.loading = true;
-            this.$api.getAllExercises()
-                .then(resp => this.exercises = resp.data.items)
+            this.$api.getAllExercises(search)
+                .then(resp => this.exercises = resp.data.items.filter(e => this.segment.exercises.findIndex(x => x.id === e.id) < 0))
                 .finally(() => this.loading = false)
         },
 
@@ -119,6 +149,10 @@ export default defineComponent({
             this.$api.deleteSegment((this.segment).id)
                 .then(() => this.$router.push({ name: 'Segments' }));
         },
+        onSaveExercise(exercise) {
+            exercise.edit = false;
+            this.getExercises();
+        },
 
         startToDrag (evt, item) {
             if (evt.dataTransfer !== null) {
@@ -142,6 +176,16 @@ export default defineComponent({
         }
     },
     computed: {
+        // availableExercises: {
+        //     get() {
+        //         return this.exercises.filter(e => this.segment.exercises.findIndex(x => x.id === e.id) < 0);
+        //     },
+        //     set(value) {
+        //         this.segment.exercises = value;
+        //         console.log(value);
+        //         this.segment.exercises.push(value);
+        //     }
+        // }
         availableExercises () {
             if (this.exercises){
                 return this.exercises.filter(e => this.segment.exercises.findIndex(x => x.id === e.id) < 0);

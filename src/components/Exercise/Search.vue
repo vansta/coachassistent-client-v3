@@ -7,11 +7,11 @@
                         <v-text-field v-model="search.search" label="Name" @input="emitSearch"></v-text-field>
                     </v-col>
                     <v-col>
-                        <v-select v-model="search.tags" label="Tags" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch">
+                        <v-autocomplete v-model="search.tags" label="Tags" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch">
                             <!-- <template v-slot:append>
                                 <v-btn icon="mdi-refresh" size="30"></v-btn>
                             </template> -->
-                        </v-select>
+                        </v-autocomplete>
                     </v-col>
                 </v-row>
             </v-form>
@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import { reactive } from '@vue/reactivity'
 var searchTimeOut;
 export default {
     // setup() {
@@ -45,7 +44,7 @@ export default {
         emitSearch() {
             clearTimeout(searchTimeOut);
             searchTimeOut = setTimeout(() => {
-                this.$emit('search');
+                this.$emit('search', this.search);
             }, 500);
         },
         getTags() {

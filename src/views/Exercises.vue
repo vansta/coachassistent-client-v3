@@ -12,7 +12,7 @@
                 </div>
             </template>
             <template #search>
-                <search ref="search" @search="getExercises"></search>
+                <search @search="getExercises"></search>
             </template>
             <template #item="{ item }">
                 <exercise-view v-if="!item.edit" :exercise="item" @edit="editRow(item)" @copy="onCopy"></exercise-view>
@@ -61,13 +61,8 @@ export default {
                 .then(resp => this.tags = resp.data);
         },
 
-        getExercises () {
+        getExercises (search) {
             this.loading = true;
-            const searchRef = this.$refs.search;
-            var search = {};
-            if (searchRef && searchRef.search){
-                search = searchRef.search;
-            }
             this.$api.getAllExercises(search)
                 .then(resp => {
                     this.exercises = resp.data.items;

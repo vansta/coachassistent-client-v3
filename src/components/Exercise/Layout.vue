@@ -1,5 +1,5 @@
 <template>
-    <v-card height="800" width="500">
+    <v-card max-height="800" max-width="500">
         <v-card-title>
             <slot name="name"><div class="text-h6 text-left text-capitalize">Name</div></slot>
         </v-card-title>

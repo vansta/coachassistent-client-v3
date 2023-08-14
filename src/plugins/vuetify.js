@@ -21,6 +21,10 @@ export default createVuetify(
       VFileInput: {
           variant: 'outlined',
           density: 'compact'
+      },
+      VAutocomplete: {
+        variant: 'outlined',
+        density: 'compact'
       }
   },
     theme: {
