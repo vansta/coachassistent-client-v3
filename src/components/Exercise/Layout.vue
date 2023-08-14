@@ -10,24 +10,6 @@
     </v-card>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
 
-export default defineComponent({
-    name: 'Layout',
-    props: {
-    },
-    setup() {
-        return {
-            
-        }
-    },
-})
 </script>
-
-<style scoped>
-    .my-card {
-        width: 100%;
-        height: 100%;
-    }
-</style>

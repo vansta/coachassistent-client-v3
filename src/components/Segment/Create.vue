@@ -21,12 +21,16 @@
         </v-card>
         <v-row>
             <v-col>
-                <div class="drop-zone" @drop="drop($event)" @dragover.prevent @dragenter.prevent>
+                <v-card class="drop-zone" @drop="drop($event)" @dragover.prevent @dragenter.prevent>
+                    <v-card-title>
+                        Drop your exercises here
+                    </v-card-title>
                     <exercise-view v-for="exercise in segment.exercises" :key="exercise.id" class="q-ma-xs" :exercise="exercise"  :draggable="true" @dragstart="startToDrag($event, exercise)"></exercise-view>
-                </div>
+                </v-card>
                 
             </v-col>
             <v-col>
+                <div>Exercises</div>
                 <div class="drop-zone" @drop="drop($event, true)" @dragover.prevent @dragenter.prevent>
                 <c-data-iterator :cols="12" :items="availableExercises">
                     <template #item="{ item }">
