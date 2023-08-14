@@ -4,7 +4,7 @@
             <div class="d-flex">
                 <v-text-field class="flex-grow-1" v-model="editExercise.name" label="Name"></v-text-field>
                 <!-- <v-btn icon="mdi-open-in-new" flat round :to="{ name: 'EditExercise', params: { id: editExercise.id } }"></v-btn> -->
-                <v-btn :disabled="!can('editShareability', editExercise)" icon="mdi-cog" flat round @click="showSharebility = !showSharebility"></v-btn>
+                <v-btn :disabled="!(can('update', editExercise, 'shareability') || can('create', editExercise, 'shareability'))" icon="mdi-cog" flat round @click="showSharebility = !showSharebility"></v-btn>
                 <v-btn :disabled="!(can('update', editExercise) || can('create', editExercise))" icon="mdi-content-save" flat round @click="save"></v-btn>
                 <v-btn :disabled="!can('delete', editExercise)" icon="mdi-delete" color="negative" flat round @click="remove"></v-btn>
             </div>
@@ -44,7 +44,7 @@ import { defineComponent, reactive } from 'vue'
 import { useToast } from 'vue-toastification'
 import Layout from '@/components/Exercise/Layout.vue';
 import Editor from '@tinymce/tinymce-vue';
-import Sharebility from '../common/Sharebility.vue';
+import Sharebility from '@/components/common/Sharebility.vue';
 import { useAbility } from '@casl/vue';
 
 export default defineComponent({

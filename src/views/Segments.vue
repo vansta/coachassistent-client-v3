@@ -2,7 +2,7 @@
     <c-data-iterator :cols="4" :items="segments" :loading="loading">
         <template #header>
             <div class="d-flex justify-end">
-                <v-btn :to="{ name: 'EditSegment' }" color="primary">Create segment</v-btn>
+                <v-btn :to="{ name: 'CreateSegment' }" color="primary">Create segment</v-btn>
             </div>
         </template>
         <template #item="{ item }">

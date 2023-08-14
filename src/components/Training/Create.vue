@@ -6,12 +6,16 @@
                     <div class="flex-grow-1">
                         <v-text-field v-model="training.name" label="Name" outlined dense></v-text-field>
                     </div>
-                    <v-btn icon="mdi-content-save" flat @click="save"></v-btn>
+                    <v-btn :disabled="!(can('update', training, 'shareability') || can('create', training, 'shareability'))" icon="mdi-cog" flat round @click="showSharebility = !showSharebility"></v-btn>
+                    <v-btn :disabled="!(can('update', training) || can('create', training))" icon="mdi-content-save" flat @click="save"></v-btn>
+                    <v-btn v-if="training.id" :disabled="!can('delete', training)" icon="mdi-delete" color="negative" flat round @click="remove"></v-btn>
                 </div>
-                
             </v-card-title>
             <v-card-text>
                 <editor v-model="training.description" api-key="no-api-key"/>
+            </v-card-text>
+            <v-card-text v-if="showSharebility">
+                <shareability v-model="training"></shareability>
             </v-card-text>
         </v-card>
         <v-row>
@@ -39,15 +43,20 @@
 import SegmentView from '@/components/Segment/OverviewItem.vue'
 import CDataIterator from '@/components/common/CDataIterator.vue'
 import Editor from '@tinymce/tinymce-vue';
+import Shareability from '@/components/common/Sharebility.vue';
 
 import { defineComponent } from 'vue'
 import { useToast } from 'vue-toastification'
+import { useAbility } from '@casl/vue';
+import { useAuthenticationStore } from '@/plugins/pinia.js';
 
 export default defineComponent({
-    components: { SegmentView, CDataIterator, Editor },
+    components: { SegmentView, CDataIterator, Editor, Shareability },
     setup() {
         const toast = useToast();
-        return { toast }
+        const { can } = useAbility();
+        const authStore = useAuthenticationStore();
+        return { toast, can, authStore }
     },
     created () {
         if (this.id) {
@@ -63,12 +72,15 @@ export default defineComponent({
         return {
             training: {
                 description: '',
-                segments: []
+                segments: [],
+                editorIds: [this.authStore.user.id],
+                constructor: { modelName: 'shareable' }
             },
             segments: [],
 
             loading: false,
             splitterValue: 50,
+            showSharebility: false
         }
     },
     methods: {
@@ -93,6 +105,10 @@ export default defineComponent({
                     .then(() => this.$router.push({ name: 'Trainings' }))
                     .catch(err => this.toast.error(err));
             }
+        },
+        remove () {
+            this.$api.deleteTraining((this.training).id)
+                .then(() => this.$router.push({ name: 'Trainings'} ));
         },
 
 

@@ -10,11 +10,11 @@
                         <v-textarea label="Description"></v-textarea>
                     </v-col>
                 </v-row>
-                <v-row>
+                <!-- <v-row>
                     <v-col>
                         <v-file-input label="Attachments"></v-file-input>
                     </v-col>
-                </v-row>
+                </v-row> -->
             </v-card-text>
             <v-divider></v-divider>
             <v-card-text>
