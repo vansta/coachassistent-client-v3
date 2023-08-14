@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card>
+        <v-card :loading="loading.get">
             <v-card-title>
                 <div class="d-flex">
                     <div class="flex-grow-1">
@@ -41,122 +41,115 @@
     </v-container>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, inject } from 'vue'
+
 import SegmentView from '@/components/Segment/OverviewItem.vue'
 import CDataIterator from '@/components/common/CDataIterator.vue'
 import Editor from '@tinymce/tinymce-vue';
 import Shareability from '@/components/common/Sharebility.vue';
 
-import { defineComponent } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useAbility } from '@casl/vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useConfirmDialog } from '@vueuse/core';
+import { useRouter } from 'vue-router';
 
+const api = inject('api');
 
-export default defineComponent({
-    components: { SegmentView, CDataIterator, Editor, Shareability },
-    setup() {
-        const toast = useToast();
-        const { can } = useAbility();
-        const authStore = useAuthenticationStore();
+const toast = useToast();
+const { can } = useAbility();
+const authStore = useAuthenticationStore();
+const router = useRouter();
 
-        const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
-        return { toast, can, authStore, isRevealed, reveal, confirm, cancel }
-    },
-    created () {
-        if (this.id) {
-            this.$api.getTraining(this.id)
-                .then((data) => this.training = data)
-        }
-        this.getSegments();
-    },
-    props: {
-        id: String
-    },
-    data () {
-        return {
-            training: {
-                description: '',
-                segments: [],
-                editorIds: [this.authStore.user.id],
-                constructor: { modelName: 'shareable' }
-            },
-            segments: [],
-            splitterValue: 50,
-            showSharebility: false,
-            loading: {
-                get: false,
-                save: false,
-                remove: false
-            }
-        }
-    },
-    methods: {
-        getSegments () {
-            this.loading.get = true;
-            this.$api.getAllSegments()
-                .then((data) => this.segments = data.items)
-                .finally(() => this.loading.get = false)
-        },
+const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 
-        save () {
-            this.loading.save = true;
-            if (!this.training.id) {
-                this.$api.postTraining(this.training)
-                    .then(resp => {
-                        this.training.id = resp;
-                        this.$router.push({ name: 'Trainings' })
-                    })
-                    .catch(err => this.toast.error(err))
-                    .finally(() => this.loading.save = false);
-            }
-            else {
-                this.$api.putTraining(this.training)
-                    .then(() => this.$router.push({ name: 'Trainings' }))
-                    .catch(err => this.toast.error(err))
-                    .finally(() => this.loading.save = false);
-            }
-        },
-        async remove () {
-            const { data } = await this.reveal();
-            console.log(data);
-            if (data) {
-                this.loading.remove = true;
-                this.$api.deleteTraining((this.training).id)
-                    .then(() => this.$router.push({ name: 'Trainings'} ))
-                    .finally(() => this.loading.remove = false);
-            }
-        },
-
-
-        startToDrag (evt, item) {
-            if (evt.dataTransfer !== null) {
-                evt.dataTransfer.dropEffect = 'link';
-                evt.dataTransfer.effectAllowed = 'link';
-                evt.dataTransfer.setData('id', item.id.toString())
-            }
-            
-        },
-        async drop (evt, remove) {
-            const segmentId = evt.dataTransfer?.getData('id');
-            if (remove) {
-                const index = this.training.segments.findIndex(e => e.id === segmentId);
-                this.training.segments.splice(index, 1);
-            }
-            else {
-                const segment = this.segments.find(e => e.id === segmentId);
-                this.training.segments.push(segment)
-            }
-            
-        }
-    },
-    computed: {
-        availableSegments () {
-            return this.segments.filter(e => this.training.segments.findIndex(x => x.id === e.id) < 0);
-        }
-    }
+const props = defineProps({
+    id: String
 })
+
+const training = ref({
+    description: '',
+    segments: [],
+    sharingLevel: '0',
+    editorIds: [authStore.user.id],
+    constructor: { modelName: 'shareable' }
+});
+const segments = ref([]);
+const showSharebility = ref(false);
+const loading = ref({
+    get: false,
+    save: false,
+    remove: false
+})
+
+const getSegments = () => {
+    loading.value.get = true;
+    api.getAllSegments()
+        .then((data) => segments.value = data.items)
+        .finally(() => loading.value.get = false)
+}
+
+const save = () => {
+    loading.value.save = true;
+    if (!training.value.id) {
+        api.postTraining(training.value)
+            .then(resp => {
+                training.value.id = resp;
+                router.push({ name: 'Trainings' })
+            })
+            .catch(err => toast.error(err))
+            .finally(() => loading.value.save = false);
+    }
+    else {
+        api.putTraining(training.value)
+            .then(() => router.push({ name: 'Trainings' }))
+            .catch(err => toast.error(err))
+            .finally(() => loading.value.save = false);
+    }
+}
+
+const remove = async () => {
+    const { data } = await reveal();
+    console.log(data);
+    if (data) {
+        loading.value.remove = true;
+        api.deleteTraining((training.value).id)
+            .then(() => router.push({ name: 'Trainings'} ))
+            .finally(() => loading.value.remove = false);
+    }
+}
+
+const startToDrag = (evt, item) => {
+    if (evt.dataTransfer !== null) {
+        evt.dataTransfer.dropEffect = 'link';
+        evt.dataTransfer.effectAllowed = 'link';
+        evt.dataTransfer.setData('id', item.id.toString())
+    }
+}
+
+const drop = async (evt, remove) => {
+    const segmentId = evt.dataTransfer?.getData('id');
+    if (remove) {
+        const index = training.value.segments.findIndex(e => e.id === segmentId);
+        training.value.segments.splice(index, 1);
+    }
+    else {
+        const segment = segments.value.find(e => e.id === segmentId);
+        training.value.segments.push(segment)
+    }
+}
+
+const availableSegments = computed(() => {
+    return segments.value.filter(e => training.value.segments.findIndex(x => x.id === e.id) < 0);
+})
+
+if (props.id) {
+    api.getTraining(props.id)
+        .then((data) => training.value = data)
+}
+getSegments();
+
 </script>
 
 <style scoped>
