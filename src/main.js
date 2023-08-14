@@ -29,7 +29,8 @@ Vue.use(Toast, {
   position: POSITION.BOTTOM_CENTER
 })
 
-
+import ConfirmDialog from '@/components/common/ConfirmDialog.vue';
+Vue.component('confirm-dialog', ConfirmDialog);
 
 Vue
   .mount('#app');

@@ -7,8 +7,8 @@
                         <v-text-field v-model="training.name" label="Name" outlined dense></v-text-field>
                     </div>
                     <v-btn :disabled="!(can('update', training, 'shareability') || can('create', training, 'shareability'))" icon="mdi-cog" flat round @click="showSharebility = !showSharebility"></v-btn>
-                    <v-btn :disabled="!(can('update', training) || can('create', training))" icon="mdi-content-save" flat @click="save"></v-btn>
-                    <v-btn v-if="training.id" :disabled="!can('delete', training)" icon="mdi-delete" color="negative" flat round @click="remove"></v-btn>
+                    <v-btn :disabled="!(can('update', training) || can('create', training))" icon="mdi-content-save" flat @click="save" :loading="loading.save"></v-btn>
+                    <v-btn v-if="training.id" :disabled="!can('delete', training)" icon="mdi-delete" color="negative" flat round @click="remove" :loading="loading.remove"></v-btn>
                 </div>
             </v-card-title>
             <v-card-text>
@@ -36,6 +36,8 @@
                 </div>
             </v-col>
         </v-row>
+
+        <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>
     </v-container>
 </template>
 
@@ -49,6 +51,8 @@ import { defineComponent } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useAbility } from '@casl/vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
+import { useConfirmDialog } from '@vueuse/core';
+
 
 export default defineComponent({
     components: { SegmentView, CDataIterator, Editor, Shareability },
@@ -56,7 +60,9 @@ export default defineComponent({
         const toast = useToast();
         const { can } = useAbility();
         const authStore = useAuthenticationStore();
-        return { toast, can, authStore }
+
+        const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
+        return { toast, can, authStore, isRevealed, reveal, confirm, cancel }
     },
     created () {
         if (this.id) {
@@ -77,38 +83,50 @@ export default defineComponent({
                 constructor: { modelName: 'shareable' }
             },
             segments: [],
-
-            loading: false,
             splitterValue: 50,
-            showSharebility: false
+            showSharebility: false,
+            loading: {
+                get: false,
+                save: false,
+                remove: false
+            }
         }
     },
     methods: {
         getSegments () {
-            this.loading = true;
+            this.loading.get = true;
             this.$api.getAllSegments()
                 .then((data) => this.segments = data.items)
-                .finally(() => this.loading = false)
+                .finally(() => this.loading.get = false)
         },
 
         save () {
+            this.loading.save = true;
             if (!this.training.id) {
                 this.$api.postTraining(this.training)
                     .then(resp => {
                         this.training.id = resp;
                         this.$router.push({ name: 'Trainings' })
                     })
-                    .catch(err => this.toast.error(err));
+                    .catch(err => this.toast.error(err))
+                    .finally(() => this.loading.save = false);
             }
             else {
                 this.$api.putTraining(this.training)
                     .then(() => this.$router.push({ name: 'Trainings' }))
-                    .catch(err => this.toast.error(err));
+                    .catch(err => this.toast.error(err))
+                    .finally(() => this.loading.save = false);
             }
         },
-        remove () {
-            this.$api.deleteTraining((this.training).id)
-                .then(() => this.$router.push({ name: 'Trainings'} ));
+        async remove () {
+            const { data } = await this.reveal();
+            console.log(data);
+            if (data) {
+                this.loading.remove = true;
+                this.$api.deleteTraining((this.training).id)
+                    .then(() => this.$router.push({ name: 'Trainings'} ))
+                    .finally(() => this.loading.remove = false);
+            }
         },
 
 
