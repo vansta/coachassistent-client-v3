@@ -49,6 +49,12 @@ const routes = [
     component: () => import('../components/Segment/Create.vue')
   },
   {
+    path: '/segments/details/:id',
+    name: "Segment",
+    props: true,
+    component: () => import('../components/Segment/Create.vue')
+  },
+  {
     path: '/trainings/create',
     name: "CreateTraining",
     component: () => import('../components/Training/Create.vue')
@@ -56,6 +62,12 @@ const routes = [
   {
     path: '/trainings/edit/:id',
     name: "EditTraining",
+    props: true,
+    component: () => import('../components/Training/Create.vue')
+  },
+  {
+    path: '/trainings/details/:id',
+    name: "Training",
     props: true,
     component: () => import('../components/Training/Create.vue')
   },

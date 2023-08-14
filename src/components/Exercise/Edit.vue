@@ -4,9 +4,9 @@
             <div class="d-flex">
                 <v-text-field class="flex-grow-1" v-model="editExercise.name" label="Name"></v-text-field>
                 <!-- <v-btn icon="mdi-open-in-new" flat round :to="{ name: 'EditExercise', params: { id: editExercise.id } }"></v-btn> -->
-                <v-btn v-if="mode == 'edit'" :disabled="!(can('update', editExercise, 'shareability') || can('create', editExercise, 'shareability'))" icon="mdi-cog" flat round @click="showSharebility = !showSharebility"></v-btn>
-                <v-btn :disabled="!(can('update', editExercise) || can('create', editExercise))" icon="mdi-content-save" flat round @click="save"></v-btn>
-                <v-btn v-if="editExercise.id && mode == 'edit'" :disabled="!can('delete', editExercise)" icon="mdi-delete" color="negative" flat round @click="remove"></v-btn>
+                <v-btn v-if="mode == 'edit'" :disabled="!(can('update', editExercise, 'shareability') || can('create', editExercise, 'shareability'))" icon="mdi-cog" variant="text" @click="showSharebility = !showSharebility"></v-btn>
+                <v-btn :disabled="!(can('update', editExercise) || can('create', editExercise))" icon="mdi-content-save" round @click="save" variant="text"></v-btn>
+                <v-btn v-if="editExercise.id && mode == 'edit'" :disabled="!can('delete', editExercise)" icon="mdi-delete" color="negative" round @click="remove" variant="text"></v-btn>
                 <v-btn icon="mdi-cancel" @click="cancel" flat variant="text"></v-btn>
             </div>
         </template>

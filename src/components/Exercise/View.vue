@@ -3,9 +3,9 @@
         <template #name>
             <div class="d-flex">
                 <div class="text-h6 text-left text-capitalize flex-grow-1">{{ exercise.name }}</div>
-                <v-btn v-if="mode == 'edit'" :disabled="!authStore.isAuthenticated" icon="mdi-content-copy" flat round @click="onCopy"></v-btn>
-                <v-btn :disabled="!(authStore.isAuthenticated && can('update', exercise))" icon="mdi-pencil" flat round @click="$emit('edit')"></v-btn>
-                <v-btn :icon="collapse ? 'mdi-chevron-down' : 'mdi-chevron-up'" variant="text" @click="collapse = !collapse"></v-btn>
+                <v-btn v-if="mode == 'edit'" :disabled="!authStore.isAuthenticated" icon="mdi-content-copy" variant="text" @click="onCopy"></v-btn>
+                <v-btn :disabled="!(authStore.isAuthenticated && can('update', exercise))" icon="mdi-pencil" variant="text" @click="$emit('edit')"></v-btn>
+                <v-btn v-if="mode == 'select'" :icon="collapse ? 'mdi-chevron-down' : 'mdi-chevron-up'" variant="text" @click="collapse = !collapse"></v-btn>
             </div>
         </template>
         <template #description>
@@ -13,7 +13,8 @@
                 <div v-html="exercise.description"></div>
                 <!-- <q-img :src="getImgSource(exercise.attachments[0])"/> -->
                 <v-carousel @click.stop>
-                    <v-carousel-item v-for="attachment in exercise.attachments" :key="attachment" :name="attachment" :src="$api.getAttachmentLink(attachment)">
+                    <v-carousel-item v-for="attachment in exercise.attachments" :key="attachment" :name="attachment" :src="$api.getAttachmentLink(attachment)" 
+                        >
                         <!-- <q-img :src="getImgSource(attachment)"/> -->
                     </v-carousel-item>
                 </v-carousel>

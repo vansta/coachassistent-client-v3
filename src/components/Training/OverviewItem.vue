@@ -3,8 +3,10 @@
         <v-card-title>
             <div class="d-flex">
                 <div class="flex-grow-1 text-h6 text-left text-capitalize">{{ training.name }}</div>
-                <v-btn icon="mdi-pencil" flat :to="{ name: 'EditTraining', params: { id: training.id }}"></v-btn>
-                <v-btn icon="mdi-delete" flat @click="remove"></v-btn>
+
+                <v-btn :disabled="!can('read', training)" icon="mdi-eye" variant="text" :to="{ name: 'Training', params: { id: training.id }}"></v-btn>
+                <v-btn :disabled="!can('update', training)" icon="mdi-pencil" variant="text" :to="{ name: 'EditTraining', params: { id: training.id }}"></v-btn>
+                <v-btn :disabled="!can('delete', training)" icon="mdi-delete" variant="text" @click="remove"></v-btn>
             </div>
             
         </v-card-title>
@@ -42,7 +44,9 @@
 <script setup>
 import { inject } from 'vue';
 import { useConfirmDialog } from '@vueuse/core';
+import { useAbility } from '@casl/vue';
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
+const { can } = useAbility();
 
 const api = inject('api');
 const props = defineProps({

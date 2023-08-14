@@ -25,6 +25,10 @@ export default createVuetify(
       VAutocomplete: {
         variant: 'outlined',
         density: 'compact'
+      },
+      VCombobox: {
+        variant: 'outlined',
+        density: 'compact'
       }
   },
     theme: {

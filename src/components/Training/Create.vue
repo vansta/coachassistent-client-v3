@@ -6,9 +6,9 @@
                     <div class="flex-grow-1">
                         <v-text-field v-model="training.name" label="Name" outlined dense></v-text-field>
                     </div>
-                    <v-btn :disabled="!(can('update', training, 'shareability') || can('create', training, 'shareability'))" icon="mdi-cog" flat round @click="showSharebility = !showSharebility"></v-btn>
-                    <v-btn :disabled="!(can('update', training) || can('create', training))" icon="mdi-content-save" flat @click="save" :loading="loading.save"></v-btn>
-                    <v-btn v-if="training.id" :disabled="!can('delete', training)" icon="mdi-delete" color="negative" flat round @click="remove" :loading="loading.remove"></v-btn>
+                    <v-btn :disabled="!(can('update', training, 'shareability') || can('create', training, 'shareability'))" icon="mdi-cog" variant="text" @click="showSharebility = !showSharebility"></v-btn>
+                    <v-btn :disabled="!(can('update', training) || can('create', training))" icon="mdi-content-save" variant="text" @click="save" :loading="loading.save"></v-btn>
+                    <v-btn v-if="training.id" :disabled="!can('delete', training)" icon="mdi-delete" color="negative" variant="text" @click="remove" :loading="loading.remove"></v-btn>
                 </div>
             </v-card-title>
             <v-card-text>
@@ -19,7 +19,7 @@
             </v-card-text>
         </v-card>
         <v-row>
-            <v-col>
+            <!-- <v-col>
                 <div class="drop-zone" @drop="drop($event)" @dragover.prevent @dragenter.prevent>
                     <segment-view v-for="segment in training.segments" :key="segment.id" class="q-ma-xs" :segment="segment"  :draggable="true" @dragstart="startToDrag($event, segment)"></segment-view>
                 </div>
@@ -27,13 +27,37 @@
             </v-col>
             <v-col>
                 <div class="drop-zone" @drop="drop($event, true)" @dragover.prevent @dragenter.prevent>
-                <c-data-iterator :cols="12" :items="availableSegments">
-                    <template #item="{ item }">
-                        <segment-view v-if="!item.edit" class="q-ma-xs" :segment="item" :draggable="true" @dragstart="startToDrag($event, item)"></segment-view>
-                    </template>
-                </c-data-iterator>
-                
+                    <c-data-iterator :cols="12" :items="availableSegments">
+                        <template #item="{ item }">
+                            <segment-view v-if="!item.edit" class="q-ma-xs" :segment="item" :draggable="true" @dragstart="startToDrag($event, item)"></segment-view>
+                        </template>
+                    </c-data-iterator>
                 </div>
+            </v-col> -->
+
+            <v-col>
+                <draggable v-model="training.segments" group="segments" item-key="id">
+                    <template #header>
+                        <v-alert type="info" variant="tonal">
+                            Drag your segments here
+                        </v-alert>
+                        
+                    </template>
+                    <template #item="{ element }">
+                        <segment-view :segment="element"></segment-view>
+                    </template>
+                </draggable>
+            </v-col>
+            <v-col v-show="(can('update', training) || can('create', training))">
+                <draggable v-model="segments" group="segments" item-key="id">
+                    <template #header>
+                        <v-alert variant="tonal">Drag the segments you want to include</v-alert>
+                        <!-- <exercise-search @search="getExercises"></exercise-search> -->
+                    </template>
+                    <template #item="{ element }">
+                        <segment-view :segment="element"></segment-view>
+                    </template>
+                </draggable>
             </v-col>
         </v-row>
 
@@ -46,6 +70,7 @@ import { ref, computed, inject } from 'vue'
 
 import SegmentView from '@/components/Segment/OverviewItem.vue'
 import CDataIterator from '@/components/common/CDataIterator.vue'
+import Draggable from 'vuedraggable';
 import Editor from '@tinymce/tinymce-vue';
 import Shareability from '@/components/common/Sharebility.vue';
 

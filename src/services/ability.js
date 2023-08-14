@@ -39,6 +39,9 @@ const buildRules = (permissions) => {
         if (p.condition === 'editors' && p.userId){
             conditions.editorIds = { $in: [p.userId] };
         }
+        if (p.action === 'create') {
+            conditions.id = { "$eq": null }
+        }
         
         if (conditions) {
             rule.conditions = conditions;

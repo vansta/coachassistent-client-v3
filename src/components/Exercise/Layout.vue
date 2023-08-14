@@ -1,5 +1,5 @@
 <template>
-    <v-card max-height="800" max-width="500">
+    <v-card class="my-card">
         <v-card-title>
             <slot name="name"><div class="text-h6 text-left text-capitalize">Name</div></slot>
         </v-card-title>
@@ -13,3 +13,9 @@
 <script setup>
 
 </script>
+
+<style scoped>
+.my-card {
+    height: 100%;
+}
+</style>

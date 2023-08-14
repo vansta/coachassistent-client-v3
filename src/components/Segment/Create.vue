@@ -6,9 +6,9 @@
                     <div class="flex-grow-1">
                         <v-text-field v-model="segment.name" label="Name" outlined dense></v-text-field>
                     </div>
-                    <v-btn :disabled="!(can('update', segment, 'shareability') || can('create', segment, 'shareability'))" icon="mdi-cog" flat round @click="showSharebility = !showSharebility"></v-btn>
-                    <v-btn :disabled="!(can('update', segment) || can('create', segment))" icon="mdi-content-save" flat @click="save"></v-btn>
-                    <v-btn v-if="segment.id" :disabled="!can('delete', segment)" icon="mdi-delete" color="negative" flat round @click="remove"></v-btn>
+                    <v-btn :disabled="!(can('update', segment, 'shareability') || can('create', segment, 'shareability'))" icon="mdi-cog" variant="text" @click="showSharebility = !showSharebility"></v-btn>
+                    <v-btn :disabled="!(can('update', segment) || can('create', segment))" icon="mdi-content-save" variant="text" @click="save"></v-btn>
+                    <v-btn v-if="segment.id" :disabled="!can('delete', segment)" icon="mdi-delete" color="negative" variant="text" @click="remove"></v-btn>
                 </div>
                 
             </v-card-title>
@@ -54,7 +54,7 @@
                     </template>
                 </draggable>
             </v-col>
-            <v-col>
+            <v-col v-show="(can('update', segment) || can('create', segment))">
                 <draggable v-model="exercises" group="exercises" item-key="id">
                     <template #header>
                         <v-alert variant="tonal">Drag the exercises you want to include</v-alert>

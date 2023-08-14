@@ -1,5 +1,5 @@
 <template>
-    <v-table>
+    <!-- <v-table>
         <thead>
             <tr>
                 <th :colspan="itemsPerRow">
@@ -24,7 +24,25 @@
                 </td>
             </tr>
         </tbody>
-    </v-table>
+    </v-table> -->
+    <v-container>
+        <v-row>
+            <v-col>
+                <slot name="header"></slot>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col>
+                <slot name="search"></slot>
+            </v-col>
+        </v-row>
+
+        <v-row v-for="n in items.length" :key="'row' + n">
+            <v-col v-for="(item, index) in itemsPerRowGroup(n - 1)" :key="'col' + index">
+                <slot name="item" :item="item"></slot>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>
