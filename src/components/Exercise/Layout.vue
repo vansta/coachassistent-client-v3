@@ -1,5 +1,5 @@
 <template>
-    <v-card min-width="350" max-width="500">
+    <v-card height="800" width="500">
         <v-card-title>
             <slot name="name"><div class="text-h6 text-left text-capitalize">Name</div></slot>
         </v-card-title>
@@ -24,9 +24,10 @@ export default defineComponent({
     },
 })
 </script>
-<!-- 
-<style lang="scss" scoped>
+
+<style scoped>
     .my-card {
-        min-width: 400px;
+        width: 100%;
+        height: 100%;
     }
-</style> -->
+</style>

@@ -34,35 +34,28 @@
                 </v-list-group>
             </v-list>
         </v-card-text>
+
+        <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>
     </v-card>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { inject } from 'vue';
+import { useConfirmDialog } from '@vueuse/core';
+const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 
-export default defineComponent({
-    name: 'OverviewItem',
-    props: {
-        training: {
-
-        }
-    },
-    components: {
-        
-    },
-    setup() {
-        return {
-            
-        }
-    },
-    methods: {
-        // edit (id) {
-        //     this
-        // },
-        remove () {
-            this.$api.deleteTraining((this.training).id)
-                .then(() => this.$emit('remove'));
-        }
-    }
+const api = inject('api');
+const props = defineProps({
+    training: Object
 })
+const emit = defineEmits(['remove']);
+
+const remove = async () =>  {
+    const { data } = await reveal();
+    if (data) {
+        api.deleteTraining(props.training.id)
+            .then(() => emit('remove'));
+    } 
+}
+
 </script>

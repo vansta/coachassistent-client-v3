@@ -12,16 +12,11 @@
     </v-row>
 </template>
 
-<script>
-export default {
-    setup() {
-        
-    },
-    props: {
-        modelValue: Object,
-        roles: Array,
-        users: Array,
-        readonly: Boolean
-    }
-}
+<script setup>
+const props = defineProps({
+    modelValue: Object,
+    roles: Array,
+    users: Array,
+    readonly: Boolean
+})
 </script>

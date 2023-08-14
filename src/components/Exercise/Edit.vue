@@ -6,7 +6,8 @@
                 <!-- <v-btn icon="mdi-open-in-new" flat round :to="{ name: 'EditExercise', params: { id: editExercise.id } }"></v-btn> -->
                 <v-btn :disabled="!(can('update', editExercise, 'shareability') || can('create', editExercise, 'shareability'))" icon="mdi-cog" flat round @click="showSharebility = !showSharebility"></v-btn>
                 <v-btn :disabled="!(can('update', editExercise) || can('create', editExercise))" icon="mdi-content-save" flat round @click="save"></v-btn>
-                <v-btn :disabled="!can('delete', editExercise)" icon="mdi-delete" color="negative" flat round @click="remove"></v-btn>
+                <v-btn v-if="editExercise.id" :disabled="!can('delete', editExercise)" icon="mdi-delete" color="negative" flat round @click="remove"></v-btn>
+                <v-btn icon="mdi-cancel" @click="cancel" flat variant="text"></v-btn>
             </div>
         </template>
         <template #description>
@@ -20,11 +21,9 @@
                         @click="toggle" class="mx-2">
                         <v-btn 
                             :icon="isSelected ? 'mdi-delete' : 'mdi-undo'"
-                            
-                            variant="text"
-                            location="top right"
+                            location="bottom right"
                             position="absolute"
-                            :color="isSelected ? 'error' : 'default'"
+                            :color="isSelected ? 'error' : 'primary'"
                             ></v-btn>
                     </v-img>
                 </v-slide-group-item>
@@ -102,6 +101,14 @@ export default defineComponent({
                     .catch(err => {
                         this.toast.error(err)
                     })
+            }
+            else {
+                this.$emit('remove');
+            }
+        },
+        cancel() {
+            if (this.editExercise.id) {
+                this.$emit('cancel');
             }
             else {
                 this.$emit('remove');

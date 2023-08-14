@@ -89,4 +89,8 @@ const router = createRouter({
   routes,
 });
 
+// router.beforeEach((to, from) => {
+//   document.title = 'Coachassistent ' + to.meta?.title ?? '';
+// })
+
 export default router;

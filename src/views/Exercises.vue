@@ -15,7 +15,7 @@
         </template>
         <template #item="{ item }">
             <exercise-view v-if="!item.edit" :exercise="item" @edit="editRow(item)" @copy="onCopy"></exercise-view>
-            <exercise-edit v-else :exercise="item" @save="saveRow(item)" @remove="removeRow(item)" :tags="tags"></exercise-edit>
+            <exercise-edit v-else :exercise="item" @save="saveRow(item)" @remove="removeRow(item)" @cancel="item.edit = false" :tags="tags"></exercise-edit>
         </template>
     </c-data-iterator>
 </template>
