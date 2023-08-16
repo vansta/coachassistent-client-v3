@@ -30,9 +30,9 @@ const useAuthenticationStore = defineStore('main', {
     },
     logout() {
       this.token = '';
-      this.permissions = '[]';
+      this.permissions = [];
       setToken('');
-      setPermissions('[]');
+      setPermissions([]);
     },
     setPermissions(permissions) {
       this.permissions = permissions;

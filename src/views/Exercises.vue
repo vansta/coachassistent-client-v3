@@ -8,7 +8,7 @@
         >
             <template #header>
                 <div class="d-flex justify-end">
-                    <v-btn @click="addRow" color="primary">{{t('action.create')}}</v-btn>
+                    <v-btn @click="addRow" color="primary" :disabled="!can('create', 'exercise')" prepend-icon="mdi-plus">{{t('action.create')}}</v-btn>
                     
                 </div>
             </template>
@@ -32,6 +32,7 @@ import Search from '@/components/Exercise/Search.vue';
 import { useAuthenticationStore } from '@/plugins/pinia';
 import { useWindowSize } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
+import { useAbility } from '@casl/vue';
 
 export default {
     components: {
@@ -48,8 +49,9 @@ export default {
         const authStore = useAuthenticationStore();
         const { width } = useWindowSize();
         const { t } =useI18n();
+        const { can } = useAbility();
 
-        return { authStore, width, t };
+        return { authStore, width, t, can };
     },
     data() {
         return {

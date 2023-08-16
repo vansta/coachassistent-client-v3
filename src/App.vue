@@ -6,7 +6,7 @@
       <v-spacer></v-spacer>
       <v-btn v-if="!authenticationStore.isAuthenticated" :to="{ name: 'Login' }">{{ t('login') }}</v-btn>
       <div v-else class="d-flex">
-        <v-chip class="flex-grow-1 mt-2">{{ authenticationStore.user.name }}</v-chip>
+        <v-chip class="flex-grow-1 mt-1 mr-4" :to="{ name: 'Profile', params: { id: authenticationStore.user.id } }" size="x-large" prepend-icon="mdi-account" color="primary" variant="outlined">{{ authenticationStore.user.name }}</v-chip>
         <v-btn icon="mdi-logout" @click="logout">
           <v-icon>mdi-logout</v-icon>
           <v-tooltip activator="parent" location="bottom" :text="t('logout')"></v-tooltip>
@@ -16,28 +16,6 @@
 
     <v-navigation-drawer v-model="drawer" rail expand-on-hover="">
       <v-list :items="filteredNavbar" nav></v-list>
-      <!-- <v-list>
-        <div v-for="(item, index) in navDrawerItems" :key="index">
-          <v-list-item :prepend-icon=""
-        </div>
-      </v-list> -->
-      <!-- <v-list>
-        <v-list-item prepend-icon="mdi-checkbox-blank" title="Trainings" :to="{ name: 'Trainings' }"></v-list-item>
-        <v-list-item prepend-icon="mdi-view-agenda" title="Segments" :to="{ name: 'Segments' }"></v-list-item>
-        <v-list-item prepend-icon="mdi-view-module" title="Exercises" :to="{ name: 'Exercises' }"></v-list-item>
-
-        <v-list-group value="Administration">
-          <template v-slot:activator="{ props }">
-            <v-list-item
-              v-bind="props"
-              prepend-icon="mdi-account-circle"
-              title="Administration"
-            ></v-list-item>
-          </template>
-          <v-list-item v-if="can('read', 'group')" prepend-icon="mdi-account-group" title="Groups" :to="{ name: 'Groups' }"></v-list-item>
-          <v-list-item v-if="can('read', 'role')" prepend-icon="mdi-security" title="Roles" :to="{ name: 'Roles' }"></v-list-item>
-        </v-list-group>
-      </v-list> -->
     </v-navigation-drawer>
 
     <v-main>
@@ -49,7 +27,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useAbility } from '@casl/vue';
 import { useRouter } from 'vue-router';
@@ -58,6 +36,10 @@ const { t } = useI18n();
 const authenticationStore = useAuthenticationStore();
 const { can } = useAbility();
 const router = useRouter();
+const ability = useAbility();
+import { buildRules } from '@/services/ability';
+
+const api = inject('api');
 
 const drawer = ref(true);
 const navDrawerItems = ref([
@@ -158,4 +140,12 @@ const filterItems = (items) => {
 }
 
 const filteredNavbar = computed(() => filterItems(navDrawerItems.value));
+api.getPermissions()
+  .then(resp => {
+    ability.update(buildRules(resp.data));
+    authenticationStore.setPermissions(resp.data);
+})
+// setInterval(() => {
+//   api.checkToken();
+// }, 60000);
 </script>

@@ -60,6 +60,15 @@ const createApiClient = (useAuthenticationStore) => {
 
 const createApiService = (apiClient) => {
     return {
+      async checkToken () {
+        try {
+          await apiClient.get('Authentication/CheckToken');
+          return true;
+        } 
+        catch (err) {
+          return false;
+        }
+    },
         getAllExercises: function (search) {
           return apiClient.get('Exercise/Overview', {
             // paramsSerializer: function (params) {
@@ -144,6 +153,12 @@ const createApiService = (apiClient) => {
         },
         getSubjects() {
           return apiClient.get('Permission/Subjects');
+        },
+        getUser() {
+          return apiClient.get('User/Profile');
+        },
+        getAvailableGroups() {
+          return apiClient.get('Group/Available');
         },
     
         //POST

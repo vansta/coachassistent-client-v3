@@ -5,11 +5,11 @@
                 <v-form>
                     <div class="d-flex">
                         <v-text-field v-model="group.name" :readonly="!can(action, group, 'name')" :label="t('field.name')" class="flex-grow-1"></v-text-field>
-                        <v-btn v-if="can(action, group)" icon="mdi-content-save" flat round @click="save"></v-btn>
+                        <v-btn v-if="can(action, group)" icon="mdi-content-save" flat round @click="save" :loading="loading.save"></v-btn>
                     </div>
                     
-                    <v-text-field v-model="group.description" :readonly="!can(action, group, 'description')" :label="t('description')"></v-text-field>
-                    <v-select v-model="group.tags" :readonly="!can(action, group, 'tags')" :label="t('tags')" :items="tags" multiple></v-select>
+                    <v-text-field v-model="group.description" :readonly="!can(action, group, 'description')" :label="t('field.description')"></v-text-field>
+                    <v-select v-model="group.tags" :readonly="!can(action, group, 'tags')" :label="t('field.tags')" :items="tags" multiple></v-select>
                 </v-form>
             </v-card-text>
         </v-card>
@@ -69,7 +69,10 @@ export default {
             tags: [],
             roles: [],
             users: [],
-            action: 'create'
+            action: 'create',
+            loading: {
+                save: false
+            }
         }
     },
     methods: {
@@ -103,12 +106,15 @@ export default {
         },
 
         save() {
+            this.loading.save = true;
             if (this.group.id) {
-                this.$api.putGroup(this.group);
+                this.$api.putGroup(this.group)
+                    .finally(() => this.loading.save = false);
             }
             else {
                 this.$api.postGroup(this.group)
-                .then(resp => this.$router.push({ name: 'EditGroup', params: { id: resp.data }}));
+                    .then(resp => this.$router.push({ name: 'EditGroup', params: { id: resp.data }}))
+                    .finally(() => this.loading.save = false);
             }
         }
     }

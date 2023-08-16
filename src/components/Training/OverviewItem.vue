@@ -4,7 +4,7 @@
             <div class="d-flex">
                 <div class="flex-grow-1 text-h6 text-left text-capitalize">{{ training.name }}</div>
 
-                <v-btn :disabled="!can('read', training)" icon="mdi-eye" variant="text" :to="{ name: 'Training', params: { id: training.id }}">
+                <v-btn icon="mdi-eye" variant="text" :to="{ name: 'Training', params: { id: training.id }}">
                     <v-icon>mdi-eye</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.view')"></v-tooltip>
                 </v-btn>

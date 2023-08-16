@@ -2,7 +2,7 @@
     <c-data-iterator :cols="4" :items="segments" :loading="loading" :totalCount="totalCount">
         <template #header>
             <div class="d-flex justify-end">
-                <v-btn :to="{ name: 'CreateSegment' }" color="primary">{{t('action.create')}}</v-btn>
+                <v-btn :to="{ name: 'CreateSegment' }" color="primary" :disabled="!can('create', 'exercise')" prepend-icon="mdi-plus">{{t('action.create')}}</v-btn>
             </div>
         </template>
         <template #search>
@@ -21,14 +21,16 @@ import Search from '@/components/Exercise/Search.vue';
 
 import { defineComponent } from 'vue'
 import { useI18n } from 'vue-i18n';
+import { useAbility } from '@casl/vue';
 
 
 export default defineComponent({
   components: { OverviewItem, CDataIterator, Search },
     setup() {
         const { t } = useI18n();
+        const { can } = useAbility();
         return {
-            t
+            t, can
         }  
     },
     created () {

@@ -4,7 +4,7 @@
             <v-card-title>
                 <div class="d-flex">
                     <div class="flex-grow-1">
-                        <v-text-field v-model="segment.name" :label="t('field.name')" outlined dense></v-text-field>
+                        <v-text-field v-model="segment.name" :label="t('field.name')" :readonly="!(can('update', segment, 'name') || can('create', segment, 'name'))"></v-text-field>
                     </div>
                     <v-btn :disabled="!(can('update', segment, 'shareability') || can('create', segment, 'shareability'))" icon="mdi-cog" variant="text" @click="showSharebility = !showSharebility">
                         <v-icon>mdi-cog</v-icon>
@@ -29,26 +29,6 @@
             </v-card-text>
         </v-card>
         <v-row>
-            <!-- <v-col>
-                <v-card class="drop-zone" @drop="drop($event)" @dragover.prevent @dragenter.prevent>
-                    <v-card-title>
-                        Drop your exercises here
-                    </v-card-title>
-                    <exercise-view v-for="exercise in segment.exercises" :key="exercise.id" class="q-ma-xs" :exercise="exercise"  :draggable="true" @dragstart="startToDrag($event, exercise)"></exercise-view>
-                </v-card>
-                
-            </v-col>
-            <v-col>
-                <div>Exercises</div>
-                <div class="drop-zone" @drop="drop($event, true)" @dragover.prevent @dragenter.prevent>
-                <c-data-iterator :cols="12" :items="availableExercises">
-                    <template #item="{ item }">
-                        <exercise-view v-if="!item.edit" class="q-ma-xs" :exercise="item" :draggable="true" @dragstart="startToDrag($event, item)"></exercise-view>
-                    </template>
-                </c-data-iterator>
-                
-                </div>
-            </v-col> -->
             <v-col>
                 <draggable v-model="segment.exercises" group="exercises" item-key="id">
                     <template #header>
@@ -120,7 +100,7 @@ export default defineComponent({
                 name: '',
                 description: '',
                 exercises: [],
-                editorIds: [this.authStore.user.id],
+                editorIds: [this.authStore.user?.id],
                 constructor: { modelName: 'shareable' }
             },
             exercises: [],

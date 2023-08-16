@@ -16,11 +16,11 @@ const messages = {
       groups: 'Groepen',
       roles: 'Rollen',
       editors: 'Beheerders',
+      profile: 'Profiel',
 
       user: 'Gebruiker',
       role: 'Rol',
       members: 'Leden',
-
       
       tooltip: {
         shareability: 'Pas aan wie dit kan zien',
@@ -74,7 +74,9 @@ const messages = {
 
       username: 'Gebruikersnaam',
       password: 'Wachtwoord',
-      email: 'Email'
+      email: 'Email',
+
+      save: 'Opslaan'
     }
   };
 

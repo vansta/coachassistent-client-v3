@@ -3,7 +3,7 @@
         <v-card-title>
             <div class="d-flex">
                 <div class="flex-grow-1 text-h6 text-left text-capitalize">{{ segment.name }}</div>
-                <v-btn :disabled="!can('read', segment)" icon="mdi-eye" variant="text" :to="{ name: 'Segment', params: { id: segment.id }}">
+                <v-btn icon="mdi-eye" variant="text" :to="{ name: 'Segment', params: { id: segment.id }}">
                     <v-icon>mdi-eye</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.view')"></v-tooltip>
                 </v-btn>
