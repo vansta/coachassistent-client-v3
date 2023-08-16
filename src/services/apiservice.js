@@ -75,8 +75,8 @@ const createApiService = (apiClient) => {
             })
         },
     
-        getAllSegments () {
-            return apiClient.get('Segment/Overview')
+        getAllSegments (search) {
+            return apiClient.get('Segment/Overview', { params: search })
             .then(resp => resp.data)
         },
     
@@ -87,8 +87,8 @@ const createApiService = (apiClient) => {
                 .then(resp => resp.data)
         },
 
-        getAllTrainings () {
-          return apiClient.get('Training/Overview')
+        getAllTrainings (search) {
+          return apiClient.get('Training/Overview', { params: search })
           .then(resp => resp.data)
         },
     

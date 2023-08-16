@@ -4,7 +4,7 @@
             <v-form>
                 <v-row>
                     <v-col>
-                        <v-text-field v-model="search.search" label="Name" @input="emitSearch"></v-text-field>
+                        <v-text-field v-model="search.search" label="Name" @update:model-value="emitSearch" clearable></v-text-field>
                     </v-col>
                     <v-col>
                         <v-autocomplete v-model="search.tags" label="Tags" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch">
