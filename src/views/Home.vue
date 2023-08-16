@@ -30,39 +30,7 @@ export default {
     },
     data() {
         return {
-            exercises: [
-                {
-                    id: '1',
-                    name: 'test',
-                    description: 'test description',
-                    attachments: []
-                },
-                {
-                    id: '2',
-                    name: 'test',
-                    attachments: []
-                },
-                {
-                    id: '3',
-                    name: 'test',
-                    attachments: []
-                },
-                {
-                    id: '4',
-                    name: 'test',
-                    attachments: []
-                },
-                {
-                    id: '5',
-                    name: 'test',
-                    attachments: []
-                },
-                {
-                    id: '6',
-                    name: 'test',
-                    attachments: []
-                }
-            ]
+            exercises: []
         }
     },
     methods: {

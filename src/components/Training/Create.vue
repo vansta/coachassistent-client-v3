@@ -66,7 +66,7 @@
 </template>
 
 <script setup>
-import { ref, computed, inject } from 'vue'
+import { ref, computed, inject } from 'vue';
 
 import SegmentView from '@/components/Segment/OverviewItem.vue'
 import CDataIterator from '@/components/common/CDataIterator.vue'

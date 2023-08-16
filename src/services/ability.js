@@ -18,7 +18,6 @@ const buildRules = (permissions) => {
             return [];
         }
     }
-    console.log(permissions, !permissions, permissions.length, typeof permissions);
     return permissions.map(p => {
         var rule = {
             action: p.action,

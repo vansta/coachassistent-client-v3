@@ -42,33 +42,35 @@
                 <slot name="item" :item="item"></slot>
             </v-col>
         </v-row>
+        <v-row>
+            <v-col>
+                <v-pagination v-model="currentPage" :length="totalCount / itemsPerRow" rounded></v-pagination>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
-<script>
-export default {
-    setup() {
-        
-    },
-    props: {
-        items: Array,
-        cols: Number,
-        loading: Boolean
-    },
-    methods: {
-        itemsPerRowGroup (rowIndex) {
-            if (this.items && this.items.length > 0){
-                var fromIndex = rowIndex * this.itemsPerRow;
-                var toIndex = fromIndex + this.itemsPerRow;
-                return this.items.slice(fromIndex, toIndex);
-            }
-        }
-    },
-    computed: {
-        itemsPerRow () {
-            return 12 / this.cols
-        },
-        
+<script setup>
+import { ref, computed } from 'vue';
+const props = defineProps({
+    items: Array,
+    cols: Number,
+    loading: Boolean,
+    totalCount: {
+        type: Number,
+        default: 0
     }
-}
+});
+const currentPage = ref(1);
+
+const itemsPerRowGroup = (rowIndex) => {
+    if (props.items && props.items.length > 0){
+        var fromIndex = rowIndex * itemsPerRow.value;
+        var toIndex = fromIndex + itemsPerRow.value;
+        return props.items.slice(fromIndex, toIndex);
+    }
+} 
+
+const itemsPerRow = computed(() => 12 / props.cols);
+const length = computed(() => props.totalCount / itemsPerRow.value)
 </script>

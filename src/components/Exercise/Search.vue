@@ -8,9 +8,6 @@
                     </v-col>
                     <v-col>
                         <v-autocomplete v-model="search.tags" label="Tags" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch">
-                            <!-- <template v-slot:append>
-                                <v-btn icon="mdi-refresh" size="30"></v-btn>
-                            </template> -->
                         </v-autocomplete>
                     </v-col>
                 </v-row>
@@ -19,38 +16,25 @@
     </v-card>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, inject } from 'vue';
+
 var searchTimeOut;
-export default {
-    // setup() {
-    //     const search = reactive({ name: '' })
+const api = inject('api');
 
-    //     return {
-    //         search
-    //     }
-    // },
-    created () {
-        this.getTags();
-    },
+const emit = defineEmits(['search']);
+const search = ref({ search: '', tags: [] });
+const tags = ref([]);
 
-    data() {
-        return {
-            search: { search: '', tags: [] },
-            tags: []
-        }
-    },
-
-    methods: {
-        emitSearch() {
-            clearTimeout(searchTimeOut);
-            searchTimeOut = setTimeout(() => {
-                this.$emit('search', this.search);
-            }, 500);
-        },
-        getTags() {
-            this.$api.getTags()
-                .then(resp => this.tags = resp.data);
-        }
-    }
+const emitSearch = () => {
+    clearTimeout(searchTimeOut);
+    searchTimeOut = setTimeout(() => {
+        emit('search', search.value);
+    }, 500);
 }
+const getTags = () => {
+    api.getTags()
+                .then(resp => tags.value = resp.data);
+}
+getTags();
 </script>

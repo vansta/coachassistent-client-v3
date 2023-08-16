@@ -12,23 +12,28 @@
                 {{ role.description }}
             </v-card-text>
             <v-card-text v-if="role.expand">
-                <permissions-overview :permissions="role.rolePermissions" :actions="actions" :subjects="subjects"></permissions-overview>
+                <permissions-overview :role="role" :permissions="role.rolePermissions" :actions="actions" :subjects="subjects"></permissions-overview>
             </v-card-text>
             <v-card-actions>
-                <v-btn @click="save(index)"><v-icon start>mdi-content-save</v-icon>Save</v-btn>
+                <v-btn :disabled="!can('update', role)" @click="save(index)"><v-icon start>mdi-content-save</v-icon>Save</v-btn>
             </v-card-actions>
         </v-card>
     </v-container>
 </template>
 
 <script>
+import { useAbility } from '@casl/vue';
 import PermissionsOverview from '../Permissions/Overview.vue'
+
 export default {
     components: {
         PermissionsOverview
     },
     setup() {
-        
+        const { can } = useAbility();
+        return {
+            can
+        }
     },
     mounted() {
         this.getRoles();

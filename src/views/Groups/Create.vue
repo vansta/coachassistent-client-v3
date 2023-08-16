@@ -8,7 +8,7 @@
                         <v-btn v-if="can(action, group)" icon="mdi-content-save" flat round @click="save"></v-btn>
                     </div>
                     
-                    <v-text-field v-model="group.description" :readonly="!can(action, group, 'name')" label="Description"></v-text-field>
+                    <v-text-field v-model="group.description" :readonly="!can(action, group, 'description')" label="Description"></v-text-field>
                     <v-select v-model="group.tags" :readonly="!can(action, group, 'tags')" label="Tags" :items="tags" multiple></v-select>
                 </v-form>
             </v-card-text>

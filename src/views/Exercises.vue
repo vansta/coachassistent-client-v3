@@ -4,6 +4,7 @@
             :items="exercises"
             :cols="12 / Math.floor(width / 500)"
             :loading="loading"
+            :totalCount="totalCount"
         >
             <template #header>
                 <div class="d-flex justify-end">
@@ -52,7 +53,8 @@ export default {
         return {
             exercises: [],
             tags: [],
-            loading: false
+            loading: false,
+            totalCount: 0
         }
     },
     methods: {
@@ -66,6 +68,7 @@ export default {
             this.$api.getAllExercises(search)
                 .then(resp => {
                     this.exercises = resp.data.items;
+                    this.totalCount = resp.data.totalCount;
                 })
                 .finally(() => this.loading = false);
         },

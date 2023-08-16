@@ -3,8 +3,14 @@
         <template #name>
             <div class="d-flex">
                 <div class="text-h6 text-left text-capitalize flex-grow-1">{{ exercise.name }}</div>
-                <v-btn v-if="mode == 'edit'" :disabled="!authStore.isAuthenticated" icon="mdi-content-copy" variant="text" @click="onCopy"></v-btn>
-                <v-btn :disabled="!(authStore.isAuthenticated && can('update', exercise))" icon="mdi-pencil" variant="text" @click="$emit('edit')"></v-btn>
+                <v-btn v-if="mode == 'edit'" :disabled="!authStore.isAuthenticated" icon="mdi-content-copy" variant="text" @click="onCopy">
+                    <v-icon>mdi-content-copy</v-icon>
+                    <v-tooltip activator="parent" location="bottom" text="Copy this exercise"></v-tooltip>
+                </v-btn>
+                <v-btn :disabled="!(authStore.isAuthenticated && can('update', exercise))" icon="mdi-pencil" variant="text" @click="$emit('edit')">
+                    <v-icon>mdi-pencil</v-icon>
+                    <v-tooltip activator="parent" location="bottom" text="Edit this exercise"></v-tooltip>
+                </v-btn>
                 <v-btn v-if="mode == 'select'" :icon="collapse ? 'mdi-chevron-down' : 'mdi-chevron-up'" variant="text" @click="collapse = !collapse"></v-btn>
             </div>
         </template>

@@ -36,11 +36,11 @@
             </v-col>
             <v-col v-for="subject in subjects" :key="subject">
                 <div v-if="hasPermission(action, subject)" class="d-flex">
-                    <v-checkbox-btn v-model="dummyTrue" @click="onToggle(action, subject)" class="pe-2"></v-checkbox-btn>
-                    <v-select v-model="getPermission(action, subject).fields" :items="subject.fields" label="Fields" hide-details multiple></v-select>
+                    <v-checkbox-btn :disabled="!can('update', role)" v-model="dummyTrue" @click="onToggle(action, subject)" class="pe-2"></v-checkbox-btn>
+                    <v-select :disabled="!can('update', role)" v-model="getPermission(action, subject).fields" :items="subject.fields" label="Fields" hide-details multiple></v-select>
                 </div>
                 <div v-else class="d-flex">
-                    <v-checkbox-btn @click="onToggle(action, subject)" class="pe-2"></v-checkbox-btn>
+                    <v-checkbox-btn :disabled="!can('update', role)" @click="onToggle(action, subject)" class="pe-2"></v-checkbox-btn>
                 </div>
             </v-col>
         </v-row>
@@ -48,36 +48,24 @@
 </template>
 
 <script>
-const distinct = (value, index, self) => {
-    return self.indexOf(value) === index;
-}
+import { useAbility } from '@casl/vue';
 export default {
     setup() {
-        
+        const { can } = useAbility();
+        return { can };
     },
     props: {
         permissions: Array,
         actions: Array,
-        subjects: Array
+        subjects: Array,
+        role: Object
     },
     created () {
-        // this.permissions.forEach(p => {
-        //     var dummyAction = this.dummy[p.actionId];
-        //     if (!dummyAction){
-        //         dummyAction = {};
-        //         this.dummy[p.actionId] = dummyAction;
-        //     }
-        //     var dummySubject = dummyAction[p.subjectId];
-        //     if (!dummySubject) {
-        //         dummySubject = true;
-        //         dummyAction[p.subjectId] = dummySubject;
-        //     }
-        // })
+
     },
     data () {
         return {
             dummyTrue: true
-            // permissions: []
         }
     },
     methods: {

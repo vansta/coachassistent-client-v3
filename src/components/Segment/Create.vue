@@ -6,9 +6,16 @@
                     <div class="flex-grow-1">
                         <v-text-field v-model="segment.name" label="Name" outlined dense></v-text-field>
                     </div>
-                    <v-btn :disabled="!(can('update', segment, 'shareability') || can('create', segment, 'shareability'))" icon="mdi-cog" variant="text" @click="showSharebility = !showSharebility"></v-btn>
-                    <v-btn :disabled="!(can('update', segment) || can('create', segment))" icon="mdi-content-save" variant="text" @click="save"></v-btn>
-                    <v-btn v-if="segment.id" :disabled="!can('delete', segment)" icon="mdi-delete" color="negative" variant="text" @click="remove"></v-btn>
+                    <v-btn :disabled="!(can('update', segment, 'shareability') || can('create', segment, 'shareability'))" icon="mdi-cog" variant="text" @click="showSharebility = !showSharebility">
+                        <v-icon>mdi-cog</v-icon>
+                        <v-tooltip activator="parent" location="bottom" text="Edit who can see this segment"></v-tooltip>
+                    </v-btn>
+                    <v-btn :disabled="!(can('update', segment) || can('create', segment))" icon="mdi-content-save" variant="text" @click="save">
+                    </v-btn>
+                    <v-btn v-if="segment.id" :disabled="!can('delete', segment)" icon="mdi-delete" color="negative" variant="text" @click="remove">
+                        <v-icon>mdi-delete</v-icon>
+                        <v-tooltip activator="parent" location="bottom" text="Delete this segment"></v-tooltip>
+                    </v-btn>
                 </div>
                 
             </v-card-title>
