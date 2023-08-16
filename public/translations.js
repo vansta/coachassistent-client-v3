@@ -17,7 +17,11 @@ const messages = {
       roles: 'Rollen',
       editors: 'Beheerders',
 
-      tags: 'Tags',
+      user: 'Gebruiker',
+      role: 'Rol',
+      members: 'Leden',
+
+      
       tooltip: {
         shareability: 'Pas aan wie dit kan zien',
         remove: 'Verwijderen',
@@ -27,9 +31,7 @@ const messages = {
         save: 'Opslaan',
         view: 'Details'
       },
-      share_with: 'Deel met',
-      name: 'Naam',
-      description: 'Omschrijving',
+      
       sharingLevel: {
         0: 'Enkel mezelf',
         1: 'Groepen',
@@ -43,7 +45,36 @@ const messages = {
       cancel: 'Annuleren',
 
       drag_to: 'Sleep naar hier',
-      drag_from: 'Sleep van hier'
+      drag_from: 'Sleep van hier',
+
+      action: {
+        create: 'Aanmaken',
+        read: 'Lezen',
+        update: 'Aanpassen',
+        delete: 'Verwijderen'
+      },
+      subject: {
+        shareable: 'Item',
+        group: 'Groep',
+        role: 'Role'
+      },
+      field: {
+        name: 'Naam',
+        description: 'Omschrijving',
+        shareability: 'Deel met',
+        attachments: 'Bijlagen',
+        member: 'Lid',
+        tags: 'Tags',
+      },
+
+      welcome: 'Welkom',
+      login: 'Inloggen',
+      logout: 'Uitloggen',
+      register: 'Registreren',
+
+      username: 'Gebruikersnaam',
+      password: 'Wachtwoord',
+      email: 'Email'
     }
   };
 

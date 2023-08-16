@@ -4,10 +4,10 @@
             <v-form>
                 <v-row>
                     <v-col>
-                        <v-text-field v-model="search.search" :label="t('name')" @update:model-value="emitSearch" clearable></v-text-field>
+                        <v-text-field v-model="search.search" :label="t('field.name')" @update:model-value="emitSearch" clearable></v-text-field>
                     </v-col>
                     <v-col>
-                        <v-autocomplete v-model="search.tags" :label="t('tags')" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch">
+                        <v-autocomplete v-model="search.tags" :label="t('field.tags')" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch">
                         </v-autocomplete>
                     </v-col>
                 </v-row>

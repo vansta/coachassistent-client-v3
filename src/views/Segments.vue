@@ -2,7 +2,7 @@
     <c-data-iterator :cols="4" :items="segments" :loading="loading" :totalCount="totalCount">
         <template #header>
             <div class="d-flex justify-end">
-                <v-btn :to="{ name: 'CreateSegment' }" color="primary">Create segment</v-btn>
+                <v-btn :to="{ name: 'CreateSegment' }" color="primary">{{t('action.create')}}</v-btn>
             </div>
         </template>
         <template #search>
@@ -20,15 +20,16 @@ import CDataIterator from '@/components/common/CDataIterator.vue';
 import Search from '@/components/Exercise/Search.vue';
 
 import { defineComponent } from 'vue'
+import { useI18n } from 'vue-i18n';
 
 
 export default defineComponent({
   components: { OverviewItem, CDataIterator, Search },
     setup() {
-        // const exercises: Array<IExercise> = ref([]);
-      return {
-        //   exercises
-      }  
+        const { t } = useI18n();
+        return {
+            t
+        }  
     },
     created () {
         this.getSegments();

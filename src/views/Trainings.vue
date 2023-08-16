@@ -2,7 +2,7 @@
     <c-data-iterator :cols="4" :items="trainings" :loading="loading" :totalCount="totalCount">
         <template #header>
             <div class="d-flex justify-end">
-                <v-btn :to="{ name: 'CreateTraining' }" color="primary">Create training</v-btn>
+                <v-btn :to="{ name: 'CreateTraining' }" color="primary">{{ t('action.create') }}</v-btn>
             </div>
         </template>
         <template #search>
@@ -19,6 +19,8 @@ import { ref, inject } from 'vue'
 import OverviewItem from '@/components/Training/OverviewItem.vue'
 import CDataIterator from '@/components/common/CDataIterator.vue';
 import Search from '@/components/Exercise/Search.vue';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const api = inject('api');
 

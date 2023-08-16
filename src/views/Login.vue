@@ -1,20 +1,20 @@
 <template>
     <v-card>
         <v-card-title>
-            Welcome
+            {{ t('welcome') }}
         </v-card-title>
         <v-card-text>
             <v-form v-model="valid">
-                <v-text-field v-model="credentials.userName" label="Username"></v-text-field>
-                <v-text-field v-model="credentials.password" label="Password" type="password"></v-text-field>
+                <v-text-field v-model="credentials.userName" :label="t('username')"></v-text-field>
+                <v-text-field v-model="credentials.password" :label="t('password')" type="password"></v-text-field>
             </v-form>
         </v-card-text>
         <v-card-actions>
             <v-btn @click="login" :loading="loading">
-                Login
+                {{ t('login') }}
             </v-btn>
             <v-btn :to="{ name: 'Register' }">
-                Register
+                {{ t('register') }}
             </v-btn>
         </v-card-actions>
     </v-card>
@@ -25,12 +25,14 @@ import { useAuthenticationStore } from '@/plugins/pinia.js'
 import { useToast } from 'vue-toastification';
 import { useAbility } from '@casl/vue';
 import { buildRules } from '@/services/ability';
+import { useI18n } from 'vue-i18n';
 export default {
     setup () {
         const authenticationStore = useAuthenticationStore();
         const toast = useToast();
         const ability = useAbility();
-        return { authenticationStore, toast, ability }
+        const { t } = useI18n();
+        return { authenticationStore, toast, ability, t }
     },
     data() {
         return {

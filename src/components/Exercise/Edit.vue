@@ -2,7 +2,7 @@
     <layout>
         <template #name>
             <div class="d-flex">
-                <v-text-field class="flex-grow-1" v-model="editExercise.name" :label="t('name')"></v-text-field>
+                <v-text-field class="flex-grow-1" v-model="editExercise.name" :label="t('field.name')"></v-text-field>
                 <!-- <v-btn icon="mdi-open-in-new" flat round :to="{ name: 'EditExercise', params: { id: editExercise.id } }"></v-btn> -->
                 <v-btn v-if="mode == 'edit'" :disabled="!(can('update', editExercise, 'shareability') || can('create', editExercise, 'shareability'))" icon variant="text" @click="showSharebility = !showSharebility">
                     <v-icon>mdi-cog</v-icon>
@@ -24,7 +24,7 @@
         </template>
         <template #description>
             <editor v-model="editExercise.description" api-key="no-api-key"/>
-            <v-combobox v-model="editExercise.tags" :label="t('tags')" :items="tags" multiple></v-combobox>
+            <v-combobox v-model="editExercise.tags" :label="t('field.tags')" :items="tags" multiple></v-combobox>
             <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
                 <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment" v-slot="{ isSelected, toggle }" :value="attachment">
                     <v-img 
@@ -40,7 +40,7 @@
                     </v-img>
                 </v-slide-group-item>
             </v-slide-group>
-            <v-file-input outlined v-model="editExercise.addedAttachments" multiple :label="t('images')">
+            <v-file-input outlined v-model="editExercise.addedAttachments" multiple :label="t('field.attachments')">
                 <template v-slot:prepend>
                     <v-icon>mdi-content-save</v-icon>
                 </template>

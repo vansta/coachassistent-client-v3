@@ -2,18 +2,18 @@
     <v-form>
         <v-card>
             <v-card-title>
-                Welcome
+                {{ t('welcome') }}
             </v-card-title>
             <v-card-text>
-                <v-text-field v-model="user.userName" label="Username"></v-text-field>
-                <v-text-field v-model="user.email" label="Email"></v-text-field>
-                <v-text-field v-model="user.password" label="Password" type="password"></v-text-field>
+                <v-text-field v-model="user.userName" :label="t('username')"></v-text-field>
+                <v-text-field v-model="user.email" :label="t('email')"></v-text-field>
+                <v-text-field v-model="user.password" :label="t('password')" type="password"></v-text-field>
 
-                <v-select v-model="user.groups" :items="availableGroups" multiple label="Groups"></v-select>
+                <v-select v-model="user.groups" :items="availableGroups" multiple :label="t('groups')"></v-select>
             </v-card-text>
             <v-card-actions>
                 <v-btn @click="register" :loading="loading">
-                    Register
+                    {{ t('register') }}
                 </v-btn>
             </v-card-actions>
         </v-card>
@@ -23,11 +23,13 @@
 <script>
 import { useAuthenticationStore } from '@/plugins/pinia.js'
 import { useToast } from 'vue-toastification';
+import { useI18n } from 'vue-i18n';
 export default {
     setup () {
         const authenticationStore = useAuthenticationStore();
         const toast = useToast();
-        return { authenticationStore, toast }
+        const { t } = useI18n();
+        return { authenticationStore, toast, t }
     },
     data() {
         return {

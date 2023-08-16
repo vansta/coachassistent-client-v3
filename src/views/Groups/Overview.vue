@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-btn :to="{ name: 'CreateGroup' }">Create</v-btn>
+        <v-btn :to="{ name: 'CreateGroup' }">{{ t('create') }}</v-btn>
         <c-data-table :items="groups" :headers="headers" @click:row="onRowClick">
 
     </c-data-table>
@@ -11,6 +11,7 @@
 <script>
 import CDataTable from '@/components/common/CDataTable.vue';
 import { useAuthenticationStore } from '@/plugins/pinia';
+import { useI18n } from 'vue-i18n';
 
 export default {
     components: {
@@ -21,8 +22,9 @@ export default {
     },
     setup() {
         const authStore = useAuthenticationStore();
+        const { t } = useI18n();
 
-        return { authStore };
+        return { authStore, t };
     },
     data() {
         return {

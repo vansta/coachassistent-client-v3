@@ -4,18 +4,18 @@
             <v-card-text>
                 <v-form>
                     <div class="d-flex">
-                        <v-text-field v-model="group.name" :readonly="!can(action, group, 'name')" label="Name" class="flex-grow-1"></v-text-field>
+                        <v-text-field v-model="group.name" :readonly="!can(action, group, 'name')" :label="t('field.name')" class="flex-grow-1"></v-text-field>
                         <v-btn v-if="can(action, group)" icon="mdi-content-save" flat round @click="save"></v-btn>
                     </div>
                     
-                    <v-text-field v-model="group.description" :readonly="!can(action, group, 'description')" label="Description"></v-text-field>
-                    <v-select v-model="group.tags" :readonly="!can(action, group, 'tags')" label="Tags" :items="tags" multiple></v-select>
+                    <v-text-field v-model="group.description" :readonly="!can(action, group, 'description')" :label="t('description')"></v-text-field>
+                    <v-select v-model="group.tags" :readonly="!can(action, group, 'tags')" :label="t('tags')" :items="tags" multiple></v-select>
                 </v-form>
             </v-card-text>
         </v-card>
         <v-card>
             <v-card-title>
-                Members
+                {{ t('members') }}
             </v-card-title>
             <v-card-text>
                 <v-row v-for="(member, index) in group.members" :key="index">
@@ -37,6 +37,7 @@
 import EditMembership from '@/components/Membership/Edit.vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useAbility } from '@casl/vue';
+import { useI18n } from 'vue-i18n';
 export default {
     components: {
         EditMembership
@@ -44,8 +45,9 @@ export default {
     setup() {
         const authenticationStore = useAuthenticationStore();
         const { can } = useAbility();
+        const { t } = useI18n();
 
-    return { authenticationStore, can }
+    return { authenticationStore, can, t }
     },
     props: {
         id: [Number, String]

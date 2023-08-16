@@ -4,10 +4,13 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-app-bar-title>Coach Assistent</v-app-bar-title>
       <v-spacer></v-spacer>
-      <v-btn v-if="!authenticationStore.isAuthenticated" :to="{ name: 'Login' }">Login</v-btn>
+      <v-btn v-if="!authenticationStore.isAuthenticated" :to="{ name: 'Login' }">{{ t('login') }}</v-btn>
       <div v-else class="d-flex">
-        <v-chip class="flex-grow-1">{{ authenticationStore.user.name }}</v-chip>
-        <v-btn icon="mdi-logout" @click="logout"></v-btn>
+        <v-chip class="flex-grow-1 mt-2">{{ authenticationStore.user.name }}</v-chip>
+        <v-btn icon="mdi-logout" @click="logout">
+          <v-icon>mdi-logout</v-icon>
+          <v-tooltip activator="parent" location="bottom" :text="t('logout')"></v-tooltip>
+        </v-btn>
       </div>
     </v-app-bar>
 

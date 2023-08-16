@@ -8,7 +8,7 @@
         >
             <template #header>
                 <div class="d-flex justify-end">
-                    <v-btn @click="addRow" color="primary">Add exercise</v-btn>
+                    <v-btn @click="addRow" color="primary">{{t('action.create')}}</v-btn>
                     
                 </div>
             </template>
@@ -31,6 +31,7 @@ import ExerciseEdit from '@/components/Exercise/Edit.vue'
 import Search from '@/components/Exercise/Search.vue';
 import { useAuthenticationStore } from '@/plugins/pinia';
 import { useWindowSize } from '@vueuse/core';
+import { useI18n } from 'vue-i18n';
 
 export default {
     components: {
@@ -46,8 +47,9 @@ export default {
     setup() {
         const authStore = useAuthenticationStore();
         const { width } = useWindowSize();
+        const { t } =useI18n();
 
-        return { authStore, width };
+        return { authStore, width, t };
     },
     data() {
         return {

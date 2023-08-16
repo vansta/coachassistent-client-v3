@@ -1,43 +1,19 @@
 <template>
-    <!-- <v-table>
-        <thead>
-            <tr>
-                <th></th>
-                <th v-for="subject in subjects" :key="subject">
-                    {{ subject.title }}
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="action in actions" :key="action">
-                <td>
-                    {{ action.title }}
-                </td>
-                <td v-for="subject in subjects" :key="subject">
-                    <div class="d-flex">
-                        <v-checkbox-btn v-if="hasPermission(action, subject)" v-model="dummyTrue" @click="onToggle(action, subject)" class="pe-2"></v-checkbox-btn>
-                        <v-checkbox-btn v-else @click="onToggle(action, subject)" class="pe-2"></v-checkbox-btn>
-                        <v-select v-if="hasPermission(action, subject)" :items="subject.fields" label="Fields" hide-details></v-select>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </v-table> -->
     <v-container>
         <v-row>
             <v-col></v-col>
             <v-col v-for="subject in subjects" :key="subject">
-                {{ subject.title }}
+                {{ t(`subject.${subject.title}`) }}
             </v-col>
         </v-row>
         <v-row v-for="action in actions" :key="action">
             <v-col>
-                {{ action.title }}
+                {{ t(`action.${action.title}`) }}
             </v-col>
             <v-col v-for="subject in subjects" :key="subject">
                 <div v-if="hasPermission(action, subject)" class="d-flex">
                     <v-checkbox-btn :disabled="!can('update', role)" v-model="dummyTrue" @click="onToggle(action, subject)" class="pe-2"></v-checkbox-btn>
-                    <v-select :disabled="!can('update', role)" v-model="getPermission(action, subject).fields" :items="subject.fields" label="Fields" hide-details multiple></v-select>
+                    <v-select :disabled="!can('update', role)" v-model="getPermission(action, subject).fields" :items="subject.fields" label="Fields" hide-details multiple :item-title="option => t(`field.${option}`)"></v-select>
                 </div>
                 <div v-else class="d-flex">
                     <v-checkbox-btn :disabled="!can('update', role)" @click="onToggle(action, subject)" class="pe-2"></v-checkbox-btn>
@@ -49,10 +25,12 @@
 
 <script>
 import { useAbility } from '@casl/vue';
+import { useI18n } from 'vue-i18n';
 export default {
     setup() {
         const { can } = useAbility();
-        return { can };
+        const { t } = useI18n();
+        return { can, t };
     },
     props: {
         permissions: Array,

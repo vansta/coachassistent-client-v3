@@ -4,7 +4,7 @@
             <v-card-title>
                 <div class="d-flex">
                     <div class="flex-grow-1">
-                        <v-text-field v-model="training.name" :label="t('name')" outlined dense></v-text-field>
+                        <v-text-field v-model="training.name" :label="t('field.name')" outlined dense></v-text-field>
                     </div>
                     <v-btn :disabled="!(can('update', training, 'shareability') || can('create', training, 'shareability'))" icon="mdi-cog" variant="text" @click="showSharebility = !showSharebility">
                         <v-icon>mdi-cog</v-icon>
