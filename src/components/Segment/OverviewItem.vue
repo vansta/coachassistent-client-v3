@@ -31,40 +31,30 @@
                 </v-list-item>
             </v-list>
         </v-card-text>
+
+        <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>
     </v-card>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
-import { defineAbility } from '@casl/ability';
+<script setup>
 import { useAbility } from '@casl/vue';
 import { useI18n } from 'vue-i18n';
+import { useConfirmDialog } from '@vueuse/core';
+import { inject } from 'vue';
+const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 
-export default defineComponent({
-    name: 'OverviewItem',
-    props: {
-        segment: {
-
-        }
-    },
-    components: {
-        
-    },
-    setup() {
-        const { can } = useAbility();
-        const { t } = useI18n();
-        return {
-            can, t
-        }
-    },
-    methods: {
-        // edit (id) {
-        //     this
-        // },
-        remove () {
-            this.$api.deleteSegment((this.segment).id)
-                .then(() => this.$emit('remove'));
-        }
-    }
+const api = inject('api');
+const { can } = useAbility();
+const { t } = useI18n();
+const emit = defineEmits(['remove']);
+const props = defineProps({
+    segment: Object
 })
+const remove = async () => {
+    const { data } = await reveal();
+    if (data) {
+        api.deleteSegment(props.segment.id)
+            .then(() => emit('remove'));
+    } 
+}
 </script>

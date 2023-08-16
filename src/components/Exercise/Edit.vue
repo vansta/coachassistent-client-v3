@@ -12,23 +12,26 @@
                     <v-icon>mdi-content-save</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.save')"></v-tooltip>
                 </v-btn>
-                <v-btn v-if="editExercise.id && mode == 'edit'" :disabled="!can('delete', editExercise)" icon="mdi-delete" color="negative" round @click="remove" variant="text" :loading="loading.remove">
+                <v-btn v-if="editExercise.id && mode == 'edit'" :disabled="!can('delete', editExercise)" icon="mdi-delete" color="negative" round @click="onRemove" variant="text" :loading="loading.remove">
                     <v-icon>mdi-delete</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.remove')"></v-tooltip>
                 </v-btn>
-                <v-btn icon="mdi-cancel" @click="cancel" flat variant="text">
+                <v-btn icon="mdi-cancel" @click="onCancel" flat variant="text">
                     <v-icon>mdi-cancel</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.cancel')"></v-tooltip>
                 </v-btn>
             </div>
         </template>
         <template #description>
-            <editor v-model="editExercise.description" api-key="no-api-key"/>
+            <!-- <editor v-model="editExercise.description" api-key="no-api-key"/> -->
+            <quill-editor v-if="(can('update', editExercise, 'description') || can('create', editExercise, 'description'))" v-model:content="editExercise.description" theme="snow" contentType="html"></quill-editor>
+            <div v-else v-html="editExercise.description"></div>
+
             <v-combobox v-model="editExercise.tags" :label="t('field.tags')" :items="tags" multiple></v-combobox>
             <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
                 <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment" v-slot="{ isSelected, toggle }" :value="attachment">
                     <v-img 
-                        :src="$api.getAttachmentLink(attachment)" 
+                        :src="api.getAttachmentLink(attachment)" 
                         min-height="150" max-heigth="150" min-width="150" max-width="150" cover
                         @click="toggle" class="mx-2">
                         <v-btn 
@@ -47,106 +50,85 @@
             </v-file-input>
             <sharebility v-if="showSharebility" v-model="editExercise"></sharebility>
         </template>
+
+        
     </layout>
+    <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>
 </template>
 
-<script>
-import { defineComponent, reactive } from 'vue'
+<script setup>
+import { inject, ref, reactive } from 'vue'
 import { useToast } from 'vue-toastification'
 import Layout from '@/components/Exercise/Layout.vue';
 import Editor from '@tinymce/tinymce-vue';
 import Sharebility from '@/components/common/Sharebility.vue';
 import { useAbility } from '@casl/vue';
 import { useI18n } from 'vue-i18n';
+import { useConfirmDialog } from '@vueuse/core';
 
-export default defineComponent({
-    name: 'Edit',
-    props: {
-        exercise: Object,
-        tags: Array,
-        mode: {
-            type: String,
-            default: 'edit'
-        }
-    },
-    components: {
-        Layout,
-        Editor,
-        Sharebility
-    },
-    setup(props) {
-        const editExercise = reactive({
-            ...props.exercise, 
-            selectedAttachments: props.exercise.attachments
-        })
-        const toast = useToast();
-        const { can } = useAbility();
-        const { t } = useI18n();
+const toast = useToast();
+const { can } = useAbility();
+const { t } = useI18n();
+const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 
-        return {
-            editExercise, toast, can, t
-        }
-    },
-    // created() {
-    //     this.editExercise.selectedAttachments = this.exercise.attachments;
-    // },
-    data () {
-        return {
-            showSharebility: false,
-            loading: {
-                save: false,
-                remove: false
-            }
-        }
-    },
-    methods: {
-        save () {
-            this.loading.save = true;
-            if (!this.editExercise.id) {
-                this.$api.postExercise(this.editExercise)
-                    .then(resp => {
-                        this.editExercise.id = resp;
-                        this.$emit('save');
-                    })
-                    .catch(err => {
-                        this.toast.error(err)
-                    })
-                    .finally(() => this.loading.save = false);
-            }
-            else {
-                this.$api.putExercise(this.editExercise)
-                    .then(() => this.$emit('save'))
-                    .finally(() => this.loading.save = false);
-            }
-        },
-        remove () {
-            this.loading.remove = true;
-            if (this.editExercise.id) {
-                this.$api.deleteExercise(this.editExercise.id)
-                    .then(() => this.$emit('remove'))
-                    .catch(err => {
-                        this.toast.error(err)
-                    })
-                    .finally(() => this.loading.remove = false);
-            }
-            else {
-                this.$emit('remove');
-            }
-        },
-        cancel() {
-            if (this.editExercise.id) {
-                this.$emit('cancel');
-            }
-            else {
-                this.$emit('remove');
-            }
-        },
+const api = inject('api');
 
-        getImgSource(attachment) {
-            if (attachment) {
-                return 'https://localhost:7210/api/' + attachment
-            }
-        }
+const props = defineProps({
+    exercise: Object,
+    tags: Array,
+    mode: {
+        type: String,
+        default: 'edit'
     }
 })
+const emit = defineEmits(['save', 'remove', 'cancel'])
+const editExercise = ref({
+    ...props.exercise, 
+    selectedAttachments: props.exercise.attachments
+})
+
+const showSharebility = ref(false);
+const loading = ref({
+    save: false,
+    remove: false
+})
+
+const save = () => {
+    loading.value.save = true;
+    if (!editExercise.value.id) {
+        api.postExercise(editExercise.value)
+            .then(resp => {
+                editExercise.value.id = resp;
+                emit('save');
+            })
+            .catch(err => {
+                        toast.error(err)
+            })
+            .finally(() => loading.value.save = false);
+    }
+    else {
+        api.putExercise(editExercise.value)
+            .then(() => emit('save'))
+            .finally(() => loading.value.save = false);
+    }
+}
+
+const onRemove = async () => {
+    const { data } = await reveal();
+    if (data) {
+        loading.value.remove = true;
+        api.deleteExercise(editExercise.value.id)
+            .then(() => emit('remove'))
+            .finally(() => loading.value.remove = false);
+    }
+}
+
+const onCancel = () => {
+    if (editExercise.value.id) {
+        emit('cancel');
+    }
+    else {
+        emit('remove');
+    }
+}
 </script>

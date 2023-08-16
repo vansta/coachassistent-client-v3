@@ -31,6 +31,10 @@ Vue.use(Toast, {
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue';
 Vue.component('confirm-dialog', ConfirmDialog);
 
+import { QuillEditor } from '@vueup/vue-quill';
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
+Vue.component('quill-editor', QuillEditor);
+
 import { messages } from '../public/translations';
 import { createI18n } from 'vue-i18n';
 const i18n = createI18n({
@@ -40,6 +44,8 @@ const i18n = createI18n({
 });
 Vue.use(i18n);
 Vue.use(vuetify);
+
+
 
 Vue
   .mount('#app');

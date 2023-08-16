@@ -2,7 +2,7 @@
     <c-data-iterator :cols="4" :items="trainings" :loading="loading" :totalCount="totalCount">
         <template #header>
             <div class="d-flex justify-end">
-                <v-btn :to="{ name: 'CreateTraining' }" color="primary" :disabled="!can('create', 'exercise')" prepend-icon="mdi-plus">{{ t('action.create') }}</v-btn>
+                <v-btn :to="{ name: 'CreateTraining' }" color="primary" :disabled="!can('create', 'shareable')" prepend-icon="mdi-plus">{{ t('action.create') }}</v-btn>
             </div>
         </template>
         <template #search>
@@ -26,7 +26,6 @@ const { t } = useI18n();
 
 const api = inject('api');
 
-const readonly = ref(true);
 const trainings = ref([]);
 const loading = ref(false);
 const totalCount = ref(0);

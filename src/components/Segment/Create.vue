@@ -22,7 +22,9 @@
                 
             </v-card-title>
             <v-card-text>
-                <editor v-model="segment.description" api-key="no-api-key"/>
+                <!-- <editor v-model="segment.description" api-key="no-api-key"/> -->
+                <quill-editor v-if="(can('update', segment, 'description') || can('create', segment, 'description'))" v-model:content="segment.description" theme="snow" contentType="html"></quill-editor>
+                <div v-else v-html="segment.description"></div>
             </v-card-text>
             <v-card-text v-if="showSharebility">
                 <sharebility v-model="segment"></sharebility>
@@ -56,6 +58,8 @@
                 </draggable>
             </v-col>
         </v-row>
+
+        <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>
     </v-container>
 </template>
 
@@ -73,6 +77,7 @@ import { useToast } from 'vue-toastification'
 import { useAbility } from '@casl/vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useI18n } from 'vue-i18n';
+import { useConfirmDialog } from '@vueuse/core';
 
 export default defineComponent({
     components: { ExerciseView, ExerciseEdit, ExerciseSearch, CDataIterator, Editor, Sharebility, Draggable },
@@ -81,7 +86,8 @@ export default defineComponent({
         const { can } = useAbility();
         const authStore = useAuthenticationStore();
         const { t } = useI18n();
-        return { toast, can, authStore, t }
+        const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
+        return { toast, can, authStore, t, isRevealed, reveal, confirm, cancel }
     },
     created () {
         if (this.id) {
@@ -101,7 +107,8 @@ export default defineComponent({
                 description: '',
                 exercises: [],
                 editorIds: [this.authStore.user?.id],
-                constructor: { modelName: 'shareable' }
+                constructor: { modelName: 'shareable' },
+                sharingLevel: '0'
             },
             exercises: [],
             tags: [],
@@ -143,11 +150,14 @@ export default defineComponent({
                     .finally(() => this.loading.save = false);
             }
         },
-        remove () {
-            this.loading.remove = true;
-            this.$api.deleteSegment((this.segment).id)
+        async remove () {
+            const { data } = await this.reveal();
+            if (data) {
+                this.loading.remove = true;
+                this.$api.deleteSegment(this.segment.id)
                 .then(() => this.$router.push({ name: 'Segments' }))
                 .finally(() => this.loading.remove = false);
+            } 
         },
         onSaveExercise(exercise) {
             exercise.edit = false;
