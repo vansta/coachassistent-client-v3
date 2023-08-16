@@ -12,7 +12,6 @@ import { abilitiesPlugin } from '@casl/vue';
 import ability from '@/services/ability';
 
 const Vue = createApp(App)
-  .use(vuetify)
   .use(abilitiesPlugin, ability);
 
 
@@ -31,6 +30,16 @@ Vue.use(Toast, {
 
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue';
 Vue.component('confirm-dialog', ConfirmDialog);
+
+import { messages } from '../public/translations';
+import { createI18n } from 'vue-i18n';
+const i18n = createI18n({
+  legacy: false,
+  locale: 'nl',
+  messages: messages
+});
+Vue.use(i18n);
+Vue.use(vuetify);
 
 Vue
   .mount('#app');

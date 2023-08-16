@@ -45,24 +45,21 @@
   </v-app>
 </template>
 
-<script>
+<script setup>
+import { computed, ref } from 'vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useAbility } from '@casl/vue';
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+const authenticationStore = useAuthenticationStore();
+const { can } = useAbility();
+const router = useRouter();
 
-export default {
-  name: 'App',
-  setup () {
-    const authenticationStore = useAuthenticationStore();
-    const { can } = useAbility();
-
-    return { authenticationStore, can }
-  },
-
-  data: () => ({
-    drawer: true,
-    navDrawerItems: [
+const drawer = ref(true);
+const navDrawerItems = ref([
       {
-        title: 'Drafts',
+        title: t('drafts'),
         props: {
             prependIcon: 'mdi-home',
             to: { name: 'Home' }
@@ -73,7 +70,7 @@ export default {
         }
       },
       {
-        title: 'Trainings',
+        title: t('trainings'),
         props: {
           prependIcon: 'mdi-checkbox-blank',
           to: { name: 'Trainings' }
@@ -84,7 +81,7 @@ export default {
         }
       },
       {
-        title: 'Segments',
+        title: t('segments'),
         props: {
           prependIcon: 'mdi-view-agenda',
           to: { name: 'Segments' }
@@ -95,7 +92,7 @@ export default {
         }
       },
       {
-        title: 'Exercises',
+        title: t('exercises'),
         props: {
             prependIcon: 'mdi-view-module',
             to: { name: 'Exercises' }
@@ -106,13 +103,13 @@ export default {
         }
       },
       {
-        title: 'Administration',
+        title: t('administration'),
         props: {
           prependIcon: 'mdi-office-building'
         },
         children: [
         {
-          title: 'Groups',
+          title: t('groups'),
           props: {
               prependIcon: 'mdi-account-group',
               to: { name: 'Groups' }
@@ -123,7 +120,7 @@ export default {
           }
         },
         {
-          title: 'Roles',
+          title: t('roles'),
           props: {
               prependIcon: 'mdi-security',
               to: { name: 'Roles' }
@@ -136,33 +133,26 @@ export default {
         ]
       },
       
-    ]
-  }),
-  methods: {
-    logout() {
-      this.authenticationStore.logout();
-      this.$router.push({ name: 'Login' });
-    },
+    ])
 
-    filterItems(items) {
-      return items.filter(i => {
-        if (i.children){
-          i.children = this.filterItems(i.children);
-          if (i.children.length === 0) {
-            return false;
-          }
-        }
-        if (i.meta) {
-          return this.can(i.meta.action, i.meta.subject);
-        }
-        return true;
-      })
-    }
-  },
-  computed: {
-    filteredNavbar () {
-      return this.filterItems(this.navDrawerItems);
-    }
-  }
+const logout = () => {
+  authenticationStore.logout();
+  router.push({ name: 'Login' });
 }
+const filterItems = (items) => {
+  return items.filter(i => {
+    if (i.children){
+      i.children = filterItems(i.children);
+      if (i.children.length === 0) {
+        return false;
+      }
+    }
+    if (i.meta) {
+      return can(i.meta.action, i.meta.subject);
+    }
+    return true;
+  })
+}
+
+const filteredNavbar = computed(() => filterItems(navDrawerItems.value));
 </script>

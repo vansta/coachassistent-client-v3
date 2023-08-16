@@ -1,63 +1,44 @@
 <template>
     <v-card>
         <v-card-title>
-            <v-select v-model="modelValue.sharingLevel" :items="sharingLevels" label="Share with"></v-select>
+            <v-select v-model="modelValue.sharingLevel" :items="sharingLevels" :label="t('label.share_with')" :item-title="(option) => t(`sharingLevel.${option.value}`)"></v-select>
         </v-card-title>
         <v-card-text>
-            <v-select v-if="modelValue.sharingLevel == 1" v-model="modelValue.groupIds" multiple :items="groups" label="Groups"></v-select>
-            <v-autocomplete v-model="modelValue.editors" multiple :items="editors" label="Editors"></v-autocomplete>
+            <v-select v-if="modelValue.sharingLevel == 1" v-model="modelValue.groupIds" multiple :items="groups" :label="t('groups')"></v-select>
+            <v-autocomplete v-model="modelValue.editors" multiple :items="editors" :label="t('editors')"></v-autocomplete>
         </v-card-text>
     </v-card>
 </template>
 
-<script>
+<script setup>
 import { useAuthenticationStore } from '@/plugins/pinia.js';
+import { useI18n } from 'vue-i18n';
+import { ref, inject } from 'vue';
+const authenticationStore = useAuthenticationStore();
+const { t } = useI18n();
+const api = inject('api');
+const props = defineProps({
+    modelValue: Object
+})
 
-export default {
-    props: {
-        modelValue: Object
-    },
-    setup() {
-        const authenticationStore = useAuthenticationStore();
+const sharingLevels = ref([]);
+const groups = ref([]);
+const editors = ref([]);
 
-        return { authenticationStore }
-    },
-    mounted () {
-        this.getSharingLevels();
-        this.getGroups();
-        this.getEditors();
-        this.getAssignedEditors();
-    },
-    data () {
-        return {
-            sharingLevels: [],
-            groups: [],
-            editors: []
-        }
-    },
-    methods: {
-        getSharingLevels() {
-            this.$api.getSharingLevels()
-                .then(resp => this.sharingLevels = resp.data);
-        },
-        getGroups () {
-            this.$api.getGroupsForUser()
-                .then(resp => this.groups = resp.data);
-        },
-        getAssignedEditors() {
-            if (this.modelValue.shareableId) {
-                this.$api.getAssignedEditors(this.modelValue.shareableId)
-                    .then(resp => this.modelValue.editors = resp.data);
-            }
-            else {
-                this.modelValue.editors = [this.authenticationStore.user.id];
-            }
-        },
-        getEditors () {
-            this.$api.getEditors()
-                .then(resp => this.editors = resp.data);
-        }
-    }
+api.getSharingLevels()
+    .then(resp => sharingLevels.value = resp.data);
+
+api.getGroupsForUser()
+    .then(resp => groups.value = resp.data);
+
+if (props.modelValue.shareableId) {
+    api.getAssignedEditors(props.modelValue.shareableId)
+        .then(resp => props.modelValue.editors = resp.data);
 }
-</script>
+else {
+    props.modelValue.editors = [authenticationStore.user.id];
+}
 
+api.getEditors()
+    .then(resp => editors.value = resp.data);
+</script>
