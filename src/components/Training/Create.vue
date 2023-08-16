@@ -4,11 +4,20 @@
             <v-card-title>
                 <div class="d-flex">
                     <div class="flex-grow-1">
-                        <v-text-field v-model="training.name" label="Name" outlined dense></v-text-field>
+                        <v-text-field v-model="training.name" :label="t('name')" outlined dense></v-text-field>
                     </div>
-                    <v-btn :disabled="!(can('update', training, 'shareability') || can('create', training, 'shareability'))" icon="mdi-cog" variant="text" @click="showSharebility = !showSharebility"></v-btn>
-                    <v-btn :disabled="!(can('update', training) || can('create', training))" icon="mdi-content-save" variant="text" @click="save" :loading="loading.save"></v-btn>
-                    <v-btn v-if="training.id" :disabled="!can('delete', training)" icon="mdi-delete" color="negative" variant="text" @click="remove" :loading="loading.remove"></v-btn>
+                    <v-btn :disabled="!(can('update', training, 'shareability') || can('create', training, 'shareability'))" icon="mdi-cog" variant="text" @click="showSharebility = !showSharebility">
+                        <v-icon>mdi-cog</v-icon>
+                        <v-tooltip activator="parent" location="bottom" :text="t('tooltip.shareability')"></v-tooltip>
+                    </v-btn>
+                    <v-btn :disabled="!(can('update', training) || can('create', training))" icon="mdi-content-save" variant="text" @click="save" :loading="loading.save">
+                        <v-icon>mdi-content-save</v-icon>
+                        <v-tooltip activator="parent" location="bottom" :text="t('tooltip.save')"></v-tooltip>
+                    </v-btn>
+                    <v-btn v-if="training.id" :disabled="!can('delete', training)" icon="mdi-delete" color="negative" variant="text" @click="remove" :loading="loading.remove">
+                        <v-icon>mdi-delete</v-icon>
+                        <v-tooltip activator="parent" location="bottom" :text="t('tooltip.remove')"></v-tooltip>
+                    </v-btn>
                 </div>
             </v-card-title>
             <v-card-text>
@@ -19,27 +28,11 @@
             </v-card-text>
         </v-card>
         <v-row>
-            <!-- <v-col>
-                <div class="drop-zone" @drop="drop($event)" @dragover.prevent @dragenter.prevent>
-                    <segment-view v-for="segment in training.segments" :key="segment.id" class="q-ma-xs" :segment="segment"  :draggable="true" @dragstart="startToDrag($event, segment)"></segment-view>
-                </div>
-                
-            </v-col>
-            <v-col>
-                <div class="drop-zone" @drop="drop($event, true)" @dragover.prevent @dragenter.prevent>
-                    <c-data-iterator :cols="12" :items="availableSegments">
-                        <template #item="{ item }">
-                            <segment-view v-if="!item.edit" class="q-ma-xs" :segment="item" :draggable="true" @dragstart="startToDrag($event, item)"></segment-view>
-                        </template>
-                    </c-data-iterator>
-                </div>
-            </v-col> -->
-
             <v-col>
                 <draggable v-model="training.segments" group="segments" item-key="id">
                     <template #header>
                         <v-alert type="info" variant="tonal">
-                            Drag your segments here
+                            {{t('drag_to')}}
                         </v-alert>
                         
                     </template>
@@ -51,7 +44,9 @@
             <v-col v-show="(can('update', training) || can('create', training))">
                 <draggable v-model="segments" group="segments" item-key="id">
                     <template #header>
-                        <v-alert variant="tonal">Drag the segments you want to include</v-alert>
+                        <v-alert variant="tonal">
+                            {{t('drag_from')}}
+                        </v-alert>
                         <!-- <exercise-search @search="getExercises"></exercise-search> -->
                     </template>
                     <template #item="{ element }">
@@ -79,6 +74,7 @@ import { useAbility } from '@casl/vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useConfirmDialog } from '@vueuse/core';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 const api = inject('api');
 
@@ -86,6 +82,7 @@ const toast = useToast();
 const { can } = useAbility();
 const authStore = useAuthenticationStore();
 const router = useRouter();
+const { t } = useI18n();
 
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 

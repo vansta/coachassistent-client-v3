@@ -2,26 +2,29 @@
     <layout>
         <template #name>
             <div class="d-flex">
-                <v-text-field class="flex-grow-1" v-model="editExercise.name" label="Name"></v-text-field>
+                <v-text-field class="flex-grow-1" v-model="editExercise.name" :label="t('name')"></v-text-field>
                 <!-- <v-btn icon="mdi-open-in-new" flat round :to="{ name: 'EditExercise', params: { id: editExercise.id } }"></v-btn> -->
                 <v-btn v-if="mode == 'edit'" :disabled="!(can('update', editExercise, 'shareability') || can('create', editExercise, 'shareability'))" icon variant="text" @click="showSharebility = !showSharebility">
                     <v-icon>mdi-cog</v-icon>
-                    <v-tooltip activator="parent" location="bottom" text="Change who can see this exercise"></v-tooltip>
+                    <v-tooltip activator="parent" location="bottom" :text="t('tooltip.shareability')"></v-tooltip>
                 </v-btn>
-                <v-btn :disabled="!(can('update', editExercise) || can('create', editExercise))" icon="mdi-content-save" round @click="save" variant="text" :loading="loading.save"></v-btn>
+                <v-btn :disabled="!(can('update', editExercise) || can('create', editExercise))" icon="mdi-content-save" round @click="save" variant="text" :loading="loading.save">
+                    <v-icon>mdi-content-save</v-icon>
+                    <v-tooltip activator="parent" location="bottom" :text="t('tooltip.save')"></v-tooltip>
+                </v-btn>
                 <v-btn v-if="editExercise.id && mode == 'edit'" :disabled="!can('delete', editExercise)" icon="mdi-delete" color="negative" round @click="remove" variant="text" :loading="loading.remove">
                     <v-icon>mdi-delete</v-icon>
-                    <v-tooltip activator="parent" location="bottom" text="Delete this exercise"></v-tooltip>
+                    <v-tooltip activator="parent" location="bottom" :text="t('tooltip.remove')"></v-tooltip>
                 </v-btn>
                 <v-btn icon="mdi-cancel" @click="cancel" flat variant="text">
                     <v-icon>mdi-cancel</v-icon>
-                    <v-tooltip activator="parent" location="bottom" text="Cancel editing"></v-tooltip>
+                    <v-tooltip activator="parent" location="bottom" :text="t('tooltip.cancel')"></v-tooltip>
                 </v-btn>
             </div>
         </template>
         <template #description>
             <editor v-model="editExercise.description" api-key="no-api-key"/>
-            <v-combobox v-model="editExercise.tags" label="Tags" :items="tags" multiple></v-combobox>
+            <v-combobox v-model="editExercise.tags" :label="t('tags')" :items="tags" multiple></v-combobox>
             <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
                 <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment" v-slot="{ isSelected, toggle }" :value="attachment">
                     <v-img 
@@ -37,12 +40,12 @@
                     </v-img>
                 </v-slide-group-item>
             </v-slide-group>
-            <v-file-input outlined v-model="editExercise.addedAttachments" multiple label="Add images">
+            <v-file-input outlined v-model="editExercise.addedAttachments" multiple :label="t('images')">
                 <template v-slot:prepend>
                     <v-icon>mdi-content-save</v-icon>
                 </template>
             </v-file-input>
-            <sharebility v-if="showSharebility" v-model="editExercise" type="exercise"></sharebility>
+            <sharebility v-if="showSharebility" v-model="editExercise"></sharebility>
         </template>
     </layout>
 </template>
@@ -54,6 +57,7 @@ import Layout from '@/components/Exercise/Layout.vue';
 import Editor from '@tinymce/tinymce-vue';
 import Sharebility from '@/components/common/Sharebility.vue';
 import { useAbility } from '@casl/vue';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
     name: 'Edit',
@@ -77,9 +81,10 @@ export default defineComponent({
         })
         const toast = useToast();
         const { can } = useAbility();
+        const { t } = useI18n();
 
         return {
-            editExercise, toast, can
+            editExercise, toast, can, t
         }
     },
     // created() {

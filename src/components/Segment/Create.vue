@@ -4,17 +4,19 @@
             <v-card-title>
                 <div class="d-flex">
                     <div class="flex-grow-1">
-                        <v-text-field v-model="segment.name" label="Name" outlined dense></v-text-field>
+                        <v-text-field v-model="segment.name" :label="t('name')" outlined dense></v-text-field>
                     </div>
                     <v-btn :disabled="!(can('update', segment, 'shareability') || can('create', segment, 'shareability'))" icon="mdi-cog" variant="text" @click="showSharebility = !showSharebility">
                         <v-icon>mdi-cog</v-icon>
-                        <v-tooltip activator="parent" location="bottom" text="Edit who can see this segment"></v-tooltip>
+                        <v-tooltip activator="parent" location="bottom" :text="t('tooltip.shareability')"></v-tooltip>
                     </v-btn>
                     <v-btn :disabled="!(can('update', segment) || can('create', segment))" icon="mdi-content-save" variant="text" @click="save" :loading="loading.save">
+                        <v-icon>mdi-content-save</v-icon>
+                        <v-tooltip activator="parent" location="bottom" :text="t('tooltip.save')"></v-tooltip>
                     </v-btn>
                     <v-btn v-if="segment.id" :disabled="!can('delete', segment)" icon="mdi-delete" color="negative" variant="text" @click="remove" :loading="loading.remove">
                         <v-icon>mdi-delete</v-icon>
-                        <v-tooltip activator="parent" location="bottom" text="Delete this segment"></v-tooltip>
+                        <v-tooltip activator="parent" location="bottom" :text="t('tooltip.remove')"></v-tooltip>
                     </v-btn>
                 </div>
                 
@@ -51,7 +53,7 @@
                 <draggable v-model="segment.exercises" group="exercises" item-key="id">
                     <template #header>
                         <v-alert type="info" variant="tonal">
-                            Drag your exercises here
+                            {{ t('drag_to') }}
                         </v-alert>
                         
                     </template>
@@ -64,7 +66,7 @@
             <v-col v-show="(can('update', segment) || can('create', segment))">
                 <draggable v-model="exercises" group="exercises" item-key="id">
                     <template #header>
-                        <v-alert variant="tonal">Drag the exercises you want to include</v-alert>
+                        <v-alert variant="tonal">{{ t('drag_from') }}</v-alert>
                         <exercise-search @search="getExercises"></exercise-search>
                     </template>
                     <template #item="{ element }">
@@ -90,6 +92,7 @@ import { defineComponent } from 'vue'
 import { useToast } from 'vue-toastification'
 import { useAbility } from '@casl/vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
+import { useI18n } from 'vue-i18n';
 
 export default defineComponent({
     components: { ExerciseView, ExerciseEdit, ExerciseSearch, CDataIterator, Editor, Sharebility, Draggable },
@@ -97,7 +100,8 @@ export default defineComponent({
         const toast = useToast();
         const { can } = useAbility();
         const authStore = useAuthenticationStore();
-        return { toast, can, authStore }
+        const { t } = useI18n();
+        return { toast, can, authStore, t }
     },
     created () {
         if (this.id) {

@@ -4,10 +4,10 @@
             <v-form>
                 <v-row>
                     <v-col>
-                        <v-text-field v-model="search.search" label="Name" @update:model-value="emitSearch" clearable></v-text-field>
+                        <v-text-field v-model="search.search" :label="t('name')" @update:model-value="emitSearch" clearable></v-text-field>
                     </v-col>
                     <v-col>
-                        <v-autocomplete v-model="search.tags" label="Tags" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch">
+                        <v-autocomplete v-model="search.tags" :label="t('tags')" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch">
                         </v-autocomplete>
                     </v-col>
                 </v-row>
@@ -18,6 +18,8 @@
 
 <script setup>
 import { ref, computed, inject } from 'vue';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 var searchTimeOut;
 const api = inject('api');

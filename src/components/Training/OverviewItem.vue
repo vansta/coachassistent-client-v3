@@ -4,9 +4,18 @@
             <div class="d-flex">
                 <div class="flex-grow-1 text-h6 text-left text-capitalize">{{ training.name }}</div>
 
-                <v-btn :disabled="!can('read', training)" icon="mdi-eye" variant="text" :to="{ name: 'Training', params: { id: training.id }}"></v-btn>
-                <v-btn :disabled="!can('update', training)" icon="mdi-pencil" variant="text" :to="{ name: 'EditTraining', params: { id: training.id }}"></v-btn>
-                <v-btn :disabled="!can('delete', training)" icon="mdi-delete" variant="text" @click="remove"></v-btn>
+                <v-btn :disabled="!can('read', training)" icon="mdi-eye" variant="text" :to="{ name: 'Training', params: { id: training.id }}">
+                    <v-icon>mdi-eye</v-icon>
+                    <v-tooltip activator="parent" location="bottom" :text="t('tooltip.view')"></v-tooltip>
+                </v-btn>
+                <v-btn :disabled="!can('update', training)" icon="mdi-pencil" variant="text" :to="{ name: 'EditTraining', params: { id: training.id }}">
+                    <v-icon>mdi-pencil</v-icon>
+                    <v-tooltip activator="parent" location="bottom" :text="t('tooltip.edit')"></v-tooltip>
+                </v-btn>
+                <v-btn :disabled="!can('delete', training)" icon="mdi-delete" variant="text" @click="remove">
+                    <v-icon>mdi-delete</v-icon>
+                    <v-tooltip activator="parent" location="bottom" :text="t('tooltip.remove')"></v-tooltip>
+                </v-btn>
             </div>
             
         </v-card-title>
@@ -45,8 +54,10 @@
 import { inject } from 'vue';
 import { useConfirmDialog } from '@vueuse/core';
 import { useAbility } from '@casl/vue';
+import { useI18n } from 'vue-i18n';
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 const { can } = useAbility();
+const { t } = useI18n();
 
 const api = inject('api');
 const props = defineProps({
