@@ -8,8 +8,8 @@
                     <v-icon>mdi-cog</v-icon>
                     <v-tooltip activator="parent" location="bottom" text="Change who can see this exercise"></v-tooltip>
                 </v-btn>
-                <v-btn :disabled="!(can('update', editExercise) || can('create', editExercise))" icon="mdi-content-save" round @click="save" variant="text"></v-btn>
-                <v-btn v-if="editExercise.id && mode == 'edit'" :disabled="!can('delete', editExercise)" icon="mdi-delete" color="negative" round @click="remove" variant="text">
+                <v-btn :disabled="!(can('update', editExercise) || can('create', editExercise))" icon="mdi-content-save" round @click="save" variant="text" :loading="loading.save"></v-btn>
+                <v-btn v-if="editExercise.id && mode == 'edit'" :disabled="!can('delete', editExercise)" icon="mdi-delete" color="negative" round @click="remove" variant="text" :loading="loading.remove">
                     <v-icon>mdi-delete</v-icon>
                     <v-tooltip activator="parent" location="bottom" text="Delete this exercise"></v-tooltip>
                 </v-btn>
@@ -87,11 +87,16 @@ export default defineComponent({
     // },
     data () {
         return {
-            showSharebility: false
+            showSharebility: false,
+            loading: {
+                save: false,
+                remove: false
+            }
         }
     },
     methods: {
         save () {
+            this.loading.save = true;
             if (!this.editExercise.id) {
                 this.$api.postExercise(this.editExercise)
                     .then(resp => {
@@ -101,19 +106,23 @@ export default defineComponent({
                     .catch(err => {
                         this.toast.error(err)
                     })
+                    .finally(() => this.loading.save = false);
             }
             else {
                 this.$api.putExercise(this.editExercise)
                     .then(() => this.$emit('save'))
+                    .finally(() => this.loading.save = false);
             }
         },
         remove () {
+            this.loading.remove = true;
             if (this.editExercise.id) {
                 this.$api.deleteExercise(this.editExercise.id)
                     .then(() => this.$emit('remove'))
                     .catch(err => {
                         this.toast.error(err)
                     })
+                    .finally(() => this.loading.remove = false);
             }
             else {
                 this.$emit('remove');

@@ -44,7 +44,7 @@
         </v-row>
         <v-row>
             <v-col>
-                <v-pagination v-model="currentPage" :length="totalCount / itemsPerRow" rounded></v-pagination>
+                <v-pagination v-model="currentPage" :length="length" rounded></v-pagination>
             </v-col>
         </v-row>
     </v-container>
@@ -72,5 +72,5 @@ const itemsPerRowGroup = (rowIndex) => {
 } 
 
 const itemsPerRow = computed(() => 12 / props.cols);
-const length = computed(() => props.totalCount / itemsPerRow.value)
+const length = computed(() => Math.floor(props.totalCount / itemsPerRow.value));
 </script>

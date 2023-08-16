@@ -17,11 +17,8 @@
         <template #description>
             <div v-show="!collapse">
                 <div v-html="exercise.description"></div>
-                <!-- <q-img :src="getImgSource(exercise.attachments[0])"/> -->
                 <v-carousel @click.stop>
-                    <v-carousel-item v-for="attachment in exercise.attachments" :key="attachment" :name="attachment" :src="$api.getAttachmentLink(attachment)" 
-                        >
-                        <!-- <q-img :src="getImgSource(attachment)"/> -->
+                    <v-carousel-item v-for="attachment in exercise.attachments" :key="attachment" :name="attachment" :src="$api.getAttachmentLink(attachment)">
                     </v-carousel-item>
                 </v-carousel>
             </div>

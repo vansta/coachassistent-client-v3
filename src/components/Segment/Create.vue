@@ -10,9 +10,9 @@
                         <v-icon>mdi-cog</v-icon>
                         <v-tooltip activator="parent" location="bottom" text="Edit who can see this segment"></v-tooltip>
                     </v-btn>
-                    <v-btn :disabled="!(can('update', segment) || can('create', segment))" icon="mdi-content-save" variant="text" @click="save">
+                    <v-btn :disabled="!(can('update', segment) || can('create', segment))" icon="mdi-content-save" variant="text" @click="save" :loading="loading.save">
                     </v-btn>
-                    <v-btn v-if="segment.id" :disabled="!can('delete', segment)" icon="mdi-delete" color="negative" variant="text" @click="remove">
+                    <v-btn v-if="segment.id" :disabled="!can('delete', segment)" icon="mdi-delete" color="negative" variant="text" @click="remove" :loading="loading.remove">
                         <v-icon>mdi-delete</v-icon>
                         <v-tooltip activator="parent" location="bottom" text="Delete this segment"></v-tooltip>
                     </v-btn>
@@ -122,39 +122,48 @@ export default defineComponent({
             exercises: [],
             tags: [],
 
-            loading: false,
+            loading: {
+                get: false,
+                save: false,
+                remove: false
+            },
             splitterValue: 50,
             showSharebility: false
         }
     },
     methods: {
         getExercises (search) {
-            this.loading = true;
+            this.loading.get = true;
             this.$api.getAllExercises(search)
                 .then(resp => this.exercises = resp.data.items.filter(e => this.segment.exercises.findIndex(x => x.id === e.id) < 0))
-                .finally(() => this.loading = false)
+                .finally(() => this.loading.get = false)
         },
 
         save () {
+            this.loading.save = true;
             if (!this.segment.id) {
                 this.$api.postSegment(this.segment)
                     .then(resp => {
                         this.segment.id = resp;
                         this.$router.push({ name: 'Segments' })
                     })
-                    .catch(err => this.toast.error(err));
+                    .catch(err => this.toast.error(err))
+                    .finally(() => this.loading.save = false);
             }
             else {
                 this.$api.putSegment(this.segment)
                     .then(() => {
                         this.$router.push({ name: 'Segments' })
                     })
-                    .catch(err => this.toast.error(err));
+                    .catch(err => this.toast.error(err))
+                    .finally(() => this.loading.save = false);
             }
         },
         remove () {
+            this.loading.remove = true;
             this.$api.deleteSegment((this.segment).id)
-                .then(() => this.$router.push({ name: 'Segments' }));
+                .then(() => this.$router.push({ name: 'Segments' }))
+                .finally(() => this.loading.remove = false);
         },
         onSaveExercise(exercise) {
             exercise.edit = false;
