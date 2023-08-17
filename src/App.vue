@@ -142,10 +142,12 @@ const filterItems = (items) => {
 const filteredNavbar = computed(() => filterItems(navDrawerItems.value));
 api.getPermissions()
   .then(resp => {
+    console.log(buildRules(resp.data));
     ability.update(buildRules(resp.data));
     authenticationStore.setPermissions(resp.data);
 })
-// setInterval(() => {
-//   api.checkToken();
-// }, 60000);
+api.checkToken();
+setInterval(() => {
+  api.checkToken();
+}, 60000);
 </script>

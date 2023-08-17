@@ -24,22 +24,24 @@ const buildRules = (permissions) => {
             subject: p.subject,
             reason: p.reason
         }
-        if (p.fields && p.fields.lenght > 0) {
+        if (p.fields && p.fields.length > 0) {
             rule.fields = p.fields;
         }
 
         var conditions = {};
-        if (p.condition === 'groupIds' && p.groupIds && p.groupIds.length > 0) {
-            conditions.groupIds = { "$in": p.ids };
-        }
-        if (p.condition === 'id' && p.ids) {
-            conditions.id = { "$in": p.ids };
-        }
-        if (p.condition === 'editors' && p.userId){
-            conditions.editorIds = { $in: [p.userId] };
-        }
         if (p.action === 'create') {
             conditions.id = { "$eq": null }
+        }
+        else {
+            if (p.condition === 'groupIds' && p.groupIds && p.groupIds.length > 0) {
+                conditions.groupIds = { "$in": p.ids };
+            }
+            if (p.condition === 'id' && p.ids) {
+                conditions.id = { "$in": p.ids };
+            }
+            if (p.condition === 'editors' && p.userId){
+                conditions.editorIds = { $in: [p.userId] };
+            }
         }
         
         if (conditions) {

@@ -241,6 +241,14 @@ const createApiService = (apiClient) => {
         putRole(role) {
           return apiClient.put('Role', role);
         },
+        putUser(user) {
+          return apiClient.put('User', user);
+        },
+        putMembershipRequest({ id, roleId }, response) {
+          return apiClient.put('Group/Request', {
+            id, roleId, response
+          })
+        },
     
         //DELETE
         deleteExercise (id) {

@@ -20,12 +20,25 @@
             <v-card-text>
                 <v-row v-for="(member, index) in group.members" :key="index">
                     <v-col>
-                        <edit-membership v-model="group.members[index]" :readonly="!can(action, group, 'members')" :roles="roles" :users="users" @delete="onDeleteRow(index)"></edit-membership>
+                        <edit-membership v-model="group.members[index]" :readonly="!can(action, group, 'member')" :roles="roles" :users="users" @remove="onDeleteRow(index)"></edit-membership>
                     </v-col>
                 </v-row>
-                <v-row v-if="can(action, group, 'members')">
+                <v-row v-if="can(action, group, 'member')">
                     <v-col>
                         <v-btn block @click="addMember">Add</v-btn>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+        </v-card>
+
+        <v-card v-if="can('update', group, 'member')">
+            <v-card-title>
+                {{ t('membership_requests') }}
+            </v-card-title>
+            <v-card-text>
+                <v-row v-for="(member, index) in group.membershipRequests" :key="index">
+                    <v-col>
+                        <edit-membership-request v-model="group.membershipRequests[index]" :roles="roles" @onAccept="getGroup"></edit-membership-request>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -35,12 +48,14 @@
 
 <script>
 import EditMembership from '@/components/Membership/Edit.vue';
+import EditMembershipRequest from '@/components/Membership/Request.vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useAbility } from '@casl/vue';
 import { useI18n } from 'vue-i18n';
 export default {
     components: {
-        EditMembership
+        EditMembership,
+        EditMembershipRequest
     },
     setup() {
         const authenticationStore = useAuthenticationStore();
@@ -61,9 +76,12 @@ export default {
     data () {
         return {
             group: {
+                id: null,
                 constructor: { modelName: 'group' },
                 members: [
-                    {  }
+                    { 
+                        userId: this.authenticationStore.user.id
+                     }
                 ]
             },
             tags: [],
@@ -107,7 +125,7 @@ export default {
 
         save() {
             this.loading.save = true;
-            if (this.group.id) {
+            if (this.id) {
                 this.$api.putGroup(this.group)
                     .finally(() => this.loading.save = false);
             }

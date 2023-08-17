@@ -76,7 +76,9 @@ const messages = {
       password: 'Wachtwoord',
       email: 'Email',
 
-      save: 'Opslaan'
+      save: 'Opslaan',
+
+      membership_requests: 'Lidaanvragen'
     }
   };
 

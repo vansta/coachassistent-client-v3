@@ -7,7 +7,7 @@
             <v-select v-model="modelValue.roleId" :readonly="readonly" :label="t('role')" :items="roles"></v-select>
         </v-col>
         <v-col cols="1">
-            <v-btn v-if="!readonly" icon="mdi-delete" color="negative" flat round @click="$emit('delete')"></v-btn>
+            <v-btn v-if="!readonly" icon="mdi-delete" color="negative" flat round @click="$emit('remove')"></v-btn>
         </v-col>
     </v-row>
 </template>
@@ -22,4 +22,5 @@ const props = defineProps({
     users: Array,
     readonly: Boolean
 })
+const emit = defineEmits(['remove'])
 </script>
