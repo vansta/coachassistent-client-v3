@@ -1,9 +1,10 @@
 import axios from 'axios';
 import settings from '../../settings';
 import { getToken, setToken } from '@/services/jwt';
-import QS from 'qs';
+// import qs from 'qs';
 
 import sha256 from 'crypto-js/sha256';
+import { useToast } from 'vue-toastification';
 
 const toFormData = (data) => {
   console.log(data);
@@ -28,7 +29,7 @@ const toFormData = (data) => {
 
 const createApiClient = (useAuthenticationStore) => {
   const authenticationStore = useAuthenticationStore();
-
+  const toast = useToast();
   const apiClient = axios.create({
     baseURL: settings.apiUrl,
     withCredentials: false,
@@ -36,7 +37,9 @@ const createApiClient = (useAuthenticationStore) => {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     },
-    // paramsSerializer: (params) => { QS.stringify(params); }
+    paramsSerializer: {
+      indexes: null
+    }
   });
 
   apiClient.defaults.headers.common["Authorization"] = "Bearer " + getToken();
@@ -49,6 +52,9 @@ const createApiClient = (useAuthenticationStore) => {
       if (error.response && error.response.status === 401) {
         console.log('Login timed out');
         authenticationStore.logout();
+      }
+      else {
+        toast.error(error);
       }
 
       throw error;
@@ -69,12 +75,9 @@ const createApiService = (apiClient) => {
           return false;
         }
     },
-        getAllExercises: function (search) {
+        getAllExercises: function ({search, tags}) {
           return apiClient.get('Exercise/Overview', {
-            // paramsSerializer: function (params) {
-            //   return QS.stringify(params)
-            // },
-            params: search
+            params: {search, tags }
           })
         },
     

@@ -68,7 +68,7 @@ export default {
 
         getExercises (search) {
             this.loading = true;
-            this.$api.getAllExercises(search)
+            this.$api.getAllExercises(search ?? {})
                 .then(resp => {
                     this.exercises = resp.data.items;
                     this.totalCount = resp.data.totalCount;
