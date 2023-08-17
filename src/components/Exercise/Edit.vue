@@ -24,7 +24,7 @@
         </template>
         <template #description>
             <!-- <editor v-model="editExercise.description" api-key="no-api-key"/> -->
-            <quill-editor v-if="(can('update', editExercise, 'description') || can('create', editExercise, 'description'))" v-model:content="editExercise.description" theme="snow" contentType="html"></quill-editor>
+            <quill-editor v-if="(can('update', editExercise, 'description') || can('create', editExercise, 'description'))" v-model:content="editExercise.description" theme="snow" contentType="html" :placeholder="t('field.description')"></quill-editor>
             <div v-else v-html="editExercise.description"></div>
 
             <v-combobox v-model="editExercise.tags" :label="t('field.tags')" :items="tags" multiple></v-combobox>

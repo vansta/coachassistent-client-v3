@@ -7,8 +7,41 @@
             <v-card-text>
                 <v-text-field v-model="user.userName" :label="t('username')"></v-text-field>
                 <v-text-field v-model="user.email" :label="t('email')"></v-text-field>
-
-                <v-select v-model="user.memberships" :items="availableGroups" multiple :label="t('groups')"></v-select>
+            </v-card-text>
+            <v-card-subtitle>
+                {{ t('groups') }}
+            </v-card-subtitle>
+            <v-card-text>
+                <v-table>
+                    <thead>
+                        <tr>
+                            <th>{{ t('subject.group') }}</th>
+                            <th>{{ t('subject.role') }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(membership, index) in user.memberships" :key="index">
+                            <td>{{ membership.group }}</td>
+                            <td>{{ membership.id ? membership.role : t('requested') }}</td>
+                            <td class="d-flex justify-end">
+                                <v-btn v-if="membership.id" icon="mdi-eye" variant="text" :to="{ name: 'EditGroup', params: { id: membership.groupId }}">
+                                    <v-icon>mdi-eye</v-icon>
+                                    <v-tooltip activator="parent">{{ t('tooltip.view') }}</v-tooltip>
+                                </v-btn>
+                                <v-btn v-if="membership.id" icon="mdi-logout" variant="text" @click="leaveGroup(index)">
+                                    <v-icon>mdi-exit-run</v-icon>
+                                    <v-tooltip activator="parent">{{ t('tooltip.leave_group') }}</v-tooltip>
+                                </v-btn>
+                            </td>
+                        </tr>
+                    </tbody>
+                </v-table>
+                <v-row>
+                    <v-col>
+                        <v-autocomplete :items="availableGroups" :label="t('request_membership')" @update:modelValue="addMembership" return-object></v-autocomplete>
+                    </v-col>
+                </v-row>
             </v-card-text>
             <v-card-actions>
                 <v-btn @click="save" :loading="loading.save">
@@ -16,6 +49,8 @@
                 </v-btn>
             </v-card-actions>
         </v-card>
+
+        <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>
     </v-form>
 </template>
 
@@ -23,16 +58,20 @@
 import { useAuthenticationStore } from '@/plugins/pinia.js'
 import { useToast } from 'vue-toastification';
 import { useI18n } from 'vue-i18n';
-import { inject, ref } from 'vue';
+import { computed, inject, ref } from 'vue';
+import { useConfirmDialog } from '@vueuse/core';
 
 const api = inject('api');
 const authenticationStore = useAuthenticationStore();
 const toast = useToast();
 const { t } = useI18n();
+const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 
 const loading = ref({ get: true, save: false });
-const user = ref({});
-const availableGroups = ref([]);
+const user = ref({
+    memberships: []
+});
+const groups = ref([]);
 
 const save = () => {
     loading.value.save = true;
@@ -46,5 +85,23 @@ api.getUser()
     .finally(() => loading.value.get = false);
 
 api.getAvailableGroups()
-    .then(resp => availableGroups.value = resp.data);
+    .then(resp => groups.value = resp.data);
+
+const leaveGroup = async (index) =>{
+    const { data } = await reveal();
+    if (data) {
+        user.value.memberships.splice(index, 1);
+    }
+}
+const addMembership = ({ value, title }) => {
+    user.value.memberships.push({
+        groupId: value,
+        group: title,
+        role: t('requested')
+    })
+}
+
+const availableGroups = computed(() => {
+    return groups.value.filter(g => !user.value.memberships.map(ms => ms.groupId).includes(g.value));
+})
 </script>

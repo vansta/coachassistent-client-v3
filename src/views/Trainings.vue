@@ -1,5 +1,5 @@
 <template>
-    <c-data-iterator :cols="4" :items="trainings" :loading="loading" :totalCount="totalCount">
+    <c-data-iterator :cols="12 / Math.floor(width / 500)" :items="trainings" :loading="loading" :totalCount="totalCount">
         <template #header>
             <div class="d-flex justify-end">
                 <v-btn :to="{ name: 'CreateTraining' }" color="primary" :disabled="!can('create', 'shareable')" prepend-icon="mdi-plus">{{ t('action.create') }}</v-btn>
@@ -21,8 +21,10 @@ import CDataIterator from '@/components/common/CDataIterator.vue';
 import Search from '@/components/Exercise/Search.vue';
 import { useI18n } from 'vue-i18n';
 import { useAbility } from '@casl/vue';
+import { useWindowSize } from '@vueuse/core';
 const { can } = useAbility();
 const { t } = useI18n();
+const { width } = useWindowSize();
 
 const api = inject('api');
 

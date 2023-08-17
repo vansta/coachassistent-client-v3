@@ -1,5 +1,5 @@
 <template>
-    <v-card min-height="300" max-height="500" max-width="500">
+    <v-card class="full-height">
         <v-card-title>
             <div class="d-flex">
                 <div class="flex-grow-1 text-h6 text-left text-capitalize">{{ segment.name }}</div>
@@ -58,3 +58,9 @@ const remove = async () => {
     } 
 }
 </script>
+
+<style>
+.full-height {
+  height: 100%;
+}
+</style>

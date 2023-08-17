@@ -12,11 +12,9 @@
                     <v-select v-model="group.tags" :readonly="!can(action, group, 'tags')" :label="t('field.tags')" :items="tags" multiple></v-select>
                 </v-form>
             </v-card-text>
-        </v-card>
-        <v-card>
-            <v-card-title>
+            <v-card-subtitle>
                 {{ t('members') }}
-            </v-card-title>
+            </v-card-subtitle>
             <v-card-text>
                 <v-row v-for="(member, index) in group.members" :key="index">
                     <v-col>
@@ -29,37 +27,43 @@
                     </v-col>
                 </v-row>
             </v-card-text>
-        </v-card>
-
-        <v-card v-if="can('update', group, 'member')">
-            <v-card-title>
+            <v-card-subtitle v-if="can('update', group, 'member')">
                 {{ t('membership_requests') }}
-            </v-card-title>
-            <v-card-text>
+            </v-card-subtitle>
+            <v-card-text v-if="can('update', group, 'member')">
                 <v-row v-for="(member, index) in group.membershipRequests" :key="index">
                     <v-col>
                         <edit-membership-request v-model="group.membershipRequests[index]" :roles="roles" @onAccept="getGroup"></edit-membership-request>
                     </v-col>
                 </v-row>
             </v-card-text>
-        </v-card>
-        <v-card v-if="can('update', group, 'subGroups')">
-            <v-card-title>
+            <v-card-subtitle v-if="can('update', group, 'subGroups')">
                 {{ t('field.subgroup') }}
-            </v-card-title>
-            <v-card-text>
-                <v-row v-for="(subgroup, index) in group.subGroups" :key="index">
-                    <v-col>
-                        {{ subgroup.name }}
-                    </v-col>
-                    <v-col>
-                        {{ subgroup.description }}
-                    </v-col>
-                    <v-col cols="2">
-                        <v-btn icon="mdi-pencil" variant="text" @click="editSubGroup(subgroup)"></v-btn>
-                        <v-btn icon="mdi-delete" variant="text" @click="group.subGroups.splice(index, 1)"></v-btn>
-                    </v-col>
-                </v-row>
+            </v-card-subtitle>
+            <v-card-text v-if="can('update', group, 'subGroups')">
+                <v-table>
+                    <thead>
+                        <tr>
+                            <td>
+                                {{ t('field.name') }}
+                            </td>
+                            <td>
+                                {{ t('field.description') }}
+                            </td>
+                            <td></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(subgroup, index) in group.subGroups" :key="index">
+                            <td>{{ subgroup.name }}</td>
+                            <td>{{ subgroup.description }}</td>
+                            <td class="d-flex justify-end">
+                                <v-btn icon="mdi-pencil" variant="text" @click="editSubGroup(subgroup)"></v-btn>
+                                <v-btn icon="mdi-delete" variant="text" @click="group.subGroups.splice(index, 1)"></v-btn>
+                            </td>
+                        </tr>
+                    </tbody>
+                </v-table>
                 <v-row v-if="can('create', 'group', 'subgroup')">
                     <v-col v-if="group.id">
                         <v-btn block @click="addSubGroup" size="large">{{ t('create_new_group') }}</v-btn>

@@ -23,7 +23,7 @@
             </v-card-title>
             <v-card-text>
                 <!-- <editor v-model="segment.description" api-key="no-api-key"/> -->
-                <quill-editor v-if="(can('update', segment, 'description') || can('create', segment, 'description'))" v-model:content="segment.description" theme="snow" contentType="html"></quill-editor>
+                <quill-editor v-if="(can('update', segment, 'description') || can('create', segment, 'description'))" v-model:content="segment.description" theme="snow" contentType="html" :placeholder="t('field.description')"></quill-editor>
                 <div v-else v-html="segment.description"></div>
             </v-card-text>
             <v-card-text v-if="showSharebility">
@@ -125,7 +125,7 @@ export default defineComponent({
     methods: {
         getExercises (search) {
             this.loading.get = true;
-            this.$api.getAllExercises(search)
+            this.$api.getAllExercises(search ?? {})
                 .then(resp => this.exercises = resp.data.items.filter(e => this.segment.exercises.findIndex(x => x.id === e.id) < 0))
                 .finally(() => this.loading.get = false)
         },

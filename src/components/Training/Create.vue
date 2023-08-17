@@ -22,7 +22,7 @@
             </v-card-title>
             <v-card-text>
                 <!-- <editor v-model="training.description" api-key="no-api-key"/> -->
-                <quill-editor v-if="(can('update', training, 'description') || can('create', training, 'description'))" v-model:content="training.description" theme="snow" contentType="html"></quill-editor>
+                <quill-editor v-if="(can('update', training, 'description') || can('create', training, 'description'))" v-model:content="training.description" theme="snow" contentType="html" :placeholder="t('field.description')"></quill-editor>
                 <div v-else v-html="training.description"></div>
             </v-card-text>
             <v-card-text v-if="showSharebility">
@@ -109,7 +109,7 @@ const loading = ref({
 
 const getSegments = () => {
     loading.value.get = true;
-    api.getAllSegments()
+    api.getAllSegments({})
         .then((data) => segments.value = data.items)
         .finally(() => loading.value.get = false)
 }

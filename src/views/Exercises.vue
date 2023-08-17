@@ -84,7 +84,7 @@ export default {
             this.getTags();
         },
         addRow () {
-            this.exercises.push({
+            this.exercises.unshift({
                 id: '',
                 name: '',
                 description: '',

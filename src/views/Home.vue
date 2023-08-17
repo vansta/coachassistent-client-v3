@@ -35,7 +35,7 @@ export default {
     },
     methods: {
         getExercises () {
-            this.$api.getAllExercises()
+            this.$api.getAllExercises({})
                 .then((data) => this.exercises = data.items)
         },
         editRow (row) {

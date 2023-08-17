@@ -29,7 +29,8 @@ const messages = {
         copy: 'Kopieren',
         edit: 'Editeren',
         save: 'Opslaan',
-        view: 'Details'
+        view: 'Details',
+        leave_group: 'Groep verlaten'
       },
       
       sharingLevel: {
@@ -73,6 +74,7 @@ const messages = {
       login: 'Inloggen',
       logout: 'Uitloggen',
       register: 'Registreren',
+      request_membership: 'Lidmaatschap aanvragen',
 
       username: 'Gebruikersnaam',
       password: 'Wachtwoord',
@@ -82,6 +84,7 @@ const messages = {
       save: 'Opslaan',
 
       membership_requests: 'Lidaanvragen',
+      requested: 'In aanvraag',
 
       create_new_group: 'Nieuwe groep aanmaken',
       add_existing_group: 'Bestaande group toevoegen'
