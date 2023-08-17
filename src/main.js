@@ -25,7 +25,10 @@ import api from '@/plugins/apiplugin.js';
   Vue.use(api, { useAuthenticationStore });
 
 Vue.use(Toast, {
-  position: POSITION.BOTTOM_CENTER
+  position: POSITION.BOTTOM_RIGHT,
+  transition: "Vue-Toastification__bounce",
+  maxToasts: 3,
+  newestOnTop: true
 })
 
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue';

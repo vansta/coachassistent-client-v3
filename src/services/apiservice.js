@@ -50,11 +50,14 @@ const createApiClient = (useAuthenticationStore) => {
     },
     function (error) {
       if (error.response && error.response.status === 401) {
-        console.log('Login timed out');
         authenticationStore.logout();
       }
       else {
-        toast.error(error);
+        var message;
+        if (error.message) {
+          message = error.message
+        }
+        toast.error(message);
       }
 
       throw error;
@@ -189,6 +192,9 @@ const createApiService = (apiClient) => {
         postGroup(group) {
           return apiClient.post('Group', group)
         },
+        requestMembership(groupId) {
+          return apiClient.post('Group/RequestMembership', groupId);
+        },
     
         async login ({ userName, password}) {
             const passwordHash = sha256(password).toString();
@@ -209,14 +215,14 @@ const createApiService = (apiClient) => {
             }
         },
 
-        async register({ userName, email, password, groups}) {
+        async register({ userName, email, password, groupIds}) {
           const passwordHash = sha256(password).toString();
     
             const resp = await apiClient.post('Authentication/Register', {
                 userName,
                 email,
                 passwordHash,
-                groups
+                groupIds
             });
     
             setToken(resp.data);

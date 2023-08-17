@@ -15,7 +15,7 @@
                 <permissions-overview :role="role" :permissions="role.rolePermissions" :actions="actions" :subjects="subjects"></permissions-overview>
             </v-card-text>
             <v-card-actions>
-                <v-btn :disabled="!can('update', role)" @click="save(index)"><v-icon start>mdi-content-save</v-icon>Save</v-btn>
+                <v-btn :disabled="!can('update', role)" @click="save(index)" :loading="loading.save"><v-icon start>mdi-content-save</v-icon>Save</v-btn>
             </v-card-actions>
         </v-card>
     </v-container>
@@ -23,7 +23,8 @@
 
 <script>
 import { useAbility } from '@casl/vue';
-import PermissionsOverview from '../Permissions/Overview.vue'
+import PermissionsOverview from '@/views/Permissions/Overview.vue'
+import { useToast } from 'vue-toastification';
 
 export default {
     components: {
@@ -31,8 +32,9 @@ export default {
     },
     setup() {
         const { can } = useAbility();
+        const toast = useToast();
         return {
-            can
+            can, toast
         }
     },
     mounted() {
@@ -44,7 +46,10 @@ export default {
         return {
             roles: [],
             actions: [],
-            subjects: []
+            subjects: [],
+            loading: {
+                save: false
+            }
         }
     },
     methods: {
@@ -61,7 +66,10 @@ export default {
                 .then(resp => this.subjects = resp.data);
         },
         save (index) {
-            this.$api.putRole(this.roles[index]);
+            this.loading.save = true;
+            this.$api.putRole(this.roles[index])
+                .then(() => this.toast.success(t('saved')))
+                .finally(() => this.loading.save = false);
         }
 
         // getFields(subjectId) {

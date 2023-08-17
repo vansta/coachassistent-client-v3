@@ -27,7 +27,7 @@
             <quill-editor v-if="(can('update', editExercise, 'description') || can('create', editExercise, 'description'))" v-model:content="editExercise.description" theme="snow" contentType="html" :placeholder="t('field.description')"></quill-editor>
             <div v-else v-html="editExercise.description"></div>
 
-            <v-combobox v-model="editExercise.tags" :label="t('field.tags')" :items="tags" multiple></v-combobox>
+            <v-combobox v-model="editExercise.tags" :label="t('field.tags')" :items="tags" multiple chips></v-combobox>
             <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
                 <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment" v-slot="{ isSelected, toggle }" :value="attachment">
                     <v-img 
@@ -43,7 +43,7 @@
                     </v-img>
                 </v-slide-group-item>
             </v-slide-group>
-            <v-file-input outlined v-model="editExercise.addedAttachments" multiple :label="t('field.attachments')">
+            <v-file-input outlined v-model="editExercise.addedAttachments" multiple :label="t('field.attachments')" chips>
                 <template v-slot:prepend>
                     <v-icon>mdi-content-save</v-icon>
                 </template>

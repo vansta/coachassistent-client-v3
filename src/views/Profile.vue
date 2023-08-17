@@ -39,7 +39,7 @@
                 </v-table>
                 <v-row>
                     <v-col>
-                        <v-autocomplete :items="availableGroups" :label="t('request_membership')" @update:modelValue="addMembership" return-object></v-autocomplete>
+                        <v-autocomplete :items="availableGroups" :label="t('request_membership')" @update:modelValue="addMembership" :loading="loading.addMembership"></v-autocomplete>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -67,22 +67,24 @@ const toast = useToast();
 const { t } = useI18n();
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 
-const loading = ref({ get: true, save: false });
+const loading = ref({ get: true, save: false, addMembership: false });
 const user = ref({
     memberships: []
 });
 const groups = ref([]);
 
-const save = () => {
+const save = async () => {
     loading.value.save = true;
-    api.putUser(user.value)
-        .finally(() => loading.value.save = false);
-
+    await api.putUser(user.value);
+    loading.value.save = false;
+    toast.success(t('saved'));
 }
 
-api.getUser()
-    .then(resp => user.value = resp.data)
-    .finally(() => loading.value.get = false);
+const getUser = () => {
+    api.getUser()
+        .then(resp => user.value = resp.data)
+        .finally(() => loading.value.get = false);
+}
 
 api.getAvailableGroups()
     .then(resp => groups.value = resp.data);
@@ -93,15 +95,16 @@ const leaveGroup = async (index) =>{
         user.value.memberships.splice(index, 1);
     }
 }
-const addMembership = ({ value, title }) => {
-    user.value.memberships.push({
-        groupId: value,
-        group: title,
-        role: t('requested')
-    })
+const addMembership = async (value) => {
+    loading.value.addMembership = true;
+    await api.requestMembership(value);
+    loading.value.addMembership = false;
+    getUser();
 }
 
 const availableGroups = computed(() => {
     return groups.value.filter(g => !user.value.memberships.map(ms => ms.groupId).includes(g.value));
 })
+
+getUser();
 </script>

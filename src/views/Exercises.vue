@@ -15,15 +15,15 @@
                 <search @search="getExercises"></search>
             </template>
             <template #item="{ item }">
-                <exercise-view v-if="!item.edit" :exercise="item" @edit="editRow(item)" @copy="onCopy"></exercise-view>
-                <exercise-edit v-else :exercise="item" @save="saveRow(item)" @remove="removeRow(item)" @cancel="item.edit = false" :tags="tags"></exercise-edit>
+                <exercise-view v-if="!item.edit" :exercise="item" @edit="item.edit = true" @copy="onCopy"></exercise-view>
+                <exercise-edit v-else :exercise="item" @save="saveRow(item)" @remove="getExercises" @cancel="item.edit = false" :tags="tags"></exercise-edit>
             </template>
         </c-data-iterator>
     </div>
     
 </template>
 
-<script>
+<script setup>
 import CDataIterator from '@/components/common/CDataIterator.vue';
 import ExerciseView from '@/components/Exercise/View.vue'
 import ExerciseEdit from '@/components/Exercise/Edit.vue'
@@ -32,80 +32,61 @@ import { useAuthenticationStore } from '@/plugins/pinia';
 import { useWindowSize } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { useAbility } from '@casl/vue';
+import { ref, inject } from 'vue';
 
-export default {
-    components: {
-    CDataIterator,
-    ExerciseEdit,
-    ExerciseView,
-    Search
-},
-    created () {
-        this.getExercises();
-        this.getTags();
-    },
-    setup() {
-        const authStore = useAuthenticationStore();
-        const { width } = useWindowSize();
-        const { t } =useI18n();
-        const { can } = useAbility();
+const authStore = useAuthenticationStore();
+const { width } = useWindowSize();
+const { t } =useI18n();
+const { can } = useAbility();
+const api = inject('api');
 
-        return { authStore, width, t, can };
-    },
-    data() {
-        return {
-            exercises: [],
-            tags: [],
-            loading: false,
-            totalCount: 0
-        }
-    },
-    methods: {
-        getTags() {
-            this.$api.getTags()
-                .then(resp => this.tags = resp.data);
-        },
+const exercises = ref([]);
+const tags = ref([]);
+const loading = ref(false);
+const totalCount = ref(0);
 
-        getExercises (search) {
-            this.loading = true;
-            this.$api.getAllExercises(search ?? {})
-                .then(resp => {
-                    this.exercises = resp.data.items;
-                    this.totalCount = resp.data.totalCount;
-                })
-                .finally(() => this.loading = false);
-        },
-        editRow (row) {
-            row.edit = true;
-        },
-        saveRow (row) {
-            row.edit = false;
-            this.getExercises();
-            this.getTags();
-        },
-        addRow () {
-            this.exercises.unshift({
-                id: '',
-                name: '',
-                description: '',
-                edit: true,
-                attachments: [],
-                editorIds: [this.authStore.user.id],
-                constructor: { modelName: 'shareable' }
-            })
-        },
-        removeRow() {
-            this.getExercises();
-        },
-        onCopy(id) {
-            this.$api.getExercise(id)
-                .then(resp => {
-                    var copy = resp.data;
-                    copy.edit = true;
-                    this.exercises.unshift(copy);
-                });
-            
-        }
-    }
+const getTags = () => {
+    api.getTags()
+        .then(resp => tags.value = resp.data);
 }
+
+const getExercises = (search) => {
+    loading.value = true;
+    api.getAllExercises(search ?? {})
+        .then(({ data }) => {
+            exercises.value = data.items;
+            totalCount.value = data.totalCount;
+        })
+        .finally(() => loading.value = false);
+}
+
+const saveRow = (row) => {
+    row.edit = false;
+    getExercises();
+    getTags();
+}
+
+const addRow = () => {
+    exercises.unshift({
+        id: '',
+        name: '',
+        description: '',
+        edit: true,
+        attachments: [],
+        editorIds: [authStore.user.id],
+        constructor: { modelName: 'shareable' }
+    })
+}
+
+const onCopy = (id) => {
+    api.getExercise(id)
+        .then(resp => {
+            var copy = resp.data;
+            copy.edit = true;
+            exercises.value.unshift(copy);
+        });
+}
+
+getTags();
+getExercises();
 </script>

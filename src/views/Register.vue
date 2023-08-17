@@ -9,7 +9,7 @@
                 <v-text-field v-model="user.email" :label="t('email')"></v-text-field>
                 <v-text-field v-model="user.password" :label="t('password')" type="password"></v-text-field>
 
-                <v-select v-model="user.groups" :items="availableGroups" multiple :label="t('groups')"></v-select>
+                <v-autocomplete v-model="user.groupIds" :items="availableGroups" multiple :label="t('request_membership')" chips></v-autocomplete>
             </v-card-text>
             <v-card-actions>
                 <v-btn @click="register" :loading="loading">
@@ -43,7 +43,7 @@ const register = () => {
     api.register(user.value)
         .then(token => {
             authenticationStore.login(token);
-            toast.success('Welcome');
+            toast.success(t('welcome'));
             router.push({ name: 'Home' });
         })
         .finally(() => loading.value = false);

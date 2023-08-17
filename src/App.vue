@@ -147,8 +147,11 @@ api.getPermissions()
     ability.update(buildRules(resp.data));
     authenticationStore.setPermissions(resp.data);
 })
-api.checkToken();
-setInterval(() => {
+
+if (authenticationStore.isAuthenticated){
   api.checkToken();
-}, 60000);
+  setInterval(() => {
+    api.checkToken();
+  }, 60000);
+}
 </script>

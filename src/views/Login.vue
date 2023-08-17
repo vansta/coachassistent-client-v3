@@ -48,7 +48,7 @@ export default {
                 .then(token => {
                     this.getPermissions();
                     this.authenticationStore.login(token);
-                    this.toast.success('Welcome');
+                    this.toast.success(this.t('welcome'));
                     this.$router.push({ name: 'Home' });
                 })
                 .finally(() => this.loading = false);

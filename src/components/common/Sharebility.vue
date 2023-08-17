@@ -4,8 +4,8 @@
             <v-select v-model="modelValue.sharingLevel" :items="sharingLevels" :label="t('field.shareability')" :item-title="(option) => t(`sharingLevel.${option.value}`)"></v-select>
         </v-card-title>
         <v-card-text>
-            <v-select v-if="modelValue.sharingLevel == 1" v-model="modelValue.groupIds" multiple :items="groups" :label="t('groups')"></v-select>
-            <v-autocomplete v-model="modelValue.editors" multiple :items="editors" :label="t('editors')"></v-autocomplete>
+            <v-select v-if="modelValue.sharingLevel == 1" v-model="modelValue.groupIds" multiple :items="groups" :label="t('groups')" chips></v-select>
+            <v-autocomplete v-model="modelValue.editors" multiple :items="editors" :label="t('editors')" chips></v-autocomplete>
         </v-card-text>
     </v-card>
 </template>

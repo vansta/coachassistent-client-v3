@@ -9,7 +9,7 @@
                     </div>
                     
                     <v-text-field v-model="group.description" :readonly="!can(action, group, 'description')" :label="t('field.description')"></v-text-field>
-                    <v-select v-model="group.tags" :readonly="!can(action, group, 'tags')" :label="t('field.tags')" :items="tags" multiple></v-select>
+                    <v-select v-model="group.tags" :readonly="!can(action, group, 'tags')" :label="t('field.tags')" :items="tags" multiple chips></v-select>
                 </v-form>
             </v-card-text>
             <v-card-subtitle>
@@ -79,13 +79,14 @@
 </template>
 
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, computed } from 'vue';
 import EditMembership from '@/components/Membership/Edit.vue';
 import EditMembershipRequest from '@/components/Membership/Request.vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useAbility } from '@casl/vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
 
 const authenticationStore = useAuthenticationStore();
 const { can } = useAbility();
@@ -93,6 +94,7 @@ const { t } = useI18n();
 const router = useRouter();
 const route = useRoute();
 const api = inject('api');
+const toast = useToast();
 
 const props = defineProps({
     id: [Number, String]
@@ -113,13 +115,8 @@ const roles = ref([]);
 const users = ref([]);
 const action = ref('create');
 const loading = ref({ save: false });
-const availableGroups= ref([]);
+const groups= ref([]);
 
-if (props.id) {
-    action.value = 'update';
-    api.getGroup(props.id)
-        .then(resp => group.value = resp.data);
-}
 api.getTags()
     .then(resp => tags.value = resp.data);
 api.getEditors()
@@ -127,24 +124,29 @@ api.getEditors()
 api.getRoles()
     .then(resp => roles.value = resp.data);
 api.getAvailableGroups('update')
-    .then(resp => availableGroups.value = resp.data);
+    .then(resp => groups.value = resp.data);
+
+const getGroup = () => {
+    api.getGroup(props.id)
+        .then(resp => group.value = resp.data);
+}
 const addMember = () => {
     group.value.members.push({});
 }
 const onDeleteRow = (index) => {
     group.value.members.splice(index, 1);
 }
-const save = () => {
+const save = async () => {
     loading.value.save = true;
     if (props.id) {
-        api.putGroup(group.value)
-            .finally(() => loading.value.save = false);
+        await api.putGroup(group.value);
     }
     else {
-        api.postGroup(group.value)
-            .then(resp => router.push({ name: 'EditGroup', params: { id: resp.data }}))
-            .finally(() => loading.value.save = false);
+        const { data } = await api.postGroup(group.value);
+        router.push({ name: 'EditGroup', params: { id: data }});
     }
+    loading.value.save = false;
+    toast.success(t('saved'))
 }
 
 const addSubGroup = async () => {
@@ -162,4 +164,13 @@ const onGroupSelect = (value) => {
     });
     console.log(value);
 }
+
+if (props.id) {
+    action.value = 'update';
+    getGroup();
+}
+
+const availableGroups = computed(() => {
+    return groups.value.filter(g => !group.value.subGroups.map(sg => sg.id).includes(g.value));
+})
 </script>

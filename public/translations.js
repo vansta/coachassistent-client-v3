@@ -87,7 +87,9 @@ const messages = {
       requested: 'In aanvraag',
 
       create_new_group: 'Nieuwe groep aanmaken',
-      add_existing_group: 'Bestaande group toevoegen'
+      add_existing_group: 'Bestaande group toevoegen',
+
+      saved: 'Opgeslaan'
     }
   };
 
