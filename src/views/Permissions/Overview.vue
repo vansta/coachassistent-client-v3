@@ -13,7 +13,7 @@
             <v-col v-for="subject in subjects" :key="subject">
                 <div v-if="hasPermission(action, subject)" class="d-flex">
                     <v-checkbox-btn :disabled="!can('update', role)" v-model="dummyTrue" @click="onToggle(action, subject)" class="pe-2"></v-checkbox-btn>
-                    <v-select :disabled="!can('update', role)" v-model="getPermission(action, subject).fields" :items="subject.fields" label="Fields" hide-details multiple :item-title="option => t(`field.${option}`)"></v-select>
+                    <v-select :disabled="!can('update', role)" v-model="getPermission(action, subject).fields" :items="subject.fields" label="Fields" hide-details multiple :item-title="option => t(`field.${option.title}`)"></v-select>
                 </div>
                 <div v-else class="d-flex">
                     <v-checkbox-btn :disabled="!can('update', role)" @click="onToggle(action, subject)" class="pe-2"></v-checkbox-btn>

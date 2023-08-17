@@ -65,6 +65,8 @@ const messages = {
         attachments: 'Bijlagen',
         member: 'Lid',
         tags: 'Tags',
+        permissions: 'Rechten',
+        subgroup: 'Subgroepen'
       },
 
       welcome: 'Welkom',

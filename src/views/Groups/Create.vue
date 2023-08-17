@@ -43,6 +43,22 @@
                 </v-row>
             </v-card-text>
         </v-card>
+
+        <v-card v-if="can('update', group, 'subGroups')">
+            <v-card-title>
+                {{ t('field.subgroup') }}
+            </v-card-title>
+            <v-card-text>
+                <v-row v-for="(subgroup, index) in group.subgroups" :key="index">
+                    <v-col>
+                        {{ subgroup.name }}
+                    </v-col>
+                </v-row>
+                <v-row v-if="can('create', group, 'subGroups')">
+                    <v-btn>Add</v-btn>
+                </v-row>
+            </v-card-text>
+        </v-card>
     </v-container>
 </template>
 
