@@ -78,9 +78,13 @@ const messages = {
       password: 'Wachtwoord',
       email: 'Email',
 
+      add: 'Toevoegen',
       save: 'Opslaan',
 
-      membership_requests: 'Lidaanvragen'
+      membership_requests: 'Lidaanvragen',
+
+      create_new_group: 'Nieuwe groep aanmaken',
+      add_existing_group: 'Bestaande group toevoegen'
     }
   };
 

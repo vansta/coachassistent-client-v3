@@ -157,8 +157,10 @@ const createApiService = (apiClient) => {
         getUser() {
           return apiClient.get('User/Profile');
         },
-        getAvailableGroups() {
-          return apiClient.get('Group/Available');
+        getAvailableGroups(action) {
+          return apiClient.get('Group/Available', {params: {
+            action
+          }});
         },
     
         //POST

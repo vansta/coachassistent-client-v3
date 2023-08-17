@@ -25,7 +25,7 @@
                 </v-row>
                 <v-row v-if="can(action, group, 'member')">
                     <v-col>
-                        <v-btn block @click="addMember">Add</v-btn>
+                        <v-btn block @click="addMember">{{ t('add') }}</v-btn>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -43,114 +43,119 @@
                 </v-row>
             </v-card-text>
         </v-card>
-
         <v-card v-if="can('update', group, 'subGroups')">
             <v-card-title>
                 {{ t('field.subgroup') }}
             </v-card-title>
             <v-card-text>
-                <v-row v-for="(subgroup, index) in group.subgroups" :key="index">
+                <v-row v-for="(subgroup, index) in group.subGroups" :key="index">
                     <v-col>
                         {{ subgroup.name }}
                     </v-col>
+                    <v-col>
+                        {{ subgroup.description }}
+                    </v-col>
+                    <v-col cols="2">
+                        <v-btn icon="mdi-pencil" variant="text" @click="editSubGroup(subgroup)"></v-btn>
+                        <v-btn icon="mdi-delete" variant="text" @click="group.subGroups.splice(index, 1)"></v-btn>
+                    </v-col>
                 </v-row>
-                <v-row v-if="can('create', group, 'subGroups')">
-                    <v-btn>Add</v-btn>
+                <v-row v-if="can('create', 'group', 'subgroup')">
+                    <v-col v-if="group.id">
+                        <v-btn block @click="addSubGroup" size="large">{{ t('create_new_group') }}</v-btn>
+                    </v-col>
+                    <v-col>
+                        <v-select :label="t('add_existing_group')" :items="availableGroups" hide-details="auto" @update:modelValue="onGroupSelect" return-object></v-select>
+                        <!-- <v-btn block @click="addGroup = !addGroup">{{ t('add_existing_group') }}</v-btn> -->
+                    </v-col>
                 </v-row>
             </v-card-text>
         </v-card>
     </v-container>
 </template>
 
-<script>
+<script setup>
+import { ref, inject } from 'vue';
 import EditMembership from '@/components/Membership/Edit.vue';
 import EditMembershipRequest from '@/components/Membership/Request.vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useAbility } from '@casl/vue';
 import { useI18n } from 'vue-i18n';
-export default {
-    components: {
-        EditMembership,
-        EditMembershipRequest
-    },
-    setup() {
-        const authenticationStore = useAuthenticationStore();
-        const { can } = useAbility();
-        const { t } = useI18n();
+import { useRoute, useRouter } from 'vue-router';
 
-    return { authenticationStore, can, t }
-    },
-    props: {
-        id: [Number, String]
-    },
-    mounted() {
-        this.getGroup();
-        this.getTags();
-        this.getRoles();
-        this.getUsers();
-    },
-    data () {
-        return {
-            group: {
+const authenticationStore = useAuthenticationStore();
+const { can } = useAbility();
+const { t } = useI18n();
+const router = useRouter();
+const route = useRoute();
+const api = inject('api');
+
+const props = defineProps({
+    id: [Number, String]
+});
+
+const group = ref({
                 id: null,
                 constructor: { modelName: 'group' },
                 members: [
                     { 
-                        userId: this.authenticationStore.user.id
+                        userId: authenticationStore.user.id
                      }
-                ]
-            },
-            tags: [],
-            roles: [],
-            users: [],
-            action: 'create',
-            loading: {
-                save: false
-            }
-        }
-    },
-    methods: {
-        getGroup () {
-            if (this.id) {
-                this.action = 'update';
-                this.$api.getGroup(this.id)
-                    .then(resp => this.group = resp.data);
-            }
-        },
-        getTags() {
-            this.$api.getTags()
-                .then(resp => this.tags = resp.data);
-        },
-        getRoles() {
-            this.$api.getRoles()
-                .then(resp => this.roles = resp.data);
-        },
-        //TODO filter for group
-        getUsers() {
-            this.$api.getEditors()
-                .then(resp => this.users = resp.data);
-        },
+                ],
+                parentGroupId: route.params.parentGroupId
+            });
+const tags = ref([]);
+const roles = ref([]);
+const users = ref([]);
+const action = ref('create');
+const loading = ref({ save: false });
+const availableGroups= ref([]);
 
-        addMember() {
-            this.group.members.push({ })
-        },
-
-        onDeleteRow (index) {
-            this.group.members.splice(index, 1);
-        },
-
-        save() {
-            this.loading.save = true;
-            if (this.id) {
-                this.$api.putGroup(this.group)
-                    .finally(() => this.loading.save = false);
-            }
-            else {
-                this.$api.postGroup(this.group)
-                    .then(resp => this.$router.push({ name: 'EditGroup', params: { id: resp.data }}))
-                    .finally(() => this.loading.save = false);
-            }
-        }
+if (props.id) {
+    action.value = 'update';
+    api.getGroup(props.id)
+        .then(resp => group.value = resp.data);
+}
+api.getTags()
+    .then(resp => tags.value = resp.data);
+api.getEditors()
+    .then(resp => users.value = resp.data);
+api.getRoles()
+    .then(resp => roles.value = resp.data);
+api.getAvailableGroups('update')
+    .then(resp => availableGroups.value = resp.data);
+const addMember = () => {
+    group.value.members.push({});
+}
+const onDeleteRow = (index) => {
+    group.value.members.splice(index, 1);
+}
+const save = () => {
+    loading.value.save = true;
+    if (props.id) {
+        api.putGroup(group.value)
+            .finally(() => loading.value.save = false);
     }
+    else {
+        api.postGroup(group.value)
+            .then(resp => router.push({ name: 'EditGroup', params: { id: resp.data }}))
+            .finally(() => loading.value.save = false);
+    }
+}
+
+const addSubGroup = async () => {
+    await router.push({ name: 'CreateGroup', params: { parentGroupId: group.value.id }});
+    router.go(0);
+}
+const editSubGroup = async (subgroup) => {
+    await router.push({ name: 'EditGroup', params: { id: subgroup.id }});
+    router.go(0);
+}
+const onGroupSelect = (value) => {
+    group.value.subGroups.push({
+        id: value.value,
+        name: value.title
+    });
+    console.log(value);
 }
 </script>

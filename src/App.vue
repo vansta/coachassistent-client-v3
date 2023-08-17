@@ -20,7 +20,7 @@
 
     <v-main>
       <v-container>
-        <router-view/>
+        <router-view :key="route.url" />
       </v-container>
     </v-main>
   </v-app>
@@ -30,12 +30,13 @@
 import { computed, inject, ref } from 'vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useAbility } from '@casl/vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 const authenticationStore = useAuthenticationStore();
 const { can } = useAbility();
 const router = useRouter();
+const route = useRoute();
 const ability = useAbility();
 import { buildRules } from '@/services/ability';
 

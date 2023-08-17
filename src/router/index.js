@@ -78,7 +78,7 @@ const routes = [
     component: () => import('../views/Groups/Overview.vue')
   },
   {
-    path: '/groups/create',
+    path: '/groups/create/:parentGroupId?',
     name: 'CreateGroup',
     props: true,
     component: () => import('../views/Groups/Create.vue')
