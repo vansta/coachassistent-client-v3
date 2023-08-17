@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-btn :to="{ name: 'CreateGroup' }">{{ t('create') }}</v-btn>
+        <v-btn :to="{ name: 'CreateGroup' }">{{ t('action.create') }}</v-btn>
         <c-data-table :items="groups" :headers="headers" @click:row="onRowClick">
 
     </c-data-table>
@@ -29,9 +29,11 @@ export default {
     data() {
         return {
             headers: [
-                { field: 'name' },
-                { field: 'description' },
-                { field: 'tags' }
+                { header: 'field.name', field: 'name' },
+                { header: 'field.description', field: 'description' },
+                { header: 'field.tags', field: 'tags' },
+                { header: 'members', field: 'members' },
+                { header: 'membership_requests', field: 'membershipRequests' }
             ],
             groups: [],
             loading: false
