@@ -28,7 +28,8 @@
             <div v-else v-html="editExercise.description"></div>
 
             <v-combobox v-model="editExercise.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3"></v-combobox>
-            <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
+            <attachment-selector v-model="editExercise" :readonly="!(can('update', editExercise, 'attachments') || can('create', editExercise, 'attachments'))"></attachment-selector>
+            <!-- <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
                 <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment" v-slot="{ isSelected, toggle }" :value="attachment">
                     <v-img 
                         :src="api.getAttachmentLink(attachment)" 
@@ -47,7 +48,7 @@
                 <template v-slot:prepend>
                     <v-icon>mdi-content-save</v-icon>
                 </template>
-            </v-file-input>
+            </v-file-input> -->
             <sharebility v-if="showSharebility" v-model="editExercise"></sharebility>
         </template>
 
@@ -61,6 +62,7 @@ import { inject, ref, reactive } from 'vue'
 import { useToast } from 'vue-toastification'
 import Layout from '@/components/Exercise/Layout.vue';
 import Sharebility from '@/components/common/Sharebility.vue';
+import AttachmentSelector from '@/components/Attachment/Selector.vue';
 import { useAbility } from '@casl/vue';
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog } from '@vueuse/core';
