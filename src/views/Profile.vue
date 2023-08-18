@@ -44,6 +44,7 @@
                 </v-row>
             </v-card-text>
             <v-card-actions>
+                
                 <v-btn @click="save" :loading="loading.save">
                     {{ t('save') }}
                 </v-btn>

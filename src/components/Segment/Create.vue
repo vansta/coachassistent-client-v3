@@ -25,6 +25,8 @@
                 <!-- <editor v-model="segment.description" api-key="no-api-key"/> -->
                 <quill-editor v-if="(can('update', segment, 'description') || can('create', segment, 'description'))" v-model:content="segment.description" theme="snow" contentType="html" :placeholder="t('field.description')"></quill-editor>
                 <div v-else v-html="segment.description"></div>
+
+                <v-combobox v-model="segment.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3"></v-combobox>
             </v-card-text>
             <v-card-text v-if="showSharebility">
                 <sharebility v-model="segment"></sharebility>
@@ -95,6 +97,7 @@ export default defineComponent({
                 .then((data) => this.segment = data)
         }
         this.getExercises();
+        this.getTags();
     },
     props: {
         id: String
@@ -183,6 +186,10 @@ export default defineComponent({
                 this.segment.exercises.push(exercise)
             }
             
+        },
+        getTags() {
+            this.$api.getTags()
+                .then(resp => this.tags = resp.data);
         }
     },
     computed: {

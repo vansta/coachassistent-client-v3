@@ -27,7 +27,7 @@
             <quill-editor v-if="(can('update', editExercise, 'description') || can('create', editExercise, 'description'))" v-model:content="editExercise.description" theme="snow" contentType="html" :placeholder="t('field.description')"></quill-editor>
             <div v-else v-html="editExercise.description"></div>
 
-            <v-combobox v-model="editExercise.tags" :label="t('field.tags')" :items="tags" multiple chips></v-combobox>
+            <v-combobox v-model="editExercise.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3"></v-combobox>
             <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
                 <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment" v-slot="{ isSelected, toggle }" :value="attachment">
                     <v-img 
@@ -60,7 +60,6 @@
 import { inject, ref, reactive } from 'vue'
 import { useToast } from 'vue-toastification'
 import Layout from '@/components/Exercise/Layout.vue';
-import Editor from '@tinymce/tinymce-vue';
 import Sharebility from '@/components/common/Sharebility.vue';
 import { useAbility } from '@casl/vue';
 import { useI18n } from 'vue-i18n';

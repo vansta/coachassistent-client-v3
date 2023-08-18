@@ -24,6 +24,8 @@
                 <!-- <editor v-model="training.description" api-key="no-api-key"/> -->
                 <quill-editor v-if="(can('update', training, 'description') || can('create', training, 'description'))" v-model:content="training.description" theme="snow" contentType="html" :placeholder="t('field.description')"></quill-editor>
                 <div v-else v-html="training.description"></div>
+
+                <v-combobox v-model="training.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3"></v-combobox>
             </v-card-text>
             <v-card-text v-if="showSharebility">
                 <shareability v-model="training"></shareability>
@@ -106,6 +108,7 @@ const loading = ref({
     save: false,
     remove: false
 })
+const tags = ref([]);
 
 const getSegments = () => {
     loading.value.get = true;
@@ -173,7 +176,8 @@ if (props.id) {
         .then((data) => training.value = data)
 }
 getSegments();
-
+api.getTags()
+    .then(resp => tags.value = resp.data);
 </script>
 
 <style scoped>

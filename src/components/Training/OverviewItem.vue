@@ -17,8 +17,11 @@
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.remove')"></v-tooltip>
                 </v-btn>
             </div>
-            
+            <div class="d-flex">
+                <v-chip v-for="tag in training.tags" :key="tag" class="mr-1">{{ tag }}</v-chip>
+            </div>
         </v-card-title>
+        <v-divider></v-divider>
         <v-card-text>
             <div v-html="training.description"></div>
         </v-card-text>

@@ -13,6 +13,9 @@
                 </v-btn>
                 <v-btn v-if="mode == 'select'" :icon="collapse ? 'mdi-chevron-down' : 'mdi-chevron-up'" variant="text" @click="collapse = !collapse"></v-btn>
             </div>
+            <div class="d-flex">
+                <v-chip v-for="tag in exercise.tags" :key="tag" class="mr-1">{{ tag }}</v-chip>
+            </div>
         </template>
         <template #description>
             <div v-show="!collapse">
@@ -22,7 +25,6 @@
                     </v-carousel-item>
                 </v-carousel>
             </div>
-                
         </template>
     </layout>
 </template>
