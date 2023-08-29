@@ -1,6 +1,9 @@
 <template>
     <v-container>
         <v-card>
+            <v-card-title v-if="!group.id">
+                {{ t('create_new_group') }}
+            </v-card-title>
             <v-card-text>
                 <v-form>
                     <div class="d-flex">

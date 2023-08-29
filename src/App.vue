@@ -155,3 +155,9 @@ if (authenticationStore.isAuthenticated){
   }, 60000);
 }
 </script>
+
+<style>
+.myFont {
+  font-family: 'Mansalva', cursive; 
+}
+</style>
