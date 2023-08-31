@@ -1,5 +1,5 @@
 const settings = {
-    apiUrl: 'https://localhost:7210/api',
+    apiUrl: 'https://coachassistent-api.azurewebsites.net/api',
 }
 
 export default settings
