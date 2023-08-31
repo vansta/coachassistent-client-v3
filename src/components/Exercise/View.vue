@@ -20,7 +20,7 @@
         <template #description>
             <div v-show="!collapse">
                 <div v-html="exercise.description"></div>
-                <v-carousel @click.stop height="320" show-arrows="hover" cycle>
+                <v-carousel @click.stop height="320" show-arrows="hover" cycle continuous>
                     <v-carousel-item max-height="250" v-for="attachment in exercise.attachments" :key="attachment" :name="attachment" :src="$api.getAttachmentLink(attachment)">
                     </v-carousel-item>
                 </v-carousel>

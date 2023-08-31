@@ -2,7 +2,7 @@
     <div>
         <c-data-iterator
             :items="exercises"
-            :cols="12 / Math.floor(width / 500)"
+            :cols="width > 500 ? 12 / Math.floor(width / 500) : 1"
             :loading="loading"
             :totalCount="totalCount"
         >
