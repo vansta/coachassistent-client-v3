@@ -1,5 +1,5 @@
 const settings = {
-    apiUrl: 'https://localhost:7210/api',
+    apiUrl: import.meta.env.VITE_API_URL// 'https://coachassistent-api.azurewebsites.net/api',
 }
 
 export default settings
