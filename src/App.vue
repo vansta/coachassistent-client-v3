@@ -115,6 +115,17 @@ const navDrawerItems = ref([
             action: 'read',
             subject: 'role'
           }
+        },
+        {
+          title: t('licenses'),
+          props: {
+              prependIcon: 'mdi-security',
+              to: { name: 'Licenses' }
+          },
+          meta: {
+            action: 'read',
+            subject: 'license'
+          }
         }
         ]
       },

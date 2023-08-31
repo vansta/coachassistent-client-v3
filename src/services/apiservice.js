@@ -142,6 +142,9 @@ const createApiService = (apiClient) => {
         getRolesOverview() {
           return apiClient.get('Role/Overview')
         },
+        getLicensesOverview() {
+          return apiClient.get('License/Overview')
+        },
 
         getPermissions() {
           return apiClient.get('User/Permissions');
@@ -251,6 +254,9 @@ const createApiService = (apiClient) => {
         },
         putRole(role) {
           return apiClient.put('Role', role);
+        },
+        putLicense(license) {
+          return apiClient.put('License', license);
         },
         putUser(user) {
           return apiClient.put('User', user);

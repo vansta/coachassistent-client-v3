@@ -15,6 +15,7 @@ const messages = {
       administration: 'Administratie',
       groups: 'Groepen',
       roles: 'Rollen',
+      licenses: 'Licenties',
       editors: 'Beheerders',
       profile: 'Profiel',
 
@@ -57,7 +58,8 @@ const messages = {
       subject: {
         shareable: 'Item',
         group: 'Groep',
-        role: 'Role'
+        role: 'Role',
+        license: 'Licentie'
       },
       field: {
         name: 'Naam',

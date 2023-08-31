@@ -1,5 +1,20 @@
 import { createWebHistory, createRouter } from "vue-router";
-// import Home from "../views/Home.vue";
+// import { useAbility } from "@casl/vue";
+// const { can } = useAbility();
+
+import createAbility from '@/services/ability.js';
+const ability = createAbility;
+
+const ifCan = (to, from, next) => {
+  console.log(to.meta);
+  if (to.meta && to.meta.action && !ability.can(to.meta.action, to.meta.subject)) {
+    console.log('cannot', to.meta);
+  }
+  else {
+    next();
+    return;
+  }
+};
 
 const routes = [
   {
@@ -75,7 +90,12 @@ const routes = [
     path: '/groups',
     name: 'Groups',
     props: true,
-    component: () => import('../views/Groups/Overview.vue')
+    component: () => import('../views/Groups/Overview.vue'),
+    meta: {
+      action: 'read',
+      subject: 'group'
+    },
+    beforeEnter: ifCan
   },
   {
     path: '/groups/create/:parentGroupId?',
@@ -92,7 +112,22 @@ const routes = [
   {
     path: '/roles',
     name: 'Roles',
-    component: () => import('../views/Roles/Overview.vue')
+    component: () => import('../views/Roles/Overview.vue'),
+    meta: {
+      action: 'read',
+      subject: 'role'
+    },
+    beforeEnter: ifCan
+  },
+  {
+    path: '/licenses',
+    name: 'Licenses',
+    component: () => import('../views/Licenses/Overview.vue'),
+    meta: {
+      action: 'read',
+      subject: 'license'
+    },
+    beforeEnter: ifCan
   },
   {
     path: '/profile/:id',
@@ -101,13 +136,10 @@ const routes = [
   }
 ];
 
+
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
-
-// router.beforeEach((to, from) => {
-//   document.title = 'Coachassistent ' + to.meta?.title ?? '';
-// })
 
 export default router;

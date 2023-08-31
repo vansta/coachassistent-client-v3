@@ -13,7 +13,23 @@
             <v-col v-for="subject in subjects" :key="subject">
                 <div v-if="hasPermission(action, subject)" class="d-flex">
                     <v-checkbox-btn :disabled="!can('update', role)" v-model="dummyTrue" @click="onToggle(action, subject)" class="pe-2"></v-checkbox-btn>
-                    <v-select :disabled="!can('update', role)" v-model="getPermission(action, subject).fields" :items="subject.fields" label="Fields" hide-details multiple chips :item-title="option => t(`field.${option.title}`)"></v-select>
+                    <v-select :disabled="!can('update', role)" v-model="getPermission(action, subject).fields" :items="subject.fields" label="Fields" hide-details multiple chips :item-title="option => t(`field.${option.title}`)">
+                        <template v-slot:prepend-item>
+                            <v-list-item
+                                :title="t('select_all')"
+                                @click="toggleAll(action, subject)"
+                            >
+                                <template v-slot:prepend>
+                                <v-checkbox-btn
+                                    :indeterminate="isIndeterminate(action, subject)"
+                                    :model-value="getPermission(action, subject).fields.length > 0"
+                                ></v-checkbox-btn>
+                                </template>
+                            </v-list-item>
+
+                            <v-divider class="mt-2"></v-divider>
+                            </template>
+                    </v-select>
                 </div>
                 <div v-else class="d-flex">
                     <v-checkbox-btn :disabled="!can('update', role)" @click="onToggle(action, subject)" class="pe-2"></v-checkbox-btn>
@@ -57,11 +73,26 @@ export default {
         onToggle(action, subject) {
             var permissionIndex = this.permissions.findIndex(p => p.subjectId == subject.value && p.actionId == action.value);
             if (permissionIndex < 0) {
-                this.permissions.push({ actionId: action.value, subjectId: subject.value, fields: subject.fields });
+                this.permissions.push({ actionId: action.value, subjectId: subject.value, fields: subject.fields.map(f => f.value) });
             }
             else{
                 this.permissions.splice(permissionIndex, 1);
             }
+        },
+        toggleAll(action, subject) {
+            
+            var permission = this.getPermission(action, subject);
+            console.log(action, subject, permission);
+            if (permission.fields.length === subject.fields.length) {
+                permission.fields = [];
+            }
+            else {
+                permission.fields = subject.fields.map(f => f.value);
+            }
+        },
+        isIndeterminate(action, subject) {
+            var permission = this.getPermission(action, subject);
+            return permission.fields.length > 0 && permission.fields.length !== subject.fields.length;
         }
     }
 }
