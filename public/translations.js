@@ -90,7 +90,10 @@ const messages = {
       add_existing_group: 'Bestaande group toevoegen',
       register_with_new_group: 'Ik wil een nieuwe groep aanmaken',
 
-      saved: 'Opgeslaan'
+      saved: 'Opgeslaan',
+
+      add_attachment: 'Bijlage toevoegen',
+      remove_attachment: 'Bijlage verwijderen'
     }
   };
 

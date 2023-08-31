@@ -67,7 +67,7 @@ const saveRow = (row) => {
 }
 
 const addRow = () => {
-    exercises.unshift({
+    exercises.value.unshift({
         id: '',
         name: '',
         description: '',
