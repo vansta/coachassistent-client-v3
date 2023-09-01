@@ -33,13 +33,15 @@
         </v-card-text>
         <v-divider></v-divider>
         <v-card-text>
-            <v-list>
-                <v-list-item v-for="exercise in segment.exercises" :key="exercise">
-                    <v-list-item-title>
-                        {{ exercise }}
-                    </v-list-item-title>
-                </v-list-item>
-            </v-list>
+            <v-expansion-panels variant="popout" readonly>
+                    <v-expansion-panel v-for="(exercise, index) in segment.exercises" :key="index" elevation="0">
+                        <v-expansion-panel-title class="font-weight-medium">
+                            <span class="mr-3">{{ index + 1 }}</span>
+                            <span class="text-capitalize">{{ exercise }}</span>
+                            <template #actions></template>
+                        </v-expansion-panel-title>
+                    </v-expansion-panel>
+            </v-expansion-panels>
         </v-card-text>
 
         <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>

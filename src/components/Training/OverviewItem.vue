@@ -33,26 +33,20 @@
         </v-card-text>
         <v-divider></v-divider>
         <v-card-text>
-            <v-list>
-                <v-list-group v-for="(segment, index) in training.segments" :key="segment.id" :value="segment.id">
-                    <template v-slot:activator="{ props }">
-                        <v-list-item
-                            v-bind="props"
-                        >
-                            <v-list-item-title>
-                                {{ index + 1 }} {{ segment.name }}
-                            </v-list-item-title>
-                        </v-list-item>
-                    </template>
-
-                    <v-list-item
-                        v-for="exercise in segment.exercises"
-                        :key="exercise"
-                        :title="exercise"
-                        :value="exercise"
-                    ></v-list-item>
-                </v-list-group>
-            </v-list>
+            <v-expansion-panels multiple>
+                    <v-expansion-panel v-for="(segment, index) in training.segments" :key="index" :value="segment.id" elevation="0">
+                        <v-expansion-panel-title class="font-weight-medium">
+                            <span class="mr-3">{{ index + 1 }}</span>
+                            <span class="text-capitalize">{{ segment.name }}</span>
+                        </v-expansion-panel-title>
+                        <v-expansion-panel-text>
+                            <v-sheet v-for="(exercise, exerciseIndex) in segment.exercises" :key="exerciseIndex" rounded class="ma-3">
+                                <span class="mr-3">{{ exerciseIndex + 1 }}</span>
+                                <span class="text-capitalize">{{ exercise }}</span>
+                            </v-sheet>
+                        </v-expansion-panel-text>
+                    </v-expansion-panel>
+            </v-expansion-panels>
         </v-card-text>
 
         <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>
