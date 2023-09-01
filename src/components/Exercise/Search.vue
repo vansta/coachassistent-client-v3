@@ -3,6 +3,11 @@
         <v-card-text>
             <v-form>
                 <v-row>
+                    <v-col cols="1">
+                        <v-btn icon variant="outlined">
+                            <v-icon>mdi-heart</v-icon>
+                        </v-btn>
+                    </v-col>
                     <v-col>
                         <v-text-field v-model="search.search" :label="t('field.name')" @update:model-value="emitSearch" clearable hide-details="auto" prepend-icon="mdi-magnify"></v-text-field>
                     </v-col>
@@ -24,7 +29,7 @@ var searchTimeOut;
 const api = inject('api');
 
 const emit = defineEmits(['search']);
-const search = ref({ search: '', tags: [] });
+const search = ref({ search: '', tags: [], onlyFavorites: false });
 const tags = ref([]);
 
 const emitSearch = () => {

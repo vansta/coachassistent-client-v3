@@ -266,6 +266,9 @@ const createApiService = (apiClient) => {
             id, roleId, response
           })
         },
+        putFavorite(shareableId) {
+          return apiClient.put('Favorite', shareableId);
+        },
     
         //DELETE
         deleteExercise (id) {

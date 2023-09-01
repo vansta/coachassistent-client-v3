@@ -11,6 +11,11 @@
                     <v-icon>mdi-pencil</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.edit')"></v-tooltip>
                 </v-btn>
+                <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-heart" variant="text" @click="onFavorite" :loading="loading.favorite">
+                    <v-icon v-if="exercise.isFavorite">mdi-heart</v-icon>
+                    <v-icon v-else>mdi-heart-outline</v-icon>
+                    <v-tooltip activator="parent" location="bottom" :text="t('tooltip.favorite')"></v-tooltip>
+                </v-btn>
                 <v-btn v-if="mode == 'select'" :icon="collapse ? 'mdi-chevron-down' : 'mdi-chevron-up'" variant="text" @click="collapse = !collapse"></v-btn>
             </div>
             <div class="d-flex">
@@ -65,13 +70,24 @@ export default defineComponent({
     data () {
         return {
             slide: this.exercise.attachments[0],
-            collapse: this.mode !== 'edit'
+            collapse: this.mode !== 'edit',
+            loading: {
+                favorite: false
+            }
         }
     },
     methods: {
         onCopy() {
             this.$api.copyExercise(this.exercise.id)
                 .then(resp => this.$emit('copy', resp.data));
+        },
+        onFavorite () {
+            this.loading.favorite = true;
+            this.$api.putFavorite(this.exercise.shareableId)
+                .then(() => {
+                    this.exercise.isFavorite = !this.exercise.isFavorite;
+                })
+                .finally(() => this.loading.favorite = false);
         }
     },
     watch: {
