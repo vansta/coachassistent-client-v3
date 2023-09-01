@@ -47,8 +47,7 @@
                         <v-alert color="info" variant="tonal" density="compact">
                             <div class="d-flex justify-space-between align-center">
                                 <span>{{t('drag_to')}}</span>
-                                <span><v-btn icon="mdi-plus" variant="text" size="small"></v-btn></span>
-                                {{ selectedSegments.length }}
+                                <span><v-btn icon="mdi-plus" variant="text" size="small" @click="createSegment = true"></v-btn></span>
                             </div>
                         </v-alert>
                         
@@ -64,8 +63,6 @@
                         <v-alert variant="tonal">
                             <div class="d-flex justify-space-between align-center">
                                 <span>{{t('drag_from')}}</span>
-                                <!-- <span><v-btn icon="mdi-plus" variant="text" size="small"></v-btn></span> -->
-                                {{ segments.length }}
                             </div>
                         </v-alert>
                         <exercise-search @search="getSegments"></exercise-search>
