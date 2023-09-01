@@ -30,13 +30,25 @@
             <v-card-text v-if="showSharebility">
                 <shareability v-model="training"></shareability>
             </v-card-text>
+            <v-card-text>
+                <v-switch v-model="createSegment" label="Create"></v-switch>
+            </v-card-text>
         </v-card>
-        <v-row>
+        <v-row v-show="createSegment">
             <v-col>
+                <segment-create></segment-create>
+            </v-col>
+        </v-row>
+        <v-row v-show="!createSegment">
+            <v-col>
+                
                 <draggable v-model="training.segments" group="segments" item-key="id">
                     <template #header>
-                        <v-alert type="info" variant="tonal">
-                            {{t('drag_to')}}
+                        <v-alert color="info" variant="tonal" density="compact">
+                            <div class="d-flex justify-space-between align-center">
+                                <span>{{t('drag_to')}}</span>
+                                <span><v-btn icon="mdi-plus" variant="text" size="small"></v-btn></span>
+                            </div>
                         </v-alert>
                         
                     </template>
@@ -45,13 +57,16 @@
                     </template>
                 </draggable>
             </v-col>
-            <v-col v-show="(can('update', training) || can('create', training))">
+            <v-col cols="4" v-show="(can('update', training) || can('create', training))">
                 <draggable v-model="segments" group="segments" item-key="id">
                     <template #header>
                         <v-alert variant="tonal">
-                            {{t('drag_from')}}
+                            <div class="d-flex justify-space-between align-center">
+                                <span>{{t('drag_from')}}</span>
+                                <!-- <span><v-btn icon="mdi-plus" variant="text" size="small"></v-btn></span> -->
+                            </div>
                         </v-alert>
-                        <!-- <exercise-search @search="getExercises"></exercise-search> -->
+                        <exercise-search @search="getSegments"></exercise-search>
                     </template>
                     <template #item="{ element }">
                         <segment-view :segment="element"></segment-view>
@@ -65,15 +80,15 @@
 </template>
 
 <script setup>
-import { ref, computed, inject } from 'vue';
+import { ref, inject } from 'vue';
 
-import SegmentView from '@/components/Segment/OverviewItem.vue'
-import CDataIterator from '@/components/common/CDataIterator.vue'
+import SegmentView from '@/components/Segment/OverviewItem.vue';
 import Draggable from 'vuedraggable';
-import Editor from '@tinymce/tinymce-vue';
 import Shareability from '@/components/common/Sharebility.vue';
+import SegmentCreate from '@/components/Segment/Create.vue';
+import ExerciseSearch from '@/components/Exercise/Search.vue';
 
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toastification';
 import { useAbility } from '@casl/vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useConfirmDialog } from '@vueuse/core';
@@ -109,10 +124,11 @@ const loading = ref({
     remove: false
 })
 const tags = ref([]);
+const createSegment = ref(false);
 
-const getSegments = () => {
+const getSegments = (search) => {
     loading.value.get = true;
-    api.getAllSegments({})
+    api.getAllSegments(search)
         .then((data) => segments.value = data.items)
         .finally(() => loading.value.get = false)
 }
@@ -147,30 +163,6 @@ const remove = async () => {
     }
 }
 
-const startToDrag = (evt, item) => {
-    if (evt.dataTransfer !== null) {
-        evt.dataTransfer.dropEffect = 'link';
-        evt.dataTransfer.effectAllowed = 'link';
-        evt.dataTransfer.setData('id', item.id.toString())
-    }
-}
-
-const drop = async (evt, remove) => {
-    const segmentId = evt.dataTransfer?.getData('id');
-    if (remove) {
-        const index = training.value.segments.findIndex(e => e.id === segmentId);
-        training.value.segments.splice(index, 1);
-    }
-    else {
-        const segment = segments.value.find(e => e.id === segmentId);
-        training.value.segments.push(segment)
-    }
-}
-
-const availableSegments = computed(() => {
-    return segments.value.filter(e => training.value.segments.findIndex(x => x.id === e.id) < 0);
-})
-
 if (props.id) {
     api.getTraining(props.id)
         .then((data) => training.value = data)
@@ -179,13 +171,3 @@ getSegments();
 api.getTags()
     .then(resp => tags.value = resp.data);
 </script>
-
-<style scoped>
-  .drop-zone {
-    background-color: #eee;
-    margin-bottom: 10px;
-    padding: 10px;
-    padding-bottom: 50px;
-  }
-  
-</style>

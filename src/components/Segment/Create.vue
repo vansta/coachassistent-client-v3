@@ -22,7 +22,6 @@
                 
             </v-card-title>
             <v-card-text>
-                <!-- <editor v-model="segment.description" api-key="no-api-key"/> -->
                 <quill-editor v-if="(can('update', segment, 'description') || can('create', segment, 'description'))" v-model:content="segment.description" theme="snow" contentType="html" :placeholder="t('field.description')"></quill-editor>
                 <div v-else v-html="segment.description"></div>
 
@@ -39,7 +38,6 @@
                         <v-alert type="info" variant="tonal">
                             {{ t('drag_to') }}
                         </v-alert>
-                        
                     </template>
                     <template #item="{ element }">
                         <exercise-view v-if="!element.edit" :exercise="element" mode="select" @edit="element.edit = true"></exercise-view>
@@ -47,7 +45,7 @@
                     </template>
                 </draggable>
             </v-col>
-            <v-col v-show="(can('update', segment) || can('create', segment))">
+            <v-col cols="4" v-show="(can('update', segment) || can('create', segment))">
                 <draggable v-model="exercises" group="exercises" item-key="id">
                     <template #header>
                         <v-alert variant="tonal">{{ t('drag_from') }}</v-alert>
@@ -65,162 +63,99 @@
     </v-container>
 </template>
 
-<script>
+<script setup>
 import ExerciseView from '@/components/Exercise/View.vue';
 import ExerciseEdit from '@/components/Exercise/Edit.vue';
 import ExerciseSearch from '@/components/Exercise/Search.vue';
-import CDataIterator from '@/components/common/CDataIterator.vue'
-import Editor from '@tinymce/tinymce-vue';
 import Sharebility from '@/components/common/Sharebility.vue';
 import Draggable from 'vuedraggable';
 
-import { defineComponent } from 'vue'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toastification';
 import { useAbility } from '@casl/vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog } from '@vueuse/core';
+import { inject, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-export default defineComponent({
-    components: { ExerciseView, ExerciseEdit, ExerciseSearch, CDataIterator, Editor, Sharebility, Draggable },
-    setup() {
-        const toast = useToast();
-        const { can } = useAbility();
-        const authStore = useAuthenticationStore();
-        const { t } = useI18n();
-        const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
-        return { toast, can, authStore, t, isRevealed, reveal, confirm, cancel }
-    },
-    created () {
-        if (this.id) {
-            this.$api.getSegment(this.id)
-                .then((data) => this.segment = data)
-        }
-        this.getExercises();
-        this.getTags();
-    },
-    props: {
-        id: String
-    },
-    data () {
-        return {
-            segment: {
-                id: '',
-                name: '',
-                description: '',
-                exercises: [],
-                editorIds: [this.authStore.user?.id],
-                constructor: { modelName: 'shareable' },
-                sharingLevel: '0'
-            },
-            exercises: [],
-            tags: [],
+const toast = useToast();
+const { can } = useAbility();
+const authStore = useAuthenticationStore();
+const { t } = useI18n();
+const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
+const api = inject('api');
+const router = useRouter();
 
-            loading: {
-                get: false,
-                save: false,
-                remove: false
-            },
-            splitterValue: 50,
-            showSharebility: false
-        }
-    },
-    methods: {
-        getExercises (search) {
-            this.loading.get = true;
-            this.$api.getAllExercises(search ?? {})
-                .then(resp => this.exercises = resp.data.items.filter(e => this.segment.exercises.findIndex(x => x.id === e.id) < 0))
-                .finally(() => this.loading.get = false)
-        },
+const props = defineProps({
+    id: String
+});
 
-        save () {
-            this.loading.save = true;
-            if (!this.segment.id) {
-                this.$api.postSegment(this.segment)
-                    .then(resp => {
-                        this.segment.id = resp;
-                        this.$router.push({ name: 'Segments' })
-                    })
-                    .catch(err => this.toast.error(err))
-                    .finally(() => this.loading.save = false);
-            }
-            else {
-                this.$api.putSegment(this.segment)
-                    .then(() => {
-                        this.$router.push({ name: 'Segments' })
-                    })
-                    .catch(err => this.toast.error(err))
-                    .finally(() => this.loading.save = false);
-            }
-        },
-        async remove () {
-            const { data } = await this.reveal();
-            if (data) {
-                this.loading.remove = true;
-                this.$api.deleteSegment(this.segment.id)
-                .then(() => this.$router.push({ name: 'Segments' }))
-                .finally(() => this.loading.remove = false);
-            } 
-        },
-        onSaveExercise(exercise) {
-            exercise.edit = false;
-            this.getExercises();
-        },
+const segment = ref({
+    id: '',
+    name: '',
+    description: '',
+    exercises: [],
+    editorIds: [authStore.user?.id],
+    constructor: { modelName: 'shareable' },
+    sharingLevel: '0'
+});
+const exercises = ref([]);
+const tags = ref([]);
+const loading = ref({
+    get: false,
+    save: false,
+    remove: false
+});
+const showSharebility = ref(false);
 
-        startToDrag (evt, item) {
-            if (evt.dataTransfer !== null) {
-                evt.dataTransfer.dropEffect = 'link';
-                evt.dataTransfer.effectAllowed = 'link';
-                evt.dataTransfer.setData('id', item.id.toString())
-            }
-            
-        },
-        async drop (evt, remove) {
-            const exerciseId = evt.dataTransfer?.getData('id');
-            if (remove) {
-                const index = this.segment.exercises.findIndex(e => e.id === exerciseId);
-                this.segment.exercises.splice(index, 1);
-            }
-            else {
-                const exercise = this.exercises.find(e => e.id === exerciseId);
-                this.segment.exercises.push(exercise)
-            }
-            
-        },
-        getTags() {
-            this.$api.getTags()
-                .then(resp => this.tags = resp.data);
-        }
-    },
-    computed: {
-        // availableExercises: {
-        //     get() {
-        //         return this.exercises.filter(e => this.segment.exercises.findIndex(x => x.id === e.id) < 0);
-        //     },
-        //     set(value) {
-        //         this.segment.exercises = value;
-        //         console.log(value);
-        //         this.segment.exercises.push(value);
-        //     }
-        // }
-        availableExercises () {
-            if (this.exercises){
-                return this.exercises.filter(e => this.segment.exercises.findIndex(x => x.id === e.id) < 0);
-            }
-            else {
-                return [];
-            }
-        }
+if (props.id) {
+    api.getSegment(props.id)
+        .then((data) => segment.value = data)
+}
+
+const getExercises = (search) => {
+    loading.value.get = true;
+    api.getAllExercises(search ?? {})
+        .then(resp => exercises.value = resp.data.items.filter(e => segment.value.exercises.findIndex(x => x.id === e.id) < 0))
+        .finally(() => loading.value.get = false)
+}
+const save = () => {
+    loading.save = true;
+    if (!segment.value.id) {
+        api.postSegment(this.segment)
+            .then(resp => {
+                segment.value.id = resp;
+                router.push({ name: 'Segments' })
+            })
+            .catch(err => toast.error(err))
+            .finally(() => loading.value.save = false);
     }
-})
+    else {
+        api.putSegment(segment.value)
+            .then(() => {
+                router.push({ name: 'Segments' })
+            })
+            .catch(err => toast.error(err))
+            .finally(() => loading.value.save = false);
+    }
+};
+const remove = async () => {
+    const { data } = await reveal();
+    if (data) {
+        loading.value.remove = true;
+        api.deleteSegment(segment.value.id)
+            .then(() => router.push({ name: 'Segments' }))
+            .finally(() => loading.value.remove = false);
+    }
+};
+const onSaveExercise = (exercise) => {
+    exercise.edit = false;
+    getExercises();
+}
+const getTags = () => {
+    api.getTags()
+        .then(resp => tags.value = resp.data);
+}
+getExercises();
+getTags();
 </script>
-
-<style scoped>
-  .drop-zone {
-    background-color: #eee;
-    margin-bottom: 10px;
-    padding: 10px;
-    padding-bottom: 50px;
-  }
-  
-</style>
