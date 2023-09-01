@@ -89,6 +89,7 @@ const router = useRouter();
 const props = defineProps({
     id: String
 });
+const emit = defineEmits(['save', 'remove']);
 
 const segment = ref({
     id: '',
@@ -125,7 +126,8 @@ const save = () => {
         api.postSegment(this.segment)
             .then(resp => {
                 segment.value.id = resp;
-                router.push({ name: 'Segments' })
+                emit('save');
+                // router.push({ name: 'Segments' })
             })
             .catch(err => toast.error(err))
             .finally(() => loading.value.save = false);
@@ -133,7 +135,8 @@ const save = () => {
     else {
         api.putSegment(segment.value)
             .then(() => {
-                router.push({ name: 'Segments' })
+                emit('save');
+                // router.push({ name: 'Segments' })
             })
             .catch(err => toast.error(err))
             .finally(() => loading.value.save = false);
@@ -144,7 +147,10 @@ const remove = async () => {
     if (data) {
         loading.value.remove = true;
         api.deleteSegment(segment.value.id)
-            .then(() => router.push({ name: 'Segments' }))
+            .then(() => {
+                emit('remove');
+                // router.push({ name: 'Segments' });
+            })
             .finally(() => loading.value.remove = false);
     }
 };

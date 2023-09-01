@@ -30,7 +30,7 @@ const routes = [
   {
     path: '/segments',
     name: 'Segments',
-    component: () => import('@/views/Segments.vue')
+    component: () => import('@/views/Segment/Overview.vue')
   },
   {
     path: '/exercises',
@@ -55,19 +55,19 @@ const routes = [
   {
     path: '/segments/create',
     name: "CreateSegment",
-    component: () => import('../components/Segment/Create.vue')
+    component: () => import('../views/Segment/Edit.vue')
   },
   {
     path: '/segments/edit/:id',
     name: "EditSegment",
     props: true,
-    component: () => import('../components/Segment/Create.vue')
+    component: () => import('../views/Segment/Edit.vue')
   },
   {
     path: '/segments/details/:id',
     name: "Segment",
     props: true,
-    component: () => import('../components/Segment/Create.vue')
+    component: () => import('../views/Segment/Edit.vue')
   },
   {
     path: '/trainings/create',
