@@ -16,6 +16,11 @@
                     <v-icon>mdi-delete</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.remove')"></v-tooltip>
                 </v-btn>
+                <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-heart" variant="text" @click="onFavorite" :loading="loading.favorite">
+                    <v-icon v-if="training.isFavorite">mdi-heart</v-icon>
+                    <v-icon v-else>mdi-heart-outline</v-icon>
+                    <v-tooltip activator="parent" location="bottom" :text="t('tooltip.favorite')"></v-tooltip>
+                </v-btn>
             </div>
             <div class="d-flex">
                 <v-chip v-for="tag in training.tags" :key="tag" class="mr-1">{{ tag }}</v-chip>
@@ -54,19 +59,25 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
+import { ref, inject } from 'vue';
 import { useConfirmDialog } from '@vueuse/core';
 import { useAbility } from '@casl/vue';
 import { useI18n } from 'vue-i18n';
+import { useAuthenticationStore } from '@/plugins/pinia';
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 const { can } = useAbility();
 const { t } = useI18n();
+const authStore = useAuthenticationStore();
 
 const api = inject('api');
 const props = defineProps({
     training: Object
 })
 const emit = defineEmits(['remove']);
+
+const loading = ref({
+    favorite: false
+});
 
 const remove = async () =>  {
     const { data } = await reveal();
@@ -75,7 +86,14 @@ const remove = async () =>  {
             .then(() => emit('remove'));
     } 
 }
-
+const onFavorite = () => {
+    loading.favorite = true;
+    api.putFavorite(props.training.shareableId)
+        .then(() => {
+            props.training.isFavorite = !props.training.isFavorite;
+        })
+        .finally(() => loading.value.favorite = false);
+        }
 </script>
 
 

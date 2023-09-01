@@ -31,7 +31,8 @@ const messages = {
         edit: 'Editeren',
         save: 'Opslaan',
         view: 'Details',
-        leave_group: 'Groep verlaten'
+        leave_group: 'Groep verlaten',
+        favorite: 'Favoriet'
       },
       
       sharingLevel: {

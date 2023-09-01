@@ -15,6 +15,11 @@
                     <v-icon>mdi-delete</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.remove')"></v-tooltip>
                 </v-btn>
+                <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-heart" variant="text" @click="onFavorite" :loading="loading.favorite">
+                    <v-icon v-if="segment.isFavorite">mdi-heart</v-icon>
+                    <v-icon v-else>mdi-heart-outline</v-icon>
+                    <v-tooltip activator="parent" location="bottom" :text="t('tooltip.favorite')"></v-tooltip>
+                </v-btn>
             </div>
             <div class="d-flex">
                 <v-chip v-for="tag in segment.tags" :key="tag" class="mr-1">{{ tag }}</v-chip>
@@ -44,16 +49,23 @@
 import { useAbility } from '@casl/vue';
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog } from '@vueuse/core';
-import { inject } from 'vue';
+import { ref, inject } from 'vue';
+import { useAuthenticationStore } from '@/plugins/pinia';
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 
 const api = inject('api');
 const { can } = useAbility();
 const { t } = useI18n();
+const authStore = useAuthenticationStore();
 const emit = defineEmits(['remove']);
 const props = defineProps({
     segment: Object
 })
+
+const loading = ref({
+    favorite: false
+});
+
 const remove = async () => {
     const { data } = await reveal();
     if (data) {
@@ -61,6 +73,14 @@ const remove = async () => {
             .then(() => emit('remove'));
     } 
 }
+const onFavorite = () => {
+    loading.favorite = true;
+    api.putFavorite(props.segment.shareableId)
+        .then(() => {
+            props.segment.isFavorite = !props.segment.isFavorite;
+        })
+        .finally(() => loading.value.favorite = false);
+        }
 </script>
 
 <style>

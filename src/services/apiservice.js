@@ -78,9 +78,9 @@ const createApiService = (apiClient) => {
           return false;
         }
     },
-        getAllExercises: function ({search, tags}) {
+        getAllExercises: function (search) {
           return apiClient.get('Exercise/Overview', {
-            params: {search, tags }
+            params: search
           })
         },
     
