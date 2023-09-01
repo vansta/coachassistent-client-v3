@@ -132,8 +132,17 @@ const navDrawerItems = ref([
       
     ])
 
-const logout = () => {
-  authenticationStore.logout();
+const getPermissions = () => {
+  api.getPermissions()
+    .then(resp => {
+      console.log(buildRules(resp.data));
+      ability.update(buildRules(resp.data));
+      authenticationStore.setPermissions(resp.data);
+  })
+}
+const logout = async () => {
+  await authenticationStore.logout();
+  getPermissions();
   router.push({ name: 'Login' });
 }
 const filterItems = (items) => {
@@ -152,13 +161,8 @@ const filterItems = (items) => {
 }
 
 const filteredNavbar = computed(() => filterItems(navDrawerItems.value));
-api.getPermissions()
-  .then(resp => {
-    console.log(buildRules(resp.data));
-    ability.update(buildRules(resp.data));
-    authenticationStore.setPermissions(resp.data);
-})
 
+getPermissions();
 if (authenticationStore.isAuthenticated){
   api.checkToken();
   setInterval(() => {

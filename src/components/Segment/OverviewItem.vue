@@ -3,15 +3,16 @@
         <v-card-title>
             <div class="d-flex">
                 <div class="flex-grow-1 text-h6 text-left text-capitalize">{{ segment.name }}</div>
-                <v-btn icon="mdi-eye" variant="text" :to="{ name: 'Segment', params: { id: segment.id }}">
-                    <v-icon>mdi-eye</v-icon>
-                    <v-tooltip activator="parent" location="bottom" :text="t('tooltip.view')"></v-tooltip>
-                </v-btn>
-                <v-btn :disabled="!can('update', segment)" icon="mdi-pencil" variant="text" :to="{ name: 'EditSegment', params: { id: segment.id }}">
+                
+                <v-btn v-if="can('update', segment)" icon="mdi-pencil" variant="text" :to="{ name: 'EditSegment', params: { id: segment.id }}">
                     <v-icon>mdi-pencil</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.edit')"></v-tooltip>
                 </v-btn>
-                <v-btn :disabled="!can('delete', segment)" icon="mdi-delete" variant="text" @click="remove">
+                <v-btn v-else icon="mdi-eye" variant="text" :to="{ name: 'Segment', params: { id: segment.id }}">
+                    <v-icon>mdi-eye</v-icon>
+                    <v-tooltip activator="parent" location="bottom" :text="t('tooltip.view')"></v-tooltip>
+                </v-btn>
+                <v-btn v-if="can('delete', segment)" icon="mdi-delete" variant="text" @click="remove">
                     <v-icon>mdi-delete</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.remove')"></v-tooltip>
                 </v-btn>
@@ -32,13 +33,15 @@
         </v-card-text>
         <v-divider></v-divider>
         <v-card-text>
-            <v-list>
-                <v-list-item v-for="exercise in segment.exercises" :key="exercise">
-                    <v-list-item-title>
-                        {{ exercise }}
-                    </v-list-item-title>
-                </v-list-item>
-            </v-list>
+            <v-expansion-panels variant="popout" readonly>
+                    <v-expansion-panel v-for="(exercise, index) in segment.exercises" :key="index" elevation="0">
+                        <v-expansion-panel-title class="font-weight-medium">
+                            <span class="mr-3">{{ index + 1 }}</span>
+                            <span class="text-capitalize">{{ exercise }}</span>
+                            <template #actions></template>
+                        </v-expansion-panel-title>
+                    </v-expansion-panel>
+            </v-expansion-panels>
         </v-card-text>
 
         <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>

@@ -7,7 +7,7 @@
                     <v-icon>mdi-content-copy</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.copy')"></v-tooltip>
                 </v-btn>
-                <v-btn :disabled="!(authStore.isAuthenticated && can('update', exercise))" icon="mdi-pencil" variant="text" @click="$emit('edit')">
+                <v-btn v-if="authStore.isAuthenticated && can('update', exercise)" icon="mdi-pencil" variant="text" @click="$emit('edit')">
                     <v-icon>mdi-pencil</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.edit')"></v-tooltip>
                 </v-btn>
@@ -24,8 +24,11 @@
         </template>
         <template #description>
             <div v-show="!collapse">
-                <div v-html="exercise.description"></div>
-                <v-carousel @click.stop height="320" show-arrows="hover" cycle continuous>
+                <div class="ma-6">
+                    <div v-html="exercise.description"></div>
+                </div>
+                
+                <v-carousel v-show="exercise.attachments.length > 0" @click.stop height="320" show-arrows="hover" cycle continuous hide-delimiter-background>
                     <v-carousel-item max-height="250" v-for="attachment in exercise.attachments" :key="attachment" :name="attachment" :src="$api.getAttachmentLink(attachment)">
                     </v-carousel-item>
                 </v-carousel>
@@ -34,66 +37,46 @@
     </layout>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
-// import { IExercise } from '@/interfaces'
+<script setup>
 import { useAuthenticationStore } from '@/plugins/pinia';
 import { useAbility } from '@casl/vue';
 
 import Layout from '@/components/Exercise/Layout.vue'
 import { useI18n } from 'vue-i18n';
-export default defineComponent({
-    name: 'View',
-    props: {
-        exercise: {
-            required: true,
-            type: Object
-        },
-        mode: {
-            type: String,
-            default: 'edit'
-        }
+import { ref, inject } from 'vue';
+
+const authStore = useAuthenticationStore();
+const { can } = useAbility();
+const { t } = useI18n(); 
+const api = inject('api');
+const props = defineProps({
+    exercise: {
+        required: true,
+        type: Object
     },
-    components: {
-        Layout
-    },
-    setup() {
-        const authStore = useAuthenticationStore();
-        const { can } = useAbility();
-        const { t } = useI18n(); 
-        return {
-            authStore,
-            can,
-            t
-        }
-    },
-    data () {
-        return {
-            slide: this.exercise.attachments[0],
-            collapse: this.mode !== 'edit',
-            loading: {
-                favorite: false
-            }
-        }
-    },
-    methods: {
-        onCopy() {
-            this.$api.copyExercise(this.exercise.id)
-                .then(resp => this.$emit('copy', resp.data));
-        },
-        onFavorite () {
-            this.loading.favorite = true;
-            this.$api.putFavorite(this.exercise.shareableId)
-                .then(() => {
-                    this.exercise.isFavorite = !this.exercise.isFavorite;
-                })
-                .finally(() => this.loading.favorite = false);
-        }
-    },
-    watch: {
-        exercise () {
-            this.slide = this.exercise.attachments[0];
-        }
+    mode: {
+        type: String,
+        default: 'edit'
     }
-})
+});
+
+const emit = defineEmits(['copy']);
+
+const collapse = ref(props.mode !== 'edit');
+const loading = ref({
+    favorite: false
+});
+
+const onCopy = () => {
+    api.copyExercise(props.exercise.id)
+        .then(resp => emit('copy', resp.data));
+}
+const onFavorite = () => {
+    loading.value.favorite = true;
+    api.putFavorite(props.exercise.shareableId)
+        .then(() => {
+            props.exercise.isFavorite = !props.exercise.isFavorite;
+        })
+        .finally(() => loading.value.favorite = false);
+}
 </script>
