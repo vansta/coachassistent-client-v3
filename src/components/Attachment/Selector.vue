@@ -4,7 +4,7 @@
             <v-icon start>mdi-attachment-plus</v-icon>
             <div>{{ t('add_attachment') }}</div>
         </v-btn>
-        <v-carousel v-model="current" @click.stop height="320" show-arrows="hover" cycle continuous>
+        <v-carousel v-model="current" @click.stop height="320" show-arrows="hover" cycle continuous hide-delimiter-background>
             <v-carousel-item max-height="250" v-for="(attachment, index) in modelValue.attachments" :key="index" :name="attachment" :src="api.getAttachmentLink(attachment)">
                 <v-btn v-if="!readonly" icon="mdi-delete" variant="text" @click="onRemove(modelValue.attachments, index)">
                     <v-icon>mdi-delete</v-icon>

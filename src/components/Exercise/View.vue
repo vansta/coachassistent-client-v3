@@ -7,7 +7,7 @@
                     <v-icon>mdi-content-copy</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.copy')"></v-tooltip>
                 </v-btn>
-                <v-btn :disabled="!(authStore.isAuthenticated && can('update', exercise))" icon="mdi-pencil" variant="text" @click="$emit('edit')">
+                <v-btn v-if="authStore.isAuthenticated && can('update', exercise)" icon="mdi-pencil" variant="text" @click="$emit('edit')">
                     <v-icon>mdi-pencil</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.edit')"></v-tooltip>
                 </v-btn>
@@ -24,8 +24,11 @@
         </template>
         <template #description>
             <div v-show="!collapse">
-                <div v-html="exercise.description"></div>
-                <v-carousel @click.stop height="320" show-arrows="hover" cycle continuous>
+                <div class="ma-6">
+                    <div v-html="exercise.description"></div>
+                </div>
+                
+                <v-carousel v-show="exercise.attachments.length > 0" @click.stop height="320" show-arrows="hover" cycle continuous hide-delimiter-background>
                     <v-carousel-item max-height="250" v-for="attachment in exercise.attachments" :key="attachment" :name="attachment" :src="$api.getAttachmentLink(attachment)">
                     </v-carousel-item>
                 </v-carousel>

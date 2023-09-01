@@ -4,7 +4,7 @@
             <v-form>
                 <v-row>
                     <v-col cols="1">
-                        <v-btn icon variant="outlined" @click="onOnlyFavorites">
+                        <v-btn icon variant="text" @click="onOnlyFavorites">
                             <v-icon v-if="search.onlyFavorites">mdi-heart</v-icon>
                             <v-icon v-else>mdi-heart-outline</v-icon>
                         </v-btn>
