@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <div>
         <v-card>
             <v-card-title>
                 <div class="d-flex">
@@ -60,7 +60,7 @@
         </v-row>
 
         <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>
-    </v-container>
+    </div>
 </template>
 
 <script setup>
@@ -123,10 +123,10 @@ const getExercises = (search) => {
 const save = () => {
     loading.save = true;
     if (!segment.value.id) {
-        api.postSegment(this.segment)
+        api.postSegment(segment.value)
             .then(resp => {
-                segment.value.id = resp;
-                emit('save');
+                segment.value.id = resp.data;
+                emit('save', segment.value.id);
                 // router.push({ name: 'Segments' })
             })
             .catch(err => toast.error(err))
@@ -135,7 +135,7 @@ const save = () => {
     else {
         api.putSegment(segment.value)
             .then(() => {
-                emit('save');
+                emit('save', segment.value.id);
                 // router.push({ name: 'Segments' })
             })
             .catch(err => toast.error(err))

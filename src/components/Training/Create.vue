@@ -30,30 +30,31 @@
             <v-card-text v-if="showSharebility">
                 <shareability v-model="training"></shareability>
             </v-card-text>
-            <v-card-text>
-                <v-switch v-model="createSegment" label="Create"></v-switch>
-            </v-card-text>
+            <v-card-actions>
+                <v-switch v-model="createSegment" :label="createSegment ? t('create_segment') : t('select_segment')"></v-switch>
+            </v-card-actions>
+            <!-- <v-card-actions></v-card-actions> -->
         </v-card>
-        <v-row v-show="createSegment">
+        <v-row v-show="createSegment" class="mt-3">
             <v-col>
-                <segment-create></segment-create>
+                <segment-create @save="onSegmentSave" @remove="onSegmentRemove"></segment-create>
             </v-col>
         </v-row>
         <v-row v-show="!createSegment">
             <v-col>
-                
-                <draggable v-model="training.segments" group="segments" item-key="id">
+                <draggable v-model="selectedSegments" group="segments" item-key="id">
                     <template #header>
                         <v-alert color="info" variant="tonal" density="compact">
                             <div class="d-flex justify-space-between align-center">
                                 <span>{{t('drag_to')}}</span>
                                 <span><v-btn icon="mdi-plus" variant="text" size="small"></v-btn></span>
+                                {{ selectedSegments.length }}
                             </div>
                         </v-alert>
                         
                     </template>
                     <template #item="{ element }">
-                        <segment-view :segment="element"></segment-view>
+                        <segment-view :segment="element" class="mt-1"></segment-view>
                     </template>
                 </draggable>
             </v-col>
@@ -64,12 +65,13 @@
                             <div class="d-flex justify-space-between align-center">
                                 <span>{{t('drag_from')}}</span>
                                 <!-- <span><v-btn icon="mdi-plus" variant="text" size="small"></v-btn></span> -->
+                                {{ segments.length }}
                             </div>
                         </v-alert>
                         <exercise-search @search="getSegments"></exercise-search>
                     </template>
                     <template #item="{ element }">
-                        <segment-view :segment="element"></segment-view>
+                        <segment-view :segment="element" class="mt-1"></segment-view>
                     </template>
                 </draggable>
             </v-col>
@@ -80,7 +82,7 @@
 </template>
 
 <script setup>
-import { ref, inject } from 'vue';
+import { ref, inject, computed } from 'vue';
 
 import SegmentView from '@/components/Segment/OverviewItem.vue';
 import Draggable from 'vuedraggable';
@@ -125,11 +127,15 @@ const loading = ref({
 })
 const tags = ref([]);
 const createSegment = ref(false);
+const selectedSegmentObjects = ref([]);
 
 const getSegments = (search) => {
     loading.value.get = true;
     api.getAllSegments(search)
-        .then((data) => segments.value = data.items)
+        .then((data) => {
+            segments.value = data.items;
+            setSelectedSegments();
+        })
         .finally(() => loading.value.get = false)
 }
 
@@ -162,12 +168,35 @@ const remove = async () => {
             .finally(() => loading.value.remove = false);
     }
 }
+const onSegmentSave = (id) => {
+    training.value.segments.push(id);
+    createSegment.value = false;
+    getSegments();
+}
+const setSelectedSegments = () => {
+    selectedSegmentObjects.value = segments.value.filter(s => training.value.segments.includes(s.id));
+    segments.value = segments.value.filter(s => !training.value.segments.includes(s.id))
+}
 
 if (props.id) {
     api.getTraining(props.id)
-        .then((data) => training.value = data)
+        .then((data) => {
+            training.value = data;
+            setSelectedSegments();
+        })
 }
 getSegments();
 api.getTags()
     .then(resp => tags.value = resp.data);
+
+
+const selectedSegments = computed({
+    get () {
+        return selectedSegmentObjects.value;
+    },
+    set (value) {
+        selectedSegmentObjects.value = value;//.push(value.id);
+        training.value.segments = value.map(s => s.id);
+    }
+})
 </script>

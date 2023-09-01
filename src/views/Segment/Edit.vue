@@ -1,5 +1,7 @@
 <template>
-    <create :id="id" @save="router.push({ name: 'Segments' })" @remove="router.push({ name: 'Segments' })"></create>
+    <v-container>
+        <create :id="id" @save="router.push({ name: 'Segments' })" @remove="router.push({ name: 'Segments' })"></create>
+    </v-container>
 </template>
 
 <script setup>

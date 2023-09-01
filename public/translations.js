@@ -96,7 +96,10 @@ const messages = {
       saved: 'Opgeslaan',
 
       add_attachment: 'Bijlage toevoegen',
-      remove_attachment: 'Bijlage verwijderen'
+      remove_attachment: 'Bijlage verwijderen',
+
+      create_segment: 'Nieuw onderdeel aanmaken',
+      select_segment: 'Onderdeel selecteren'
     }
   };
 
