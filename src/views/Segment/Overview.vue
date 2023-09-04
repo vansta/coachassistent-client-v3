@@ -12,6 +12,11 @@
             <overview-item :segment="item" @remove="getSegments"></overview-item>
         </template>
     </c-data-iterator>
+
+    <v-btn :to="{ name: 'CreateSegment' }" color="primary" :disabled="!(authStore.isAuthenticated && can('create', 'shareable'))" icon="mdi-plus" position="fixed" location="bottom right" class="ma-2 ma-md-6" size="large">
+            <v-icon>mdi-plus</v-icon>
+            <v-tooltip activator="parent" location="left" :text="t('tooltip.add')"></v-tooltip>
+    </v-btn>
 </template>
 
 <script setup>

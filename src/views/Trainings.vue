@@ -1,10 +1,10 @@
 <template>
     <c-data-iterator v-model="pageInfo" :cols="width > 500 ? 12 / Math.floor(width / 500) : 1" :items="trainings" @update:model-value="getTrainings">
-        <template #header>
+        <!-- <template #header>
             <div class="d-flex justify-end">
                 <v-btn :to="{ name: 'CreateTraining' }" color="primary" :disabled="!(authStore.isAuthenticated && can('create', 'shareable'))" prepend-icon="mdi-plus">{{ t('action.create') }}</v-btn>
             </div>
-        </template>
+        </template> -->
         <template #search>
             <search v-model="search" @update:model-value="getTrainings"></search>
         </template>
@@ -12,6 +12,11 @@
             <overview-item :training="item" @remove="remove"></overview-item>
         </template>
     </c-data-iterator>
+
+    <v-btn :to="{ name: 'CreateTraining' }" color="primary" :disabled="!(authStore.isAuthenticated && can('create', 'shareable'))" icon="mdi-plus" position="fixed" location="bottom right" class="ma-2 ma-md-6" size="large">
+            <v-icon>mdi-plus</v-icon>
+            <v-tooltip activator="parent" location="left" :text="t('tooltip.add')"></v-tooltip>
+    </v-btn>
 </template>
 
 <script setup>

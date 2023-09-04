@@ -33,7 +33,8 @@ const messages = {
         save: 'Opslaan',
         view: 'Details',
         leave_group: 'Groep verlaten',
-        favorite: 'Favoriet'
+        favorite: 'Favoriet',
+        add: 'Toevoegen'
       },
       
       sharingLevel: {
