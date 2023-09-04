@@ -40,10 +40,10 @@
                     </v-col>
                 </v-row>
             </v-card-text>
-            <v-card-subtitle v-if="can('update', group, 'subGroups')">
+            <v-card-subtitle v-if="can('update', group, 'subgroup')">
                 {{ t('field.subgroup') }}
             </v-card-subtitle>
-            <v-card-text v-if="can('update', group, 'subGroups')">
+            <v-card-text v-if="can('update', group, 'subgroup')">
                 <v-table>
                     <thead>
                         <tr>
