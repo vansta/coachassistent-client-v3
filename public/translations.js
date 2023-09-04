@@ -18,6 +18,7 @@ const messages = {
       licenses: 'Licenties',
       editors: 'Beheerders',
       profile: 'Profiel',
+      help: 'Hulp',
 
       user: 'Gebruiker',
       role: 'Rol',

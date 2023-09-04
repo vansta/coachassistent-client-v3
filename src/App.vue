@@ -132,7 +132,13 @@ const navDrawerItems = ref([
         }
         ]
       },
-      
+      {
+        title: t('help'),
+        props: {
+            prependIcon: 'mdi-help',
+            to: { name: 'Welcome' }
+        }
+      },
     ])
 
 const getPermissions = () => {
@@ -176,13 +182,13 @@ const filterItems = (items) => {
 const filteredNavbar = computed(() => filterItems(navDrawerItems.value));
 
 getPermissions();
-// if (!process.env.VITE_PREVENT_REFRESH)
-// {
-//   checkToken();
-//   setInterval(() => {
-//       checkToken();
-//   }, 60000);
-// }
+if (!import.meta.env.VITE_PREVENT_REFRESH)
+{
+  checkToken();
+  setInterval(() => {
+      checkToken();
+  }, 60000);
+}
 </script>
 
 <style>
