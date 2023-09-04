@@ -32,13 +32,16 @@ import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useAbility } from '@casl/vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { buildRules } from '@/services/ability';
+import { useToast } from 'vue-toastification';
+
 const { t } = useI18n();
 const authenticationStore = useAuthenticationStore();
 const { can } = useAbility();
 const router = useRouter();
 const route = useRoute();
 const ability = useAbility();
-import { buildRules } from '@/services/ability';
+const toast = useToast();
 
 const api = inject('api');
 
@@ -142,8 +145,18 @@ const getPermissions = () => {
 }
 const logout = async () => {
   await authenticationStore.logout();
+  api.logout();
   getPermissions();
   router.push({ name: 'Login' });
+}
+const checkToken = async () => {
+  if (authenticationStore.isAuthenticated){
+    var resp = await api.checkToken();
+    if (!resp){
+      toast.error(t('error.session_expired'))
+      logout();
+    }
+  }
 }
 const filterItems = (items) => {
   return items.filter(i => {
@@ -163,12 +176,10 @@ const filterItems = (items) => {
 const filteredNavbar = computed(() => filterItems(navDrawerItems.value));
 
 getPermissions();
-if (authenticationStore.isAuthenticated){
-  api.checkToken();
-  setInterval(() => {
-    api.checkToken();
-  }, 60000);
-}
+checkToken();
+setInterval(() => {
+    checkToken();
+}, 60000);
 </script>
 
 <style>

@@ -51,6 +51,7 @@ const createApiClient = (useAuthenticationStore) => {
     function (error) {
       if (error.response && error.response.status === 401) {
         authenticationStore.logout();
+        apiClient.defaults.headers.common["Authorization"] = null;
       }
       else {
         var message;

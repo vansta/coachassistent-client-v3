@@ -99,7 +99,11 @@ const messages = {
       remove_attachment: 'Bijlage verwijderen',
 
       create_segment: 'Nieuw onderdeel aanmaken',
-      select_segment: 'Onderdeel selecteren'
+      select_segment: 'Onderdeel selecteren',
+
+      error: {
+        session_expired: 'Sessie is afgelopen'
+      }
     }
   };
 
