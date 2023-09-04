@@ -5,15 +5,15 @@
                 <v-row>
                     <v-col cols="1">
                         <v-btn icon variant="text" @click="onOnlyFavorites">
-                            <v-icon v-if="search.onlyFavorites">mdi-heart</v-icon>
+                            <v-icon v-if="modelValue.onlyFavorites">mdi-heart</v-icon>
                             <v-icon v-else>mdi-heart-outline</v-icon>
                         </v-btn>
                     </v-col>
                     <v-col>
-                        <v-text-field v-model="search.search" :label="t('field.name')" @update:model-value="emitSearch" clearable hide-details="auto" prepend-icon="mdi-magnify"></v-text-field>
+                        <v-text-field v-model="modelValue.search" :label="t('field.name')" @update:model-value="emitSearch" clearable hide-details="auto" prepend-icon="mdi-magnify"></v-text-field>
                     </v-col>
                     <v-col>
-                        <v-autocomplete v-model="search.tags" :label="t('field.tags')" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch" clearable hide-details="auto" chips></v-autocomplete>
+                        <v-autocomplete v-model="modelValue.tags" :label="t('field.tags')" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch" clearable hide-details="auto" chips></v-autocomplete>
                     </v-col>
                 </v-row>
             </v-form>
@@ -22,21 +22,27 @@
 </template>
 
 <script setup>
-import { ref, computed, inject } from 'vue';
+import { ref, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 var searchTimeOut;
 const api = inject('api');
 
-const emit = defineEmits(['search']);
-const search = ref({ search: '', tags: [], onlyFavorites: false });
+const props = defineProps({
+    modelValue: {
+        type: Object,
+        default: { search: '', tags: [], onlyFavorites: false }
+    }
+});
+const emit = defineEmits(['update:modelValue']);
+// const search = ref({ search: '', tags: [], onlyFavorites: false });
 const tags = ref([]);
 
 const emitSearch = () => {
     clearTimeout(searchTimeOut);
     searchTimeOut = setTimeout(() => {
-        emit('search', search.value);
+        emit('update:modelValue', props.modelValue);
     }, 500);
 }
 const getTags = () => {
@@ -44,8 +50,8 @@ const getTags = () => {
                 .then(resp => tags.value = resp.data);
 }
 const onOnlyFavorites = () => {
-    search.value.onlyFavorites = !search.value.onlyFavorites;
-    emit('search', search.value);
+    props.modelValue.onlyFavorites = !props.modelValue.onlyFavorites;
+    emit('update:modelValue', props.modelValue);
 }
 
 getTags();

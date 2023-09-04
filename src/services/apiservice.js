@@ -79,9 +79,9 @@ const createApiService = (apiClient) => {
           return false;
         }
     },
-        getAllExercises: function (search) {
+        getAllExercises: function (search, pageInfo) {
           return apiClient.get('Exercise/Overview', {
-            params: search
+            params: { ...search, ...pageInfo }
           })
         },
     
@@ -91,8 +91,8 @@ const createApiService = (apiClient) => {
             })
         },
     
-        getAllSegments (search) {
-            return apiClient.get('Segment/Overview', { params: search })
+        getAllSegments (search, pageInfo) {
+            return apiClient.get('Segment/Overview', { params: { ...search, ...pageInfo } })
             .then(resp => resp.data)
         },
     
@@ -103,8 +103,8 @@ const createApiService = (apiClient) => {
                 .then(resp => resp.data)
         },
 
-        getAllTrainings (search) {
-          return apiClient.get('Training/Overview', { params: search })
+        getAllTrainings (search, pageInfo) {
+          return apiClient.get('Training/Overview', { params: { ...search, ...pageInfo } })
           .then(resp => resp.data)
         },
     

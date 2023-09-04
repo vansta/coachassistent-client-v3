@@ -65,7 +65,7 @@
                                 <span>{{t('drag_from')}}</span>
                             </div>
                         </v-alert>
-                        <exercise-search @search="getSegments"></exercise-search>
+                        <exercise-search v-model="search" @update:model-value="getSegments"></exercise-search>
                     </template>
                     <template #item="{ element }">
                         <segment-view :segment="element" class="mt-1"></segment-view>
@@ -125,10 +125,11 @@ const loading = ref({
 const tags = ref([]);
 const createSegment = ref(false);
 const selectedSegmentObjects = ref([]);
+const search = ref({ search: '', tags: [], onlyFavorites: false });
 
-const getSegments = (search) => {
+const getSegments = () => {
     loading.value.get = true;
-    api.getAllSegments(search)
+    api.getAllSegments(search.value)
         .then((data) => {
             segments.value = data.items;
             setSelectedSegments();

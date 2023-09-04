@@ -1,10 +1,10 @@
 <template>
     <div>
         <c-data-iterator
+            v-model="pageInfo"
             :items="exercises"
             :cols="width > 500 ? 12 / Math.floor(width / 500) : 1"
-            :loading="loading"
-            :totalCount="totalCount"
+            @update:model-value="getExercises"
         >
             <template #header>
                 <div class="d-flex justify-end">
@@ -12,7 +12,7 @@
                 </div>
             </template>
             <template #search>
-                <search @search="getExercises"></search>
+                <search v-model="search" @update:model-value="getExercises"></search>
             </template>
             <template #item="{ item }">
                 <exercise-view v-if="!item.edit" :exercise="item" @edit="item.edit = true" @copy="onCopy"></exercise-view>
@@ -42,22 +42,22 @@ const api = inject('api');
 
 const exercises = ref([]);
 const tags = ref([]);
-const loading = ref(false);
-const totalCount = ref(0);
+const search = ref({ search: '', tags: [], onlyFavorites: false });
+const pageInfo = ref({ itemsPerPage: 6, currentPage: 1, totalCount: 0, loading: false });
 
 const getTags = () => {
     api.getTags()
         .then(resp => tags.value = resp.data);
 }
 
-const getExercises = (search) => {
-    loading.value = true;
-    api.getAllExercises(search ?? {})
+const getExercises = () => {
+    pageInfo.value.loading = true;
+    api.getAllExercises(search.value, pageInfo.value)
         .then(({ data }) => {
             exercises.value = data.items;
-            totalCount.value = data.totalCount;
+            pageInfo.value.totalCount = data.totalCount;
         })
-        .finally(() => loading.value = false);
+        .finally(() => pageInfo.value.loading = false);
 }
 
 const saveRow = (row) => {

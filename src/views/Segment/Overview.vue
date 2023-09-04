@@ -1,12 +1,12 @@
 <template>
-    <c-data-iterator :cols="width > 500 ? 12 / Math.floor(width / 500) : 1" :items="segments" :loading="loading" :totalCount="totalCount">
+    <c-data-iterator v-model="pageInfo" :cols="width > 500 ? 12 / Math.floor(width / 500) : 1" :items="segments" @update:model-value="getSegments">
         <template #header>
             <div class="d-flex justify-end">
                 <v-btn :to="{ name: 'CreateSegment' }" color="primary" :disabled="!(authStore.isAuthenticated && can('create', 'shareable'))" prepend-icon="mdi-plus">{{t('action.create')}}</v-btn>
             </div>
         </template>
         <template #search>
-            <search @search="getSegments"></search>
+            <search v-model="search" @update-modelValue="getSegments"></search>
         </template>
         <template #item="{ item }">
             <overview-item :segment="item" @remove="getSegments"></overview-item>
@@ -33,17 +33,17 @@ const { width } = useWindowSize();
 const authStore = useAuthenticationStore();
 
 const segments = ref([]);
-const loading = ref(false);
-const totalCount = ref(0);
+const search = ref({ search: '', tags: [], onlyFavorites: false });
+const pageInfo = ref({ itemsPerPage: 6, currentPage: 1, totalCount: 0, loading: false });
 
-const getSegments = (search) => {
-    loading.value = true;
-    api.getAllSegments(search)
+const getSegments = () => {
+    pageInfo.value.loading = true;
+    api.getAllSegments(search.value, pageInfo.value)
         .then((data) => {
             segments.value = data.items;
-            totalCount.value = data.totalCount;
+            pageInfo.value.totalCount = data.totalCount;
         })
-        .finally(() => loading.value = false);
+        .finally(() => pageInfo.value.loading = false);
 }
 
 getSegments();

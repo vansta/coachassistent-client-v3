@@ -176,10 +176,13 @@ const filterItems = (items) => {
 const filteredNavbar = computed(() => filterItems(navDrawerItems.value));
 
 getPermissions();
-checkToken();
-setInterval(() => {
-    checkToken();
-}, 60000);
+// if (!process.env.VITE_PREVENT_REFRESH)
+// {
+//   checkToken();
+//   setInterval(() => {
+//       checkToken();
+//   }, 60000);
+// }
 </script>
 
 <style>
