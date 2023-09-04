@@ -38,10 +38,13 @@
                     <template #header>
                         <v-alert type="info" variant="tonal">
                             {{ t('drag_to') }}
+                            <v-btn icon variant="text" @click="addNewExercise">
+                                <v-icon>mdi-plus</v-icon>
+                            </v-btn>
                         </v-alert>
                     </template>
                     <template #item="{ element }">
-                        <exercise-drag :exercise="element" :tags="tags" :key="element.id"></exercise-drag>                     
+                        <exercise-drag :exercise="element" :tags="tags" ></exercise-drag>                     
                     </template>
                 </draggable>
             </v-col>
@@ -52,7 +55,7 @@
                         <!-- <exercise-search v-model="search" @update:model-value="getExercises"></exercise-search> -->
                     </template>
                     <template #item="{ element }">
-                        <exercise-drag :exercise="element" :tags="tags"></exercise-drag>
+                        <exercise-drag :exercise="element" :tags="tags" @save="onSaveExercise" @remove="getExercises"></exercise-drag>
                     </template>
                 </draggable>
             </v-col>
@@ -64,7 +67,6 @@
 
 <script setup>
 import ExerciseDrag from '@/components/Exercise/Drag.vue';
-import ExerciseView from '@/components/Exercise/View.vue';
 import ExerciseSearch from '@/components/Exercise/Search.vue';
 import Sharebility from '@/components/common/Sharebility.vue';
 import Draggable from 'vuedraggable';
@@ -77,13 +79,14 @@ import { useConfirmDialog } from '@vueuse/core';
 import { inject, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+import { getDefaultExercise } from '@/services/defaults.js';
+
 const toast = useToast();
 const { can } = useAbility();
 const authStore = useAuthenticationStore();
 const { t } = useI18n();
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 const api = inject('api');
-const router = useRouter();
 
 const props = defineProps({
     id: String
@@ -127,7 +130,6 @@ const save = () => {
             .then(resp => {
                 segment.value.id = resp.data;
                 emit('save', segment.value.id);
-                // router.push({ name: 'Segments' })
             })
             .catch(err => toast.error(err))
             .finally(() => loading.value.save = false);
@@ -136,7 +138,6 @@ const save = () => {
         api.putSegment(segment.value)
             .then(() => {
                 emit('save', segment.value.id);
-                // router.push({ name: 'Segments' })
             })
             .catch(err => toast.error(err))
             .finally(() => loading.value.save = false);
@@ -149,13 +150,17 @@ const remove = async () => {
         api.deleteSegment(segment.value.id)
             .then(() => {
                 emit('remove');
-                // router.push({ name: 'Segments' });
             })
             .finally(() => loading.value.remove = false);
     }
 };
+const addNewExercise = () => {
+    exercises.value.unshift(getDefaultExercise(authStore.user.id));
+}
 const onSaveExercise = (exercise) => {
-    exercise.edit = false;
+    if (segment.value.exercises.findIndex(e => e.id === exercise.id) < 0){
+        segment.value.exercises.push(exercise);
+    }
     getExercises();
 }
 const getTags = () => {

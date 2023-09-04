@@ -100,7 +100,7 @@ const save = () => {
         api.postExercise(editExercise.value)
             .then(resp => {
                 editExercise.value.id = resp;
-                emit('save');
+                emit('save', editExercise.value);
             })
             .catch(err => {
                         toast.error(err)
@@ -109,7 +109,7 @@ const save = () => {
     }
     else {
         api.putExercise(editExercise.value)
-            .then(() => emit('save'))
+            .then(() => emit('save', editExercise.value))
             .finally(() => loading.value.save = false);
     }
 }
