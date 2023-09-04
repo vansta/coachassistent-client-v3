@@ -7,7 +7,7 @@
                     <v-icon>mdi-content-copy</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.copy')"></v-tooltip>
                 </v-btn>
-                <v-btn v-if="authStore.isAuthenticated && can('update', exercise)" icon="mdi-pencil" variant="text" @click="$emit('edit')">
+                <v-btn v-if="authStore.isAuthenticated && can('update', exercise)" icon="mdi-pencil" variant="text" @click="emit('edit')">
                     <v-icon>mdi-pencil</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.edit')"></v-tooltip>
                 </v-btn>
@@ -60,7 +60,7 @@ const props = defineProps({
     }
 });
 
-const emit = defineEmits(['copy']);
+const emit = defineEmits(['edit', 'copy']);
 
 const collapse = ref(props.mode !== 'edit');
 const loading = ref({

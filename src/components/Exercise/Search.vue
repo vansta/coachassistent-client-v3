@@ -1,5 +1,8 @@
 <template>
     <v-card>
+        <v-card-subtitle v-if="subtitle">
+            {{ t(subtitle) }}
+        </v-card-subtitle>
         <v-card-text>
             <v-form>
                 <v-row dense>
@@ -33,7 +36,8 @@ const props = defineProps({
     modelValue: {
         type: Object,
         default: { search: '', tags: [], onlyFavorites: false }
-    }
+    },
+    subtitle: String
 });
 const emit = defineEmits(['update:modelValue']);
 // const search = ref({ search: '', tags: [], onlyFavorites: false });

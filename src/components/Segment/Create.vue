@@ -31,8 +31,9 @@
                 <sharebility v-model="segment"></sharebility>
             </v-card-text>
         </v-card>
-        <v-row>
-            <v-col>
+        <exercise-search v-model="search" @update:model-value="getExercises" subtitle="exercises"></exercise-search>
+        <v-row dense>
+            <v-col cols="6">
                 <draggable v-model="segment.exercises" group="exercises" item-key="id">
                     <template #header>
                         <v-alert type="info" variant="tonal">
@@ -40,20 +41,18 @@
                         </v-alert>
                     </template>
                     <template #item="{ element }">
-                        <exercise-view v-if="!element.edit" :exercise="element" mode="select" @edit="element.edit = true"></exercise-view>
-                        <exercise-edit v-else :exercise="element" mode="select" @save="onSaveExercise(element)" @cancel="element.edit = false" :tags="tags"></exercise-edit>
+                        <exercise-drag :exercise="element" :tags="tags" :key="element.id"></exercise-drag>                     
                     </template>
                 </draggable>
             </v-col>
-            <v-col cols="4" v-show="(can('update', segment) || can('create', segment))">
+            <v-col cols="6" v-show="(can('update', segment) || can('create', segment))">
                 <draggable v-model="exercises" group="exercises" item-key="id">
                     <template #header>
                         <v-alert variant="tonal">{{ t('drag_from') }}</v-alert>
-                        <exercise-search @search="getExercises"></exercise-search>
+                        <!-- <exercise-search v-model="search" @update:model-value="getExercises"></exercise-search> -->
                     </template>
                     <template #item="{ element }">
-                        <exercise-view v-if="!element.edit" :exercise="element" mode="select" @edit="element.edit = true"></exercise-view>
-                        <exercise-edit v-else :exercise="element" mode="select" @save="onSaveExercise(element)" @cancel="element.edit = false" :tags="tags"></exercise-edit>
+                        <exercise-drag :exercise="element" :tags="tags"></exercise-drag>
                     </template>
                 </draggable>
             </v-col>
@@ -64,8 +63,8 @@
 </template>
 
 <script setup>
+import ExerciseDrag from '@/components/Exercise/Drag.vue';
 import ExerciseView from '@/components/Exercise/View.vue';
-import ExerciseEdit from '@/components/Exercise/Edit.vue';
 import ExerciseSearch from '@/components/Exercise/Search.vue';
 import Sharebility from '@/components/common/Sharebility.vue';
 import Draggable from 'vuedraggable';
@@ -108,15 +107,16 @@ const loading = ref({
     remove: false
 });
 const showSharebility = ref(false);
+const search = ref({})
 
 if (props.id) {
     api.getSegment(props.id)
         .then((data) => segment.value = data)
 }
 
-const getExercises = (search) => {
+const getExercises = () => {
     loading.value.get = true;
-    api.getAllExercises(search ?? {})
+    api.getAllExercises(search.value ?? {})
         .then(resp => exercises.value = resp.data.items.filter(e => segment.value.exercises.findIndex(x => x.id === e.id) < 0))
         .finally(() => loading.value.get = false)
 }
