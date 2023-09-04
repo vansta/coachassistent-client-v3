@@ -5,8 +5,9 @@ import { createWebHistory, createRouter } from "vue-router";
 import createAbility from '@/services/ability.js';
 const ability = createAbility;
 
+const firstVisitStorageId = 'ca-fv';
+
 const ifCan = (to, from, next) => {
-  console.log(to.meta);
   if (to.meta && to.meta.action && !ability.can(to.meta.action, to.meta.subject)) {
     console.log('cannot', to.meta);
   }
@@ -16,11 +17,24 @@ const ifCan = (to, from, next) => {
   }
 };
 
+const ifFirstVisit = (to, from, next) => {
+  if (!localStorage.getItem(firstVisitStorageId)) {
+    localStorage.setItem(firstVisitStorageId, new Date());
+    next({ name: 'Welcome' });
+    return;
+  }
+  else{
+    next();
+    return;
+  }
+}
+
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('@/views/Exercises.vue')
+    component: () => import('@/views/Exercises.vue'),
+    beforeEnter: ifFirstVisit
   },
   {
     path: '/trainings',
@@ -51,6 +65,11 @@ const routes = [
     path: '/about',
     name: 'About',
     component: () => import('@/views/About.vue')
+  },
+  {
+    path: '/welcome',
+    name: 'Welcome',
+    component: () => import('@/views/Welcome.vue')
   },
   {
     path: '/segments/create',
