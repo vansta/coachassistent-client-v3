@@ -8,7 +8,7 @@
         >
             <template #header>
                 <div class="d-flex justify-end">
-                    <v-btn @click="addRow" color="primary" :disabled="!can('create', 'shareable')" prepend-icon="mdi-plus">{{t('action.create')}}</v-btn>
+                    <v-btn @click="addRow" color="primary" :disabled="!(authStore.isAuthenticated && can('create', 'shareable'))" prepend-icon="mdi-plus">{{t('action.create')}}</v-btn>
                 </div>
             </template>
             <template #search>

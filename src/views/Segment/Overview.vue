@@ -2,7 +2,7 @@
     <c-data-iterator :cols="width > 500 ? 12 / Math.floor(width / 500) : 1" :items="segments" :loading="loading" :totalCount="totalCount">
         <template #header>
             <div class="d-flex justify-end">
-                <v-btn :to="{ name: 'CreateSegment' }" color="primary" :disabled="!can('create', 'shareable')" prepend-icon="mdi-plus">{{t('action.create')}}</v-btn>
+                <v-btn :to="{ name: 'CreateSegment' }" color="primary" :disabled="!(authStore.isAuthenticated && can('create', 'shareable'))" prepend-icon="mdi-plus">{{t('action.create')}}</v-btn>
             </div>
         </template>
         <template #search>
@@ -25,10 +25,12 @@ const api = inject('api');
 import { useI18n } from 'vue-i18n';
 import { useAbility } from '@casl/vue';
 import { useWindowSize } from '@vueuse/core';
+import { useAuthenticationStore } from '@/plugins/pinia.js';
 
 const { t } = useI18n();
 const { can } = useAbility();
 const { width } = useWindowSize();
+const authStore = useAuthenticationStore();
 
 const segments = ref([]);
 const loading = ref(false);
