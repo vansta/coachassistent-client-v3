@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container class="pa-0 pa-sm-4">
         <v-card :loading="loading.get">
             <v-card-title>
                 {{ t('training') }}

@@ -1,5 +1,5 @@
 <template>
-    <v-container class="ma-0 pa-0">
+    <v-container class="pa-0 pa-sm-4">
         <create :id="id" @save="router.push({ name: 'Segments' })" @remove="router.push({ name: 'Segments' })"></create>
     </v-container>
 </template>
