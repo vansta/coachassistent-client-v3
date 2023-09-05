@@ -1,24 +1,20 @@
 <template>
-    <v-card>
-        <v-card-text>
-            <v-form>
-                <v-row>
-                    <v-col cols="1">
-                        <v-btn icon variant="text" @click="onOnlyFavorites">
-                            <v-icon v-if="modelValue.onlyFavorites">mdi-heart</v-icon>
-                            <v-icon v-else>mdi-heart-outline</v-icon>
-                        </v-btn>
-                    </v-col>
-                    <v-col>
-                        <v-text-field v-model="modelValue.search" :label="t('field.name')" @update:model-value="emitSearch" clearable hide-details="auto" prepend-icon="mdi-magnify"></v-text-field>
-                    </v-col>
-                    <v-col>
-                        <v-autocomplete v-model="modelValue.tags" :label="t('field.tags')" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch" clearable hide-details="auto" chips></v-autocomplete>
-                    </v-col>
-                </v-row>
-            </v-form>
-        </v-card-text>
-    </v-card>
+    <v-form>
+        <v-row dense>
+            <v-col cols="2" md="1">
+                <v-btn icon variant="text" @click="onOnlyFavorites">
+                    <v-icon v-if="modelValue.onlyFavorites">mdi-heart</v-icon>
+                    <v-icon v-else>mdi-heart-outline</v-icon>
+                </v-btn>
+            </v-col>
+            <v-col>
+                <v-text-field v-model="modelValue.search" :label="t('field.name')" @update:model-value="emitSearch" clearable hide-details="auto" prepend-inner-icon="mdi-magnify"></v-text-field>
+            </v-col>
+            <v-col cols="5">
+                <v-autocomplete v-model="modelValue.tags" :label="t('field.tags')" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch" clearable hide-details="auto" chips></v-autocomplete>
+            </v-col>
+        </v-row>
+    </v-form>
 </template>
 
 <script setup>

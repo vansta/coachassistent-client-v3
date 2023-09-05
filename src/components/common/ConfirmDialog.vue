@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="show" class="d-flex justify-center">
-        <v-card max-width="500" min-width="400" class="mx-auto">
+        <v-card max-width="450" min-width="300" class="mx-auto">
             <v-card-title class="text-orange">
                 <v-icon start>mdi-alert</v-icon>
                 {{ t('confirm') }}

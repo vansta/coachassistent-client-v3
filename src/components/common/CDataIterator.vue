@@ -1,10 +1,10 @@
 <template>
     <v-container>
-        <v-row>
+        <!-- <v-row>
             <v-col>
                 <slot name="header"></slot>
             </v-col>
-        </v-row>
+        </v-row> -->
         <v-row>
             <v-col>
                 <slot name="search"></slot>

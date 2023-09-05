@@ -6,11 +6,6 @@
             :cols="width > 500 ? 12 / Math.floor(width / 500) : 1"
             @update:model-value="getExercises"
         >
-            <template #header>
-                <div class="d-flex justify-end">
-                    <v-btn @click="addRow" color="primary" :disabled="!(authStore.isAuthenticated && can('create', 'shareable'))" prepend-icon="mdi-plus">{{t('action.create')}}</v-btn>
-                </div>
-            </template>
             <template #search>
                 <search v-model="search" @update:model-value="getExercises"></search>
             </template>
@@ -19,6 +14,11 @@
                 <exercise-edit v-else :exercise="item" @save="saveRow(item)" @remove="getExercises" @cancel="item.edit = false" :tags="tags"></exercise-edit>
             </template>
         </c-data-iterator>
+
+        <v-btn @click="addRow" color="primary" :disabled="!(authStore.isAuthenticated && can('create', 'shareable'))" icon="mdi-plus" position="fixed" location="bottom right" class="ma-2 ma-md-6" size="large">
+            <v-icon>mdi-plus</v-icon>
+            <v-tooltip activator="parent" location="left" :text="t('tooltip.add')"></v-tooltip>
+        </v-btn>
     </div>
     
 </template>
@@ -33,6 +33,7 @@ import { useWindowSize } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { useAbility } from '@casl/vue';
 import { ref, inject } from 'vue';
+import { getDefaultExercise } from '@/services/defaults.js';
 
 const authStore = useAuthenticationStore();
 const { width } = useWindowSize();
@@ -67,15 +68,7 @@ const saveRow = (row) => {
 }
 
 const addRow = () => {
-    exercises.value.unshift({
-        id: '',
-        name: '',
-        description: '',
-        edit: true,
-        attachments: [],
-        editorIds: [authStore.user.id],
-        constructor: { modelName: 'shareable' }
-    })
+    exercises.value.unshift(getDefaultExercise(authStore.user.id));
 }
 
 const onCopy = (id) => {

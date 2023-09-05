@@ -2,6 +2,9 @@
     <v-container>
         <v-card :loading="loading.get">
             <v-card-title>
+                {{ t('training') }}
+            </v-card-title>
+            <v-card-title>
                 <div class="d-flex">
                     <div class="flex-grow-1">
                         <v-text-field v-model="training.name" :label="t('field.name')" :readonly="!(can('update', training, 'name') || can('create', training, 'name'))" outlined dense></v-text-field>
@@ -30,12 +33,55 @@
             <v-card-text v-if="showSharebility">
                 <shareability v-model="training"></shareability>
             </v-card-text>
-            <v-card-actions>
-                <v-switch v-model="createSegment" :label="createSegment ? t('create_segment') : t('select_segment')"></v-switch>
-            </v-card-actions>
-            <!-- <v-card-actions></v-card-actions> -->
         </v-card>
-        <v-row v-show="createSegment" class="mt-3">
+
+        <v-card>
+            <v-card-subtitle class="d-flex justify-space-between align-center">
+                <span>{{ t('segments') }}</span>
+                <span>
+                    <v-btn @click="showSelectSegments = !showSelectSegments" icon="mdi-magnify" variant="text" color="black">
+                        <v-icon v-if="!showSelectSegments">mdi-magnify</v-icon>
+                        <v-icon v-else>mdi-magnify-close</v-icon>
+                        <v-tooltip activator="parent" location="bottom" :text="t('tooltip.search')"></v-tooltip>
+                    </v-btn>
+                    <v-btn @click="createSegment = true" icon="mdi-plus" variant="text" color="black">
+                        <v-icon>mdi-plus</v-icon>
+                        <v-tooltip activator="parent" location="bottom" :text="t('tooltip.add')"></v-tooltip>
+                    </v-btn>
+                </span>
+            </v-card-subtitle>
+            <v-card-text>
+                <v-row>
+                    <v-col>
+                        <draggable v-model="selectedSegments" group="segments" item-key="id">
+                            <template #item="{ element }">
+                                <drag :element="element" :tags="tags" >
+                                    <template #dialog>
+                                        <segment-view :segment="element"></segment-view>
+                                    </template>
+                                </drag>                     
+                            </template>
+                        </draggable>
+                    </v-col>
+                    <v-col cols="12" sm="6" v-show="(can('update', training) || can('create', training)) && showSelectSegments">
+                        <draggable v-model="segments" group="segments" item-key="id">
+                            <template #header>
+                                <exercise-search v-show="showSelectSegments" v-model="search" @update:model-value="getSegments"></exercise-search>
+                            </template>
+                            <template #item="{ element }">
+                                <drag :element="element" :tags="tags">
+                                    <template #dialog>
+                                        <segment-view :segment="element"></segment-view>
+                                    </template>
+                                </drag>
+                            </template>
+                        </draggable>
+                    </v-col>
+                </v-row>
+                
+            </v-card-text>
+        </v-card>
+        <!-- <v-row v-show="createSegment" class="mt-3">
             <v-col>
                 <segment-create @save="onSegmentSave" @remove="onSegmentRemove"></segment-create>
             </v-col>
@@ -72,7 +118,7 @@
                     </template>
                 </draggable>
             </v-col>
-        </v-row>
+        </v-row> -->
 
         <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>
     </v-container>
@@ -84,8 +130,9 @@ import { ref, inject, computed } from 'vue';
 import SegmentView from '@/components/Segment/OverviewItem.vue';
 import Draggable from 'vuedraggable';
 import Shareability from '@/components/common/Sharebility.vue';
-import SegmentCreate from '@/components/Segment/Create.vue';
+// import SegmentCreate from '@/components/Segment/Create.vue';
 import ExerciseSearch from '@/components/Exercise/Search.vue';
+import Drag from '@/components/common/Drag.vue';
 
 import { useToast } from 'vue-toastification';
 import { useAbility } from '@casl/vue';
@@ -126,6 +173,7 @@ const tags = ref([]);
 const createSegment = ref(false);
 const selectedSegmentObjects = ref([]);
 const search = ref({ search: '', tags: [], onlyFavorites: false });
+const showSelectSegments = ref(false);
 
 const getSegments = () => {
     loading.value.get = true;
@@ -166,11 +214,11 @@ const remove = async () => {
             .finally(() => loading.value.remove = false);
     }
 }
-const onSegmentSave = (id) => {
-    training.value.segments.push(id);
-    createSegment.value = false;
-    getSegments();
-}
+// const onSegmentSave = (id) => {
+//     training.value.segments.push(id);
+//     createSegment.value = false;
+//     getSegments();
+// }
 const setSelectedSegments = () => {
     selectedSegmentObjects.value = segments.value.filter(s => training.value.segments.includes(s.id));
     segments.value = segments.value.filter(s => !training.value.segments.includes(s.id))
