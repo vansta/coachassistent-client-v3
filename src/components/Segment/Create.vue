@@ -61,10 +61,13 @@
                     <v-col cols="12" sm="6" v-show="(can('update', segment) || can('create', segment)) && showSelectExercises">
                         <draggable v-model="exercises" group="exercises" item-key="id">
                             <template #header>
-                                <exercise-search v-show="showSelectExercises" v-model="search" @update:model-value="getExercises" subtitle="exercises"></exercise-search>
+                                <exercise-search v-show="showSelectExercises" v-model="search" @update:model-value="onSearch" subtitle="exercises"></exercise-search>
                             </template>
                             <template #item="{ element }">
                                 <exercise-drag :exercise="element" :tags="tags" @save="onSaveExercise" @remove="getExercises"></exercise-drag>
+                            </template>
+                            <template #footer>
+                                <v-pagination v-model="pageInfo.currentPage" :length="length" @update:modelValue="getExercises"></v-pagination>
                             </template>
                         </draggable>
                     </v-col>
@@ -88,7 +91,7 @@ import { useAbility } from '@casl/vue';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog } from '@vueuse/core';
-import { inject, ref } from 'vue';
+import { inject, ref, computed } from 'vue';
 
 import { getDefaultExercise } from '@/services/defaults.js';
 
@@ -123,6 +126,11 @@ const loading = ref({
 const showSharebility = ref(false);
 const search = ref({});
 const showSelectExercises = ref(false);
+const pageInfo = ref({
+    currentPage: 1,
+    itemsPerPage: 6,
+    totalCount: 0
+});
 
 if (props.id) {
     api.getSegment(props.id)
@@ -131,8 +139,11 @@ if (props.id) {
 
 const getExercises = () => {
     loading.value.get = true;
-    api.getAllExercises(search.value ?? {})
-        .then(resp => exercises.value = resp.data.items.filter(e => segment.value.exercises.findIndex(x => x.id === e.id) < 0))
+    api.getAllExercises(search.value, pageInfo.value)
+        .then(resp => {
+            exercises.value = resp.data.items.filter(e => segment.value.exercises.findIndex(x => x.id === e.id) < 0);
+            pageInfo.value.totalCount = resp.data.totalCount;
+        })
         .finally(() => loading.value.get = false)
 }
 const save = () => {
@@ -186,6 +197,12 @@ const getTags = () => {
     api.getTags()
         .then(resp => tags.value = resp.data);
 }
+const onSearch = () => {
+    pageInfo.value.currentPage = 1;
+    getExercises();
+}
 getExercises();
 getTags();
+
+const length = computed(() => Math.ceil(pageInfo.value.totalCount / pageInfo.value.itemsPerPage));
 </script>
