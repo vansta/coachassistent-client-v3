@@ -44,7 +44,7 @@
                         <v-icon v-else>mdi-magnify-close</v-icon>
                         <v-tooltip activator="parent" location="bottom" :text="t('tooltip.search')"></v-tooltip>
                     </v-btn>
-                    <v-btn @click="createSegment = true" icon="mdi-plus" variant="text" color="black">
+                    <v-btn :to="{ name: 'CreateSegment' }" icon="mdi-plus" variant="text" color="black">
                         <v-icon>mdi-plus</v-icon>
                         <v-tooltip activator="parent" location="bottom" :text="t('tooltip.add')"></v-tooltip>
                     </v-btn>

@@ -1,17 +1,16 @@
 <template>
     <v-container>
-        <!-- <v-row>
-            <v-col>
-                <slot name="header"></slot>
-            </v-col>
-        </v-row> -->
         <v-row>
             <v-col>
                 <slot name="search"></slot>
             </v-col>
         </v-row>
-
-        <v-row v-for="n in items.length" :key="'row' + n">
+        <v-row v-if="modelValue.loading">
+            <v-col>
+                <v-progress-linear indeterminate></v-progress-linear>
+            </v-col>
+        </v-row>
+        <v-row v-else v-for="n in items.length" :key="'row' + n">
             <v-col v-for="(item, index) in itemsPerRowGroup(n - 1)" :key="'col' + index">
                 <slot name="item" :item="item"></slot>
             </v-col>
@@ -29,12 +28,7 @@ import { ref, computed } from 'vue';
 const props = defineProps({
     modelValue: Object,
     items: Array,
-    cols: Number,
-    loading: Boolean,
-    totalCount: {
-        type: Number,
-        default: 0
-    }
+    cols: Number
 });
 const emit = defineEmits(['update:model-value']);
 // const currentPage = ref(1);
