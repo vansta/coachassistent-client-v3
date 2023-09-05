@@ -77,7 +77,6 @@ import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog } from '@vueuse/core';
 import { inject, ref } from 'vue';
-import { useRouter } from 'vue-router';
 
 import { getDefaultExercise } from '@/services/defaults.js';
 

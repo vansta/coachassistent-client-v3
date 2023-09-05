@@ -1,11 +1,11 @@
 <template>
-    <v-card>
-        <v-card-text class="d-flex justify-space-between">
-            {{ exercise.name }}
-            <v-btn icon variant="text" @click="exercise.dialog = !exercise.dialog">
+    <v-card class="draggable d-flex justify-space-between align-center">
+            <v-icon color="grey">mdi-drag-vertical</v-icon>
+            <span class="flex-grow-1 font-weight-bold">{{ exercise.name }}</span>
+            
+            <v-btn icon variant="text" @click="exercise.dialog = !exercise.dialog" size="small" color="gray">
                 <v-icon>mdi-eye</v-icon>
             </v-btn>
-        </v-card-text>
 
         <v-dialog v-model="exercise.dialog">
             <exercise-view v-if="!exercise.edit" :exercise="exercise" @edit="exercise.edit = true"></exercise-view>
@@ -44,3 +44,9 @@ const onRemove = () => {
     emit('remove');
 }
 </script>
+
+<style scoped>
+.draggable {
+    cursor: grab;
+}
+</style>
