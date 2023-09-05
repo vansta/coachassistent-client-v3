@@ -1,12 +1,12 @@
 <template>
   <v-app>
-    <v-app-bar>
+    <v-app-bar color="primary">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-app-bar-title>Coach Assistent</v-app-bar-title>
       <v-spacer></v-spacer>
       <v-btn v-if="!authenticationStore.isAuthenticated" :to="{ name: 'Login' }">{{ t('login') }}</v-btn>
       <div v-else class="d-flex">
-        <v-chip class="flex-grow-1 mt-1 mr-4" :to="{ name: 'Profile', params: { id: authenticationStore.user.id } }" size="x-large" prepend-icon="mdi-account" color="primary" variant="outlined">{{ authenticationStore.user.name }}</v-chip>
+        <v-chip class="flex-grow-1 mt-1 mr-4" :to="{ name: 'Profile', params: { id: authenticationStore.user.id } }" size="x-large" prepend-icon="mdi-account" variant="outlined">{{ mdAndUp ? authenticationStore.user.name : '' }}</v-chip>
         <v-btn icon="mdi-logout" @click="logout">
           <v-icon>mdi-logout</v-icon>
           <v-tooltip activator="parent" location="bottom" :text="t('logout')"></v-tooltip>
@@ -34,6 +34,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { buildRules } from '@/services/ability';
 import { useToast } from 'vue-toastification';
+import { useDisplay } from 'vuetify';
 
 const { t } = useI18n();
 const authenticationStore = useAuthenticationStore();
@@ -42,6 +43,7 @@ const router = useRouter();
 const route = useRoute();
 const ability = useAbility();
 const toast = useToast();
+const { mdAndUp } = useDisplay();
 
 const api = inject('api');
 
