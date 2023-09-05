@@ -2,6 +2,9 @@
     <div>
         <v-card>
             <v-card-title>
+                {{ t('segment') }}
+            </v-card-title>
+            <v-card-title>
                 <div class="d-flex">
                     <div class="flex-grow-1">
                         <v-text-field v-model="segment.name" :label="t('field.name')" :readonly="!(can('update', segment, 'name') || can('create', segment, 'name'))"></v-text-field>
@@ -51,7 +54,7 @@
                     <v-col>
                         <draggable v-model="segment.exercises" group="exercises" item-key="id">
                             <template #item="{ element }">
-                                <exercise-drag :exercise="element" :tags="tags" ></exercise-drag>                     
+                                <exercise-drag :exercise="element" :tags="tags" @save="onSaveExercise"></exercise-drag>                     
                             </template>
                         </draggable>
                     </v-col>
@@ -167,9 +170,15 @@ const addNewExercise = () => {
     exercises.value.unshift(getDefaultExercise(authStore.user.id));
 }
 const onSaveExercise = (exercise) => {
-    console.log(exercise);
-    if (segment.value.exercises.findIndex(e => e.id === exercise.id) < 0){
+    exercise.dialog = false;
+    exercise.edit = false;
+    var index = segment.value.exercises.findIndex(e => e.id === exercise.id);
+    console.log(exercise, exercise.id, index);
+    if (index < 0){
         segment.value.exercises.push(exercise);
+    }
+    else {
+        segment.value.exercises[index] = exercise;
     }
     getExercises();
 }

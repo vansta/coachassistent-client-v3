@@ -6,7 +6,9 @@ const getDefaultExercise = (userId) => ({
     dialog: true,
     attachments: [],
     editorIds: [userId],
-    constructor: { modelName: 'shareable' }
+    constructor: { modelName: 'shareable' },
+    tags: [],
+    sharingLevel: '3'
 });
 
 export { getDefaultExercise };

@@ -33,6 +33,7 @@ import { useWindowSize } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { useAbility } from '@casl/vue';
 import { ref, inject } from 'vue';
+import { getDefaultExercise } from '@/services/defaults.js';
 
 const authStore = useAuthenticationStore();
 const { width } = useWindowSize();
@@ -67,15 +68,7 @@ const saveRow = (row) => {
 }
 
 const addRow = () => {
-    exercises.value.unshift({
-        id: '',
-        name: '',
-        description: '',
-        edit: true,
-        attachments: [],
-        editorIds: [authStore.user.id],
-        constructor: { modelName: 'shareable' }
-    })
+    exercises.value.unshift(getDefaultExercise(authStore.user.id));
 }
 
 const onCopy = (id) => {
