@@ -6,13 +6,13 @@
         </v-btn>
         <v-carousel v-model="current" @click.stop height="320" show-arrows="hover" cycle continuous hide-delimiter-background>
             <v-carousel-item max-height="250" v-for="(attachment, index) in modelValue.attachments" :key="index" :name="attachment" :src="api.getAttachmentLink(attachment)">
-                <v-btn v-if="!readonly" icon="mdi-delete" variant="flat" @click="onRemove(modelValue.attachments, index)">
+                <v-btn v-if="!readonly" icon="mdi-delete" variant="flat" @click="onRemove(modelValue.attachments, index)" color="error">
                     <v-icon>mdi-delete</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.remove')"></v-tooltip>
                 </v-btn>
             </v-carousel-item>
             <v-carousel-item max-height="250" v-for="(attachment, index) in addedAttachments" :key="index" :name="attachment" :src="createURL(attachment)">
-                <v-btn v-if="!readonly" icon="mdi-delete" variant="flat" @click="onRemove(addedAttachments, index)">
+                <v-btn v-if="!readonly" icon="mdi-delete" variant="flat" @click="onRemove(addedAttachments, index)" color="error">
                     <v-icon>mdi-delete</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.remove')"></v-tooltip>
                 </v-btn>

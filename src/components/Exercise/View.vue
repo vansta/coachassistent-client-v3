@@ -11,7 +11,7 @@
                     <v-icon>mdi-pencil</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.edit')"></v-tooltip>
                 </v-btn>
-                <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-heart" variant="text" @click="onFavorite" :loading="loading.favorite">
+                <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-heart" variant="text" @click="onFavorite" :loading="loading.favorite" color="heart">
                     <v-icon v-if="exercise.isFavorite">mdi-heart</v-icon>
                     <v-icon v-else>mdi-heart-outline</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.favorite')"></v-tooltip>
