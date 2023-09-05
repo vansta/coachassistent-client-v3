@@ -7,7 +7,7 @@
             @update:model-value="getExercises"
         >
             <template #search>
-                <search v-model="search" @update:model-value="getExercises"></search>
+                <search v-model="search" @update:model-value="onSearch"></search>
             </template>
             <template #item="{ item }">
                 <exercise-view v-if="!item.edit" :exercise="item" @edit="item.edit = true" @copy="onCopy"></exercise-view>
@@ -78,6 +78,10 @@ const onCopy = (id) => {
             copy.edit = true;
             exercises.value.unshift(copy);
         });
+}
+const onSearch = () => {
+    pageInfo.value.currentPage = 1;
+    getExercises();
 }
 
 getTags();

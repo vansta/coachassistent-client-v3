@@ -6,7 +6,7 @@
             </div>
         </template> -->
         <template #search>
-            <search v-model="search" @update:model-value="getTrainings"></search>
+            <search v-model="search" @update:model-value="onSearch"></search>
         </template>
         <template #item="{ item }">
             <overview-item :training="item" @remove="remove"></overview-item>
@@ -50,6 +50,10 @@ const getTrainings = () => {
         .finally(() => pageInfo.value.loading = false);
 }
 const remove = () => {
+    getTrainings();
+}
+const onSearch = () => {
+    pageInfo.value.currentPage = 1;
     getTrainings();
 }
 

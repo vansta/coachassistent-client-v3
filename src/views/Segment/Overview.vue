@@ -6,7 +6,7 @@
             </div>
         </template>
         <template #search>
-            <search v-model="search" @update-modelValue="getSegments"></search>
+            <search v-model="search" @update-modelValue="onSearch"></search>
         </template>
         <template #item="{ item }">
             <overview-item :segment="item" @remove="getSegments"></overview-item>
@@ -49,6 +49,10 @@ const getSegments = () => {
             pageInfo.value.totalCount = data.totalCount;
         })
         .finally(() => pageInfo.value.loading = false);
+}
+const onSearch = () => {
+    pageInfo.value.currentPage = 1;
+    getSegments();
 }
 
 getSegments();
