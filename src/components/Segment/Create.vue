@@ -31,36 +31,45 @@
                 <sharebility v-model="segment"></sharebility>
             </v-card-text>
         </v-card>
-        <exercise-search v-model="search" @update:model-value="getExercises" subtitle="exercises"></exercise-search>
-        <v-row dense>
-            <v-col cols="6">
-                <draggable v-model="segment.exercises" group="exercises" item-key="id">
-                    <template #header>
-                        <v-alert type="info" variant="tonal">
-                            {{ t('drag_to') }}
-                            <v-btn icon variant="text" @click="addNewExercise">
-                                <v-icon>mdi-plus</v-icon>
-                            </v-btn>
-                        </v-alert>
-                    </template>
-                    <template #item="{ element }">
-                        <exercise-drag :exercise="element" :tags="tags" ></exercise-drag>                     
-                    </template>
-                </draggable>
-            </v-col>
-            <v-col cols="6" v-show="(can('update', segment) || can('create', segment))">
-                <draggable v-model="exercises" group="exercises" item-key="id">
-                    <template #header>
-                        <v-alert variant="tonal">{{ t('drag_from') }}</v-alert>
-                        <!-- <exercise-search v-model="search" @update:model-value="getExercises"></exercise-search> -->
-                    </template>
-                    <template #item="{ element }">
-                        <exercise-drag :exercise="element" :tags="tags" @save="onSaveExercise" @remove="getExercises"></exercise-drag>
-                    </template>
-                </draggable>
-            </v-col>
-        </v-row>
-
+        <v-card>
+            <v-card-subtitle class="d-flex justify-space-between">
+                <span>{{ t('exercises') }}</span>
+                <span>
+                    <v-btn @click="showSelectExercises = !showSelectExercises" icon="mdi-magnify" variant="text" color="black">
+                        <v-icon v-if="!showSelectExercises">mdi-magnify</v-icon>
+                        <v-icon v-else>mdi-magnify-cancel</v-icon>
+                        <v-tooltip activator="parent" location="bottom" :text="t('tooltip.search')"></v-tooltip>
+                    </v-btn>
+                    <v-btn @click="addNewExercise" icon="mdi-plus" variant="text" color="black">
+                        <v-icon>mdi-plus</v-icon>
+                        <v-tooltip activator="parent" location="bottom" :text="t('tooltip.add')"></v-tooltip>
+                    </v-btn>
+                </span>
+            </v-card-subtitle>
+            <v-card-text>
+                <v-row>
+                    <v-col>
+                        <draggable v-model="segment.exercises" group="exercises" item-key="id">
+                            <template #item="{ element }">
+                                <exercise-drag :exercise="element" :tags="tags" ></exercise-drag>                     
+                            </template>
+                        </draggable>
+                    </v-col>
+                    <v-col cols="12" sm="6" v-show="(can('update', segment) || can('create', segment)) && showSelectExercises">
+                        <draggable v-model="exercises" group="exercises" item-key="id">
+                            <template #header>
+                                <exercise-search v-show="showSelectExercises" v-model="search" @update:model-value="getExercises" subtitle="exercises"></exercise-search>
+                            </template>
+                            <template #item="{ element }">
+                                <exercise-drag :exercise="element" :tags="tags" @save="onSaveExercise" @remove="getExercises"></exercise-drag>
+                            </template>
+                        </draggable>
+                    </v-col>
+                </v-row>
+                
+            </v-card-text>
+        </v-card>
+        
         <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>
     </div>
 </template>
@@ -109,7 +118,8 @@ const loading = ref({
     remove: false
 });
 const showSharebility = ref(false);
-const search = ref({})
+const search = ref({});
+const showSelectExercises = ref(false);
 
 if (props.id) {
     api.getSegment(props.id)

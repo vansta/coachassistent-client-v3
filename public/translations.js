@@ -34,7 +34,8 @@ const messages = {
         view: 'Details',
         leave_group: 'Groep verlaten',
         favorite: 'Favoriet',
-        add: 'Toevoegen'
+        add: 'Toevoegen',
+        search: 'Zoeken'
       },
       
       sharingLevel: {
