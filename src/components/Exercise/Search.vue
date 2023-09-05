@@ -8,7 +8,7 @@
                 </v-btn>
             </v-col>
             <v-col>
-                <v-text-field v-model="modelValue.search" :label="t('field.name')" @update:model-value="emitSearch" clearable hide-details="auto" prepend-inner-icon="mdi-magnify"></v-text-field>
+                <v-text-field v-model="modelValue.search" :label="t('search')" @update:model-value="emitSearch" clearable hide-details="auto" prepend-inner-icon="mdi-magnify"></v-text-field>
             </v-col>
             <v-col cols="5">
                 <v-autocomplete v-model="modelValue.tags" :label="t('field.tags')" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch" clearable hide-details="auto" chips></v-autocomplete>

@@ -55,7 +55,7 @@
                     <v-col>
                         <draggable v-model="selectedSegments" group="segments" item-key="id">
                             <template #item="{ element }">
-                                <drag :element="element" :tags="tags" >
+                                <drag :element="element" :tags="tags" class="mt-1">
                                     <template #dialog>
                                         <segment-view :segment="element"></segment-view>
                                     </template>
@@ -69,7 +69,7 @@
                                 <exercise-search v-show="showSelectSegments" v-model="search" @update:model-value="getSegments"></exercise-search>
                             </template>
                             <template #item="{ element }">
-                                <drag :element="element" :tags="tags">
+                                <drag :element="element" :tags="tags" class="mt-1">
                                     <template #dialog>
                                         <segment-view :segment="element"></segment-view>
                                     </template>
@@ -173,7 +173,7 @@ const tags = ref([]);
 const createSegment = ref(false);
 const selectedSegmentObjects = ref([]);
 const search = ref({ search: '', tags: [], onlyFavorites: false });
-const showSelectSegments = ref(false);
+const showSelectSegments = ref(!props.id);
 
 const getSegments = () => {
     loading.value.get = true;

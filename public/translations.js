@@ -106,7 +106,8 @@ const messages = {
 
       error: {
         session_expired: 'Sessie is afgelopen'
-      }
+      },
+      search: 'Zoeken'
     }
   };
 

@@ -54,7 +54,7 @@
                     <v-col>
                         <draggable v-model="segment.exercises" group="exercises" item-key="id">
                             <template #item="{ element }">
-                                <exercise-drag :exercise="element" :tags="tags" @save="onSaveExercise"></exercise-drag>                     
+                                <exercise-drag :exercise="element" :tags="tags" @save="onSaveExercise" class="mt-1"></exercise-drag>                     
                             </template>
                         </draggable>
                     </v-col>
@@ -64,7 +64,7 @@
                                 <exercise-search v-show="showSelectExercises" v-model="search" @update:model-value="onSearch" subtitle="exercises"></exercise-search>
                             </template>
                             <template #item="{ element }">
-                                <exercise-drag :exercise="element" :tags="tags" @save="onSaveExercise" @remove="getExercises"></exercise-drag>
+                                <exercise-drag :exercise="element" :tags="tags" @save="onSaveExercise" @remove="getExercises" class="mt-1"></exercise-drag>
                             </template>
                             <template #footer>
                                 <v-pagination v-model="pageInfo.currentPage" :length="length" @update:modelValue="getExercises"></v-pagination>
@@ -125,7 +125,7 @@ const loading = ref({
 });
 const showSharebility = ref(false);
 const search = ref({});
-const showSelectExercises = ref(false);
+const showSelectExercises = ref(!props.id);
 const pageInfo = ref({
     currentPage: 1,
     itemsPerPage: 6,
