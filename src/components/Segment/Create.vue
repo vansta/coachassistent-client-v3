@@ -32,12 +32,12 @@
             </v-card-text>
         </v-card>
         <v-card>
-            <v-card-subtitle class="d-flex justify-space-between">
+            <v-card-subtitle class="d-flex justify-space-between align-center">
                 <span>{{ t('exercises') }}</span>
                 <span>
                     <v-btn @click="showSelectExercises = !showSelectExercises" icon="mdi-magnify" variant="text" color="black">
                         <v-icon v-if="!showSelectExercises">mdi-magnify</v-icon>
-                        <v-icon v-else>mdi-magnify-cancel</v-icon>
+                        <v-icon v-else>mdi-magnify-close</v-icon>
                         <v-tooltip activator="parent" location="bottom" :text="t('tooltip.search')"></v-tooltip>
                     </v-btn>
                     <v-btn @click="addNewExercise" icon="mdi-plus" variant="text" color="black">
@@ -167,6 +167,7 @@ const addNewExercise = () => {
     exercises.value.unshift(getDefaultExercise(authStore.user.id));
 }
 const onSaveExercise = (exercise) => {
+    console.log(exercise);
     if (segment.value.exercises.findIndex(e => e.id === exercise.id) < 0){
         segment.value.exercises.push(exercise);
     }
