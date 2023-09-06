@@ -172,6 +172,9 @@ const createApiService = (apiClient) => {
             action
           }});
         },
+        checkUserName(userName) {
+          return apiClient.get('User/CheckUserName', { params: { userName }});
+        },
     
         //POST
         async postExercise (exercise) {

@@ -20,9 +20,12 @@
 <script setup>
 import { ref, inject } from "vue";
 import { useI18n } from "vue-i18n";
-import { required } from '@/services/validation.js';
+import { useValidation } from '@/services/validation.js';
+
 const api = inject('api');
 const { t } = useI18n();
+const { required } = useValidation(t);
+
 const props = defineProps({
     modelValue: Object,
     roles: Array,
@@ -37,7 +40,7 @@ const decline = async () => {
     emit('onAccept');
 }
 const accept = async () => {
-    form.value.validate();
+    await form.value.validate();
     if (valid.value) {
         await api.putMembershipRequest(props.modelValue, true);
         emit('onAccept');
