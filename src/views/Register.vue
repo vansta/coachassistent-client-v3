@@ -15,7 +15,7 @@
             <v-card-text>
                 <v-switch v-model="newGroup" :label="t('register_with_new_group')" color="primary"></v-switch>
                 <div v-show="!newGroup">
-                    <v-autocomplete v-model="user.groupIds" :items="availableGroups" multiple :label="t('request_membership')" chips></v-autocomplete>
+                    <v-autocomplete v-model="user.groupIds" :items="availableGroups" multiple :label="t('request_membership')" chips @update:search="getAvailableGroups"></v-autocomplete>
                 </div>
             </v-card-text>
             <v-card-actions>
@@ -69,11 +69,20 @@ const register = async () => {
         })
         .finally(() => loading.value = false);
 }
+
+var timeout;
+const getAvailableGroups = (input) => {
+    clearTimeout(timeout);
+    if (input && input.length > 3){
+        timeout = setTimeout(() => {
+            api.getAvailableGroups(input)
+                .then(resp => availableGroups.value = resp.data);
+        }, 300);
+    }
+}
+
 const unique = async (value) => {
     var { data } = await api.checkUserName(value);
     return data || t('validate.username.unique');
 }
-
-api.getAvailableGroups()
-    .then(resp => availableGroups.value.push(...resp.data));
 </script>

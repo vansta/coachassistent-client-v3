@@ -118,7 +118,7 @@ const roles = ref([]);
 const users = ref([]);
 const action = ref('create');
 const loading = ref({ save: false });
-const groups= ref([]);
+const groups = ref([]);
 
 api.getTags()
     .then(resp => tags.value = resp.data);
@@ -126,7 +126,7 @@ api.getEditors()
     .then(resp => users.value = resp.data);
 api.getRoles()
     .then(resp => roles.value = resp.data);
-api.getAvailableGroups('update')
+api.getAvailableGroups('', 'update')
     .then(resp => groups.value = resp.data);
 
 const getGroup = () => {

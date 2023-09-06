@@ -39,13 +39,14 @@
                 </v-table>
                 <v-row>
                     <v-col>
-                        <v-autocomplete :items="availableGroups" :label="t('request_membership')" @update:modelValue="addMembership" :loading="loading.addMembership"></v-autocomplete>
+                        <v-autocomplete :items="availableGroups" :label="t('request_membership')" @update:modelValue="addMembership" :loading="loading.addMembership" @update:search="getAvailableGroups"></v-autocomplete>
                     </v-col>
                 </v-row>
             </v-card-text>
             <v-card-actions>
                 
-                <v-btn @click="save" :loading="loading.save">
+                <v-btn @click="save" :loading="loading.save" color="primary">
+                    <v-icon start>mdi-content-save</v-icon>
                     {{ t('save') }}
                 </v-btn>
             </v-card-actions>
@@ -87,8 +88,16 @@ const getUser = () => {
         .finally(() => loading.value.get = false);
 }
 
-api.getAvailableGroups()
-    .then(resp => groups.value = resp.data);
+var timeout;
+const getAvailableGroups = (input) => {
+    clearTimeout(timeout);
+    if (input && input.length > 3){
+        timeout = setTimeout(() => {
+            api.getAvailableGroups(input)
+                .then(resp => groups.value = resp.data);
+        }, 300);
+    }
+}
 
 const leaveGroup = async (index) =>{
     const { data } = await reveal();
