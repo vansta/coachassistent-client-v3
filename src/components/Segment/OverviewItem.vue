@@ -8,7 +8,7 @@
                     <v-icon>mdi-pencil</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.edit')"></v-tooltip>
                 </v-btn>
-                <v-btn v-else icon="mdi-eye" variant="text" :to="{ name: 'Segment', params: { id: segment.id }}">
+                <v-btn v-else :disabled="!can('read', training)" icon="mdi-eye" variant="text" :to="{ name: 'Segment', params: { id: segment.id }}">
                     <v-icon>mdi-eye</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.view')"></v-tooltip>
                 </v-btn>
