@@ -1,10 +1,14 @@
 <template>
     <v-form>
         <v-row dense>
-            <v-col cols="2" md="1">
+            <v-col cols="4">
                 <v-btn icon variant="text" @click="onOnlyFavorites" color="heart">
                     <v-icon v-if="modelValue.onlyFavorites">mdi-heart</v-icon>
                     <v-icon v-else>mdi-heart-outline</v-icon>
+                </v-btn>
+                <v-btn icon variant="text" @click="onOnlyOwned">
+                    <v-icon v-if="modelValue.onlyOwned">mdi-account-wrench</v-icon>
+                    <v-icon v-else>mdi-account-wrench-outline</v-icon>
                 </v-btn>
             </v-col>
             <v-col>
@@ -47,6 +51,10 @@ const getTags = () => {
 }
 const onOnlyFavorites = () => {
     props.modelValue.onlyFavorites = !props.modelValue.onlyFavorites;
+    emit('update:modelValue', props.modelValue);
+}
+const onOnlyOwned = () => {
+    props.modelValue.onlyOwned = !props.modelValue.onlyOwned;
     emit('update:modelValue', props.modelValue);
 }
 
