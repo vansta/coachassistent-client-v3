@@ -33,7 +33,7 @@ const getUsers = (value) => {
     clearTimeout(searchTimeOut);
     if (value && value.length >= 3){
         searchTimeOut = setTimeout(() => {
-            api.getEditors(value)
+            api.searchUsers(value)
                 .then(resp => users.value = resp.data);
         }, 300);
     }
