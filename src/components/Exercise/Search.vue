@@ -15,10 +15,10 @@
                 
                 <v-text-field v-model="modelValue.search" :label="t('search')" @update:model-value="emitSearch" clearable hide-details="auto" prepend-inner-icon="mdi-magnify" class="flex-grow-1"></v-text-field>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="12" sm="6">
                 <v-autocomplete v-model="modelValue.tags" :label="t('field.tags')" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch" clearable hide-details="auto" chips prepend-inner-icon="mdi-tag"></v-autocomplete>
             </v-col>
-            <v-col cols="6" class="mt-n3">
+            <v-col cols="12" sm="6" class="mt-n3">
                 <v-select v-model="modelValue.level" :label="t('field.level')" :items="levels" class="mt-3" :item-title="(option) => t(`level.${option.title}`)" hide-details="auto" @update:model-value="emitSearch" clearable prepend-inner-icon="mdi-star-settings"></v-select>
             </v-col>
         </v-row>

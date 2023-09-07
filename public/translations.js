@@ -125,7 +125,9 @@ const messages = {
           length: 'Wachtwoord moet minstens 8 karakters zijn'
         },
         email: 'Email ongeldig'
-      }
+      },
+
+      select_all: 'Alles selecteren'
     }
   };
 
