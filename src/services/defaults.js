@@ -11,4 +11,13 @@ const getDefaultExercise = (userId) => ({
     sharingLevel: '3'
 });
 
-export { getDefaultExercise };
+const getDefaultGroup = (userId, parentGroupId) => ({
+    id: null,
+    constructor: { modelName: 'group' },
+    members: [
+        { userId: userId }
+    ],
+    parentGroupId: parentGroupId
+})
+
+export { getDefaultExercise, getDefaultGroup };

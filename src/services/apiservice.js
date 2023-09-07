@@ -124,8 +124,8 @@ const createApiService = (apiClient) => {
             params: { search }
           })
         },
-        getEditors() {
-          return apiClient.get('User')
+        getEditors(search) {
+          return apiClient.get('User', { params: { search }})
         },
         getAssignedEditors(shareableId) {
           return apiClient.get('User/AssignedEditors', {
@@ -174,6 +174,9 @@ const createApiService = (apiClient) => {
         },
         checkUserName(userName) {
           return apiClient.get('User/CheckUserName', { params: { userName }});
+        },
+        getMembersForGroup(groupId) {
+          return apiClient.get('Group/Members', { params: { groupId }})
         },
     
         //POST

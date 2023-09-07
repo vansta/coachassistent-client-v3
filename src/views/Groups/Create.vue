@@ -21,7 +21,7 @@
             <v-card-text>
                 <v-row v-for="(member, index) in group.members" :key="index">
                     <v-col>
-                        <edit-membership v-model="group.members[index]" :readonly="!can(action, group, 'member')" :roles="roles" :users="users" @remove="onDeleteRow(index)"></edit-membership>
+                        <edit-membership v-model="group.members[index]" :readonly="!can(action, group, 'member')" :roles="roles" :members="members" @remove="onDeleteRow(index)"></edit-membership>
                     </v-col>
                 </v-row>
                 <v-row v-if="can(action, group, 'member')">
@@ -90,6 +90,7 @@ import { useAbility } from '@casl/vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
+import { getDefaultGroup } from '@/services/defaults';
 
 const authenticationStore = useAuthenticationStore();
 const { can } = useAbility();
@@ -103,27 +104,23 @@ const props = defineProps({
     id: [Number, String]
 });
 
-const group = ref({
-                id: null,
-                constructor: { modelName: 'group' },
-                members: [
-                    { 
-                        userId: authenticationStore.user.id
-                     }
-                ],
-                parentGroupId: route.params.parentGroupId
-            });
+const group = ref(props.id ? {} : getDefaultGroup(authenticationStore.user.id, route.params.parentGroupId));
 const tags = ref([]);
 const roles = ref([]);
-const users = ref([]);
+const members = ref([]);
 const action = ref('create');
 const loading = ref({ save: false });
 const groups = ref([]);
 
 api.getTags()
     .then(resp => tags.value = resp.data);
-api.getEditors()
-    .then(resp => users.value = resp.data);
+if (props.id){
+    api.getMembersForGroup(props.id)
+        .then(({ data }) => members.value = data);
+}
+else {
+    members.value = [{ value: authenticationStore.user.id, title: authenticationStore.user.name }]
+}
 api.getRoles()
     .then(resp => roles.value = resp.data);
 api.getAvailableGroups('', 'update')
