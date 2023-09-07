@@ -162,7 +162,6 @@ const onGroupSelect = (value) => {
         id: value.value,
         name: value.title
     });
-    console.log(value);
 }
 
 if (props.id) {

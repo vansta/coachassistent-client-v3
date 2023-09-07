@@ -55,7 +55,6 @@ export default {
         },
 
         onRowClick (item) {
-            console.log(item);
             this.$router.push({ name: 'EditGroup', params: {
                 id: item.id
             }})

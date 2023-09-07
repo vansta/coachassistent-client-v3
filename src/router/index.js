@@ -9,7 +9,6 @@ const firstVisitStorageId = 'ca-fv';
 
 const ifCan = (to, from, next) => {
   if (to.meta && to.meta.action && !ability.can(to.meta.action, to.meta.subject)) {
-    console.log('cannot', to.meta);
   }
   else {
     next();

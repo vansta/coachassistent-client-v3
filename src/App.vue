@@ -146,7 +146,6 @@ const navDrawerItems = ref([
 const getPermissions = () => {
   api.getPermissions()
     .then(resp => {
-      console.log(buildRules(resp.data));
       ability.update(buildRules(resp.data));
       authenticationStore.setPermissions(resp.data);
   })

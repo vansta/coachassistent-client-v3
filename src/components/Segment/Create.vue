@@ -181,7 +181,6 @@ const onSaveExercise = (exercise) => {
     exercise.dialog = false;
     exercise.edit = false;
     var index = segment.value.exercises.findIndex(e => e.id === exercise.id);
-    console.log(exercise, exercise.id, index);
     if (index < 0){
         segment.value.exercises.push(exercise);
     }

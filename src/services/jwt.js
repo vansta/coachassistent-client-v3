@@ -25,7 +25,6 @@ const getDecodedToken = (token) => {
     }
     if (token){
         var decoded = jwtDecode(token);
-        console.log(decoded);
         return decoded;
     }
     

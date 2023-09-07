@@ -18,7 +18,6 @@ const props = defineProps({
 
 const onSave = (value) => {
     if (props.fromTraining) {
-        console.log(value);
         offlineStore.pushSegment(value);
         router.push({ name: 'CreateTraining' });
     }

@@ -164,7 +164,7 @@ const props = defineProps({
     id: String
 })
 
-const training = ref(offlineStore.getTraining.constructor ? offlineStore.getTraining : getDefaultTraining(authStore.user?.id));
+const training = ref(getDefaultTraining(authStore.user?.id));
 const segments = ref([]);
 const showSharebility = ref(false);
 const loading = ref({
@@ -193,14 +193,18 @@ const save = () => {
         api.postTraining(training.value)
             .then(resp => {
                 training.value.id = resp;
-                router.push({ name: 'Trainings' })
+                router.push({ name: 'Trainings' });
+                offlineStore.setTraining(getDefaultTraining(authStore.user.id));
             })
             .catch(err => toast.error(err))
             .finally(() => loading.value.save = false);
     }
     else {
         api.putTraining(training.value)
-            .then(() => router.push({ name: 'Trainings' }))
+            .then(() => {
+                router.push({ name: 'Trainings' });
+                offlineStore.setTraining(getDefaultTraining(authStore.user.id));
+            })
             .catch(err => toast.error(err))
             .finally(() => loading.value.save = false);
     }
@@ -208,7 +212,6 @@ const save = () => {
 
 const remove = async () => {
     const { data } = await reveal();
-    console.log(data);
     if (data) {
         loading.value.remove = true;
         api.deleteTraining((training.value).id)
@@ -236,6 +239,9 @@ if (props.id) {
             training.value = data;
             setSelectedSegments();
         })
+}
+else if (offlineStore.getTraining.level) {
+    training.value = offlineStore.getTraining;
 }
 getSegments();
 api.getTags()

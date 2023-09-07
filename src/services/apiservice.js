@@ -7,7 +7,6 @@ import sha256 from 'crypto-js/sha256';
 import { useToast } from 'vue-toastification';
 
 const toFormData = (data) => {
-  console.log(data);
   var formData = new FormData();
   const keys = Object.keys(data);
   keys.forEach(k => {
