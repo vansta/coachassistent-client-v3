@@ -12,6 +12,15 @@ const getDefaultExercise = (userId) => ({
     level: 0
 });
 
-const levels = ['0', '1', '2', '3', '4'].map(l => ({ title: l, value: l }))
+const getDefaultGroup = (userId, parentGroupId) => ({
+    id: null,
+    constructor: { modelName: 'group' },
+    members: [
+        { userId: userId }
+    ],
+    parentGroupId: parentGroupId
+});
 
-export { getDefaultExercise, levels };
+const levels = ['0', '1', '2', '3', '4'].map(l => ({ title: l, value: l }));
+
+export { getDefaultExercise, getDefaultGroup, levels };

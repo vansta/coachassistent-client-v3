@@ -17,7 +17,7 @@
                     <v-icon>mdi-delete</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.remove')"></v-tooltip>
                 </v-btn>
-                <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-heart" variant="text" @click="onFavorite" :loading="loading.favorite">
+                <v-btn :disabled="!authStore.isAuthenticated" icon="mdi-heart" variant="text" @click="onFavorite" :loading="loading.favorite" color="heart">
                     <v-icon v-if="training.isFavorite">mdi-heart</v-icon>
                     <v-icon v-else>mdi-heart-outline</v-icon>
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.favorite')"></v-tooltip>

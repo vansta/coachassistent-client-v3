@@ -37,7 +37,9 @@ export default createVuetify(
           dark: false,
           colors: {
             primary: colors.blueGrey.darken1,
-            secondary: colors.brown.base
+            secondary: colors.brown.base,
+            heart: '#BA5555',
+            error: '#CC7777'
           }
         }
       }

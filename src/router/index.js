@@ -74,30 +74,55 @@ const routes = [
   {
     path: '/segments/create',
     name: "CreateSegment",
-    component: () => import('../views/Segment/Edit.vue')
+    component: () => import('../views/Segment/Edit.vue'),
+    meta: {
+      action: 'create',
+      subject: 'shareable'
+    },
+    beforeEnter: ifCan
   },
   {
     path: '/segments/edit/:id',
     name: "EditSegment",
     props: true,
-    component: () => import('../views/Segment/Edit.vue')
+    component: () => import('../views/Segment/Edit.vue'),
+    meta: {
+      action: 'update',
+      subject: 'shareable'
+    },
+    beforeEnter: ifCan
   },
   {
     path: '/segments/details/:id',
     name: "Segment",
     props: true,
-    component: () => import('../views/Segment/Edit.vue')
+    component: () => import('../views/Segment/Edit.vue'),
+    meta: {
+      action: 'read',
+      subject: 'shareable'
+    },
+    beforeEnter: ifCan
   },
   {
     path: '/trainings/create',
     name: "CreateTraining",
-    component: () => import('../components/Training/Create.vue')
+    component: () => import('../components/Training/Create.vue'),
+    meta: {
+      action: 'create',
+      subject: 'shareable'
+    },
+    beforeEnter: ifCan
   },
   {
     path: '/trainings/edit/:id',
     name: "EditTraining",
     props: true,
-    component: () => import('../components/Training/Create.vue')
+    component: () => import('../components/Training/Create.vue'),
+    meta: {
+      action: 'update',
+      subject: 'shareable'
+    },
+    beforeEnter: ifCan
   },
   {
     path: '/trainings/details/:id',
@@ -120,13 +145,23 @@ const routes = [
     path: '/groups/create/:parentGroupId?',
     name: 'CreateGroup',
     props: true,
-    component: () => import('../views/Groups/Create.vue')
+    component: () => import('../views/Groups/Create.vue'),
+    meta: {
+      action: 'create',
+      subject: 'group'
+    },
+    beforeEnter: ifCan
   },
   {
     path: '/groups/edit/:id',
     name: 'EditGroup',
     props: true,
-    component: () => import('../views/Groups/Create.vue')
+    component: () => import('../views/Groups/Create.vue'),
+    meta: {
+      action: 'update',
+      subject: 'group'
+    },
+    beforeEnter: ifCan
   },
   {
     path: '/roles',

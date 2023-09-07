@@ -2,7 +2,7 @@
     <v-form>
         <v-row dense>
             <v-col cols="2" md="1">
-                <v-btn icon variant="text" @click="onOnlyFavorites">
+                <v-btn icon variant="text" @click="onOnlyFavorites" color="heart">
                     <v-icon v-if="modelValue.onlyFavorites">mdi-heart</v-icon>
                     <v-icon v-else>mdi-heart-outline</v-icon>
                 </v-btn>

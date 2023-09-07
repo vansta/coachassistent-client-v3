@@ -4,9 +4,9 @@
             {{ t('welcome') }}
         </v-card-title>
         <v-card-text>
-            <v-form v-model="valid">
-                <v-text-field v-model="credentials.userName" :label="t('username')"></v-text-field>
-                <v-text-field v-model="credentials.password" :label="t('password')" type="password"></v-text-field>
+            <v-form v-model="valid" ref="form" validate-on="blur">
+                <v-text-field v-model="credentials.userName" :label="t('username')" :rules="[required]"></v-text-field>
+                <v-text-field v-model="credentials.password" :label="t('password')" type="password" :rules="[required]"></v-text-field>
             </v-form>
         </v-card-text>
         <v-card-actions>
@@ -20,48 +20,50 @@
     </v-card>
 </template>
 
-<script>
+<script setup>
 import { useAuthenticationStore } from '@/plugins/pinia.js'
 import { useToast } from 'vue-toastification';
 import { useAbility } from '@casl/vue';
 import { buildRules } from '@/services/ability';
 import { useI18n } from 'vue-i18n';
-export default {
-    setup () {
-        const authenticationStore = useAuthenticationStore();
-        const toast = useToast();
-        const ability = useAbility();
-        const { t } = useI18n();
-        return { authenticationStore, toast, ability, t }
-    },
-    data() {
-        return {
-            loading: false,
-            valid: false,
-            credentials: {}
-        }
-    },
-    methods: {
-        login () {
-            this.loading = true;
-            this.$api.login(this.credentials)
-                .then(token => {
-                    this.getPermissions();
-                    this.authenticationStore.login(token);
-                    this.toast.success(this.t('welcome'));
-                    this.$router.push({ name: 'Home' });
-                })
-                .finally(() => this.loading = false);
-        },
+import { inject, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useValidation } from '@/services/validation.js';
 
-        getPermissions() {
-            this.$api.getPermissions()
-                .then(resp => {
-                    console.log(buildRules(resp.data));
-                    this.ability.update(buildRules(resp.data));
-                    this.authenticationStore.setPermissions(resp.data);
-                })
-        }
+const authenticationStore = useAuthenticationStore();
+const toast = useToast();
+const ability = useAbility();
+const { t } = useI18n();
+const { required } = useValidation(t);
+const router = useRouter();
+
+const api = inject('api');
+
+const loading = ref(false);
+const valid = ref(false);
+const credentials = ref({});
+const form = ref(null);
+
+const login = async () => {
+    await form.value.validate();
+    if (valid.value){
+        loading.value = true;
+        api.login(credentials.value)
+            .then(token => {
+                getPermissions();
+                authenticationStore.login(token);
+                toast.success(t('welcome'));
+                router.push({ name: 'Home' });
+            })
+            .finally(() => loading.value = false);
     }
+}
+
+const getPermissions = () => {
+    api.getPermissions()
+        .then(resp => {
+            ability.update(buildRules(resp.data));
+            authenticationStore.setPermissions(resp.data);
+    })
 }
 </script>

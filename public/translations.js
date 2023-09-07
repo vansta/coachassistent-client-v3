@@ -115,6 +115,16 @@ const messages = {
         '2': 'Gemiddeld',
         '3': 'Ervaren',
         '4': 'Expert'
+      },
+      validate: {
+        username: { 
+          unique: 'Gebruikersnaam al in gebruik'
+        },
+        required: 'Dit veld is verplicht',
+        password: {
+          length: 'Wachtwoord moet minstens 8 karakters zijn'
+        },
+        email: 'Email ongeldig'
       }
     }
   };

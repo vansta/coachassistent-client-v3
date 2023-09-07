@@ -116,16 +116,19 @@ const createApiService = (apiClient) => {
         },
 
         getGroupsForUser() {
-          return apiClient.get('Group')
+          return apiClient.get('Group');
         },
 
         getTags(search) {
           return apiClient.get('Tag', {
             params: { search }
-          })
+          });
         },
         getEditors() {
-          return apiClient.get('User')
+          return apiClient.get('User');
+        },
+        searchUsers(search) {
+          return apiClient.get('User/Search', { params: { search }})
         },
         getAssignedEditors(shareableId) {
           return apiClient.get('User/AssignedEditors', {
@@ -167,10 +170,16 @@ const createApiService = (apiClient) => {
         getUser() {
           return apiClient.get('User/Profile');
         },
-        getAvailableGroups(action) {
+        getAvailableGroups(search, action) {
           return apiClient.get('Group/Available', {params: {
-            action
+            search, action
           }});
+        },
+        checkUserName(userName) {
+          return apiClient.get('User/CheckUserName', { params: { userName }});
+        },
+        getMembersForGroup(groupId) {
+          return apiClient.get('Group/Members', { params: { groupId }})
         },
     
         //POST
