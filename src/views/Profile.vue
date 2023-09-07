@@ -39,7 +39,7 @@
                 </v-table>
                 <v-row>
                     <v-col>
-                        <v-autocomplete :items="availableGroups" :label="t('request_membership')" @update:modelValue="addMembership" :loading="loading.addMembership" @update:search="getAvailableGroups"></v-autocomplete>
+                        <v-autocomplete :items="availableGroups" :label="t('request_membership')" @update:modelValue="addMembership" :loading="loading.addMembership" @update:search="getAvailableGroups" prepend-icon="mdi-account-group"></v-autocomplete>
                     </v-col>
                 </v-row>
             </v-card-text>

@@ -1,24 +1,25 @@
 <template>
     <v-form>
         <v-row dense>
-            <v-col cols="4">
-                <v-btn icon variant="text" @click="onOnlyFavorites" color="heart">
-                    <v-icon v-if="modelValue.onlyFavorites">mdi-heart</v-icon>
-                    <v-icon v-else>mdi-heart-outline</v-icon>
-                </v-btn>
-                <v-btn icon variant="text" @click="onOnlyOwned">
-                    <v-icon v-if="modelValue.onlyOwned">mdi-account-wrench</v-icon>
-                    <v-icon v-else>mdi-account-wrench-outline</v-icon>
-                </v-btn>
+            <v-col cols="12" class="d-flex">
+                <div>
+                    <v-btn icon variant="text" @click="onOnlyFavorites" color="heart">
+                        <v-icon v-if="modelValue.onlyFavorites">mdi-heart</v-icon>
+                        <v-icon v-else>mdi-heart-outline</v-icon>
+                    </v-btn>
+                    <v-btn icon variant="text" @click="onOnlyOwned">
+                        <v-icon v-if="modelValue.onlyOwned">mdi-account-wrench</v-icon>
+                        <v-icon v-else>mdi-account-wrench-outline</v-icon>
+                    </v-btn>
+                </div>
+                
+                <v-text-field v-model="modelValue.search" :label="t('search')" @update:model-value="emitSearch" clearable hide-details="auto" prepend-inner-icon="mdi-magnify" class="flex-grow-1"></v-text-field>
             </v-col>
-            <v-col cols="10" md="4">
-                <v-text-field v-model="modelValue.search" :label="t('search')" @update:model-value="emitSearch" clearable hide-details="auto" prepend-inner-icon="mdi-magnify"></v-text-field>
+            <v-col cols="6">
+                <v-autocomplete v-model="modelValue.tags" :label="t('field.tags')" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch" clearable hide-details="auto" chips prepend-inner-icon="mdi-tag"></v-autocomplete>
             </v-col>
-            <v-col cols="6" md="4">
-                <v-autocomplete v-model="modelValue.tags" :label="t('field.tags')" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch" clearable hide-details="auto" chips></v-autocomplete>
-            </v-col>
-            <v-col cols="6" md="3" class="mt-n3">
-                <v-select v-model="modelValue.level" :label="t('field.level')" :items="levels" class="mt-3" :item-title="(option) => t(`level.${option.title}`)" hide-details="auto" @update:model-value="emitSearch" clearable></v-select>
+            <v-col cols="6" class="mt-n3">
+                <v-select v-model="modelValue.level" :label="t('field.level')" :items="levels" class="mt-3" :item-title="(option) => t(`level.${option.title}`)" hide-details="auto" @update:model-value="emitSearch" clearable prepend-inner-icon="mdi-star-settings"></v-select>
             </v-col>
         </v-row>
     </v-form>

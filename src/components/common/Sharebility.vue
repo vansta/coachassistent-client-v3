@@ -1,11 +1,11 @@
 <template>
     <v-card>
         <v-card-title>
-            <v-select v-model="modelValue.sharingLevel" :items="sharingLevels" :label="t('field.shareability')" :item-title="(option) => t(`sharingLevel.${option.value}`)"></v-select>
+            <v-select v-model="modelValue.sharingLevel" :items="sharingLevels" :label="t('field.shareability')" :item-title="(option) => t(`sharingLevel.${option.value}`)" prepend-icon="mdi-share-all"></v-select>
         </v-card-title>
         <v-card-text>
-            <v-select v-if="modelValue.sharingLevel == 1" v-model="modelValue.groupIds" multiple :items="groups" :label="t('groups')" chips></v-select>
-            <v-autocomplete v-model="modelValue.editors" multiple :items="editors" :label="t('editors')" chips></v-autocomplete>
+            <v-select v-if="modelValue.sharingLevel == 1" v-model="modelValue.groupIds" multiple :items="groups" :label="t('groups')" chips prepend-icon="mdi-account-group"></v-select>
+            <v-autocomplete v-model="modelValue.editors" multiple :items="editors" :label="t('editors')" chips prepend-icon="mdi-account-wrench"></v-autocomplete>
         </v-card-text>
     </v-card>
 </template>

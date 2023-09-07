@@ -24,11 +24,11 @@
             </div>
             <v-row dense>
                 <v-col cols="8">
-                    <div class="d-flex">
+                    <v-chip-group>
                         <v-chip v-for="tag in segment.tags" :key="tag" class="mr-1">{{ tag }}</v-chip>
-                    </div>
+                    </v-chip-group>
                 </v-col>
-                <v-col class="d-flex justify-end">
+                <v-col class="d-flex justify-end mt-2">
                     <v-chip color="info">
                         {{ t(`level.${segment.level}`) }}
                     </v-chip>

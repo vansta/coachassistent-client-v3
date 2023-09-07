@@ -29,10 +29,10 @@
 
             <v-row no-gutters dense>
                 <v-col cols="12" sm="6">
-                    <v-combobox v-model="editExercise.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3" hide-details="auto"></v-combobox>
+                    <v-combobox v-model="editExercise.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3" hide-details="auto" prepend-icon="mdi-tag"></v-combobox>
                 </v-col>
                 <v-col cols="12" sm="6">
-                    <v-select v-model="editExercise.level" :label="t('field.level')" :items="levels" class="mt-3" :item-title="(option) => t(`level.${option.title}`)" hide-details="auto"></v-select>
+                    <v-select v-model="editExercise.level" :label="t('field.level')" :items="levels" class="mt-3" :item-title="(option) => t(`level.${option.title}`)" hide-details="auto" prepend-icon="mdi-star-settings"></v-select>
                 </v-col>
             </v-row>
 
