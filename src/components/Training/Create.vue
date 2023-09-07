@@ -51,7 +51,7 @@
                         <v-icon v-else>mdi-magnify-close</v-icon>
                         <v-tooltip activator="parent" location="bottom" :text="t('tooltip.search')"></v-tooltip>
                     </v-btn>
-                    <v-btn :to="{ name: 'CreateSegment' }" icon="mdi-plus" variant="text" color="black">
+                    <v-btn @click="onNewSegment" icon="mdi-plus" variant="text" color="black">
                         <v-icon>mdi-plus</v-icon>
                         <v-tooltip activator="parent" location="bottom" :text="t('tooltip.add')"></v-tooltip>
                     </v-btn>
@@ -143,17 +143,18 @@ import Drag from '@/components/common/Drag.vue';
 
 import { useToast } from 'vue-toastification';
 import { useAbility } from '@casl/vue';
-import { useAuthenticationStore } from '@/plugins/pinia.js';
+import { useAuthenticationStore, useOfflineStore } from '@/plugins/pinia.js';
 import { useConfirmDialog } from '@vueuse/core';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import { levels } from '@/services/defaults.js';
+import { levels, getDefaultTraining } from '@/services/defaults.js';
 
 const api = inject('api');
 
 const toast = useToast();
 const { can } = useAbility();
 const authStore = useAuthenticationStore();
+const offlineStore = useOfflineStore();
 const router = useRouter();
 const { t } = useI18n();
 
@@ -163,13 +164,7 @@ const props = defineProps({
     id: String
 })
 
-const training = ref({
-    description: '',
-    segments: [],
-    sharingLevel: '0',
-    editorIds: [authStore.user?.id],
-    constructor: { modelName: 'shareable' }
-});
+const training = ref(offlineStore.getTraining.constructor ? offlineStore.getTraining : getDefaultTraining(authStore.user?.id));
 const segments = ref([]);
 const showSharebility = ref(false);
 const loading = ref({
@@ -178,7 +173,6 @@ const loading = ref({
     remove: false
 })
 const tags = ref([]);
-const createSegment = ref(false);
 const selectedSegmentObjects = ref([]);
 const search = ref({ search: '', tags: [], onlyFavorites: false });
 const showSelectSegments = ref(!props.id);
@@ -230,6 +224,10 @@ const remove = async () => {
 const setSelectedSegments = () => {
     selectedSegmentObjects.value = segments.value.filter(s => training.value.segments.includes(s.id));
     segments.value = segments.value.filter(s => !training.value.segments.includes(s.id))
+}
+const onNewSegment = () => {
+    offlineStore.setTraining(training.value);
+    router.push({ name: 'CreateSegment', params: { fromTraining: true } });
 }
 
 if (props.id) {

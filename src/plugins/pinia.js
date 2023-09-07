@@ -41,6 +41,25 @@ const useAuthenticationStore = defineStore('main', {
   }
 });
 
+const useOfflineStore = defineStore('offline', {
+  state: () => ({
+    training: {
+      segments: []
+    }
+  }),
+  getters: {
+    getTraining: (state) => state.training
+  },
+  actions: {
+    setTraining(value) {
+      this.training = value;
+    },
+    pushSegment(value) {
+      this.training.segments.push(value);
+    }
+  }
+})
 
 
-export { pinia, useAuthenticationStore }
+
+export { pinia, useAuthenticationStore, useOfflineStore }

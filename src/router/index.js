@@ -72,8 +72,9 @@ const routes = [
     component: () => import('@/views/Welcome.vue')
   },
   {
-    path: '/segments/create',
+    path: '/segments/create/:fromTraining?',
     name: "CreateSegment",
+    props: true,
     component: () => import('../views/Segment/Edit.vue'),
     meta: {
       action: 'create',

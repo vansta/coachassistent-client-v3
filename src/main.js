@@ -22,7 +22,7 @@ Vue
   .use(router);
 
 import api from '@/plugins/apiplugin.js';
-  Vue.use(api, { useAuthenticationStore });
+Vue.use(api, { useAuthenticationStore });
 
 Vue.use(Toast, {
   position: POSITION.BOTTOM_RIGHT,

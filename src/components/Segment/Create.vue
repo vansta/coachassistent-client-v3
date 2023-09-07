@@ -98,9 +98,7 @@ import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog } from '@vueuse/core';
 import { inject, ref, computed } from 'vue';
-import { levels } from '@/services/defaults.js';
-
-import { getDefaultExercise } from '@/services/defaults.js';
+import { levels, getDefaultExercise, getDefaultSegment } from '@/services/defaults.js';
 
 const toast = useToast();
 const { can } = useAbility();
@@ -114,15 +112,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['save', 'remove']);
 
-const segment = ref({
-    id: '',
-    name: '',
-    description: '',
-    exercises: [],
-    editorIds: [authStore.user?.id],
-    constructor: { modelName: 'shareable' },
-    sharingLevel: '0'
-});
+const segment = ref(getDefaultSegment(authStore.user.id));
 const exercises = ref([]);
 const tags = ref([]);
 const loading = ref({
