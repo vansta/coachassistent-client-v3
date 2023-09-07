@@ -22,9 +22,18 @@
                     <v-tooltip activator="parent" location="bottom" :text="t('tooltip.favorite')"></v-tooltip>
                 </v-btn>
             </div>
-            <div class="d-flex">
-                <v-chip v-for="tag in segment.tags" :key="tag" class="mr-1">{{ tag }}</v-chip>
-            </div>
+            <v-row dense>
+                <v-col cols="8">
+                    <div class="d-flex">
+                        <v-chip v-for="tag in segment.tags" :key="tag" class="mr-1">{{ tag }}</v-chip>
+                    </div>
+                </v-col>
+                <v-col class="d-flex justify-end">
+                    <v-chip color="info">
+                        {{ t(`level.${segment.level}`) }}
+                    </v-chip>
+                </v-col>
+            </v-row>
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>

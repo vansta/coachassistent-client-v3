@@ -72,6 +72,7 @@ const messages = {
         attachments: 'Bijlagen',
         member: 'Lid',
         tags: 'Tags',
+        level: 'Niveau',
         permissions: 'Rechten',
         subgroup: 'Subgroepen'
       },
@@ -107,7 +108,14 @@ const messages = {
       error: {
         session_expired: 'Sessie is afgelopen'
       },
-      search: 'Zoeken'
+      search: 'Zoeken',
+      level: {
+        '0': 'Alle niveaus',
+        '1': 'Beginners',
+        '2': 'Regelmatig',
+        '3': 'Ervaren',
+        '4': 'Expert'
+      }
     }
   };
 

@@ -27,8 +27,14 @@
             <v-card-text>
                 <quill-editor v-if="(can('update', segment, 'description') || can('create', segment, 'description'))" v-model:content="segment.description" theme="snow" contentType="html" :placeholder="t('field.description')"></quill-editor>
                 <div v-else v-html="segment.description"></div>
-
-                <v-combobox v-model="segment.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3"></v-combobox>
+                <v-row no-gutters dense>
+                    <v-col cols="12" sm="6">
+                        <v-combobox v-model="segment.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3" hide-details="auto"></v-combobox>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                        <v-select v-model="segment.level" :label="t('field.level')" :items="levels" class="mt-3" :item-title="(option) => t(`level.${option.title}`)" hide-details="auto"></v-select>
+                    </v-col>
+                </v-row>
             </v-card-text>
             <v-card-text v-if="showSharebility">
                 <sharebility v-model="segment"></sharebility>
@@ -92,6 +98,7 @@ import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog } from '@vueuse/core';
 import { inject, ref, computed } from 'vue';
+import { levels } from '@/services/defaults.js';
 
 import { getDefaultExercise } from '@/services/defaults.js';
 

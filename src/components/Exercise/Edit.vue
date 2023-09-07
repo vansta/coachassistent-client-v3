@@ -27,28 +27,17 @@
             <quill-editor v-if="(can('update', editExercise, 'description') || can('create', editExercise, 'description'))" v-model:content="editExercise.description" theme="snow" contentType="html" :placeholder="t('field.description')"></quill-editor>
             <div v-else v-html="editExercise.description"></div>
 
-            <v-combobox v-model="editExercise.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3"></v-combobox>
+            <v-row no-gutters dense>
+                <v-col cols="12" sm="6">
+                    <v-combobox v-model="editExercise.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3" hide-details="auto"></v-combobox>
+                </v-col>
+                <v-col cols="12" sm="6">
+                    <v-select v-model="editExercise.level" :label="t('field.level')" :items="levels" class="mt-3" :item-title="(option) => t(`level.${option.title}`)" hide-details="auto"></v-select>
+                </v-col>
+            </v-row>
+
             <attachment-selector v-model="editExercise" :readonly="!(can('update', editExercise, 'attachments') || can('create', editExercise, 'attachments'))"></attachment-selector>
-            <!-- <v-slide-group multiple v-model="editExercise.selectedAttachments" show-arrows :center-active="false">
-                <v-slide-group-item v-for="attachment in editExercise.attachments" :key="attachment" v-slot="{ isSelected, toggle }" :value="attachment">
-                    <v-img 
-                        :src="api.getAttachmentLink(attachment)" 
-                        min-height="150" max-heigth="150" min-width="150" max-width="150" cover
-                        @click="toggle" class="mx-2">
-                        <v-btn 
-                            :icon="isSelected ? 'mdi-delete' : 'mdi-undo'"
-                            location="bottom right"
-                            position="absolute"
-                            :color="isSelected ? 'error' : 'primary'"
-                            ></v-btn>
-                    </v-img>
-                </v-slide-group-item>
-            </v-slide-group>
-            <v-file-input outlined v-model="editExercise.addedAttachments" multiple :label="t('field.attachments')" chips>
-                <template v-slot:prepend>
-                    <v-icon>mdi-content-save</v-icon>
-                </template>
-            </v-file-input> -->
+            
             <sharebility v-if="showSharebility" v-model="editExercise"></sharebility>
         </template>
 
@@ -66,6 +55,7 @@ import AttachmentSelector from '@/components/Attachment/Selector.vue';
 import { useAbility } from '@casl/vue';
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog } from '@vueuse/core';
+import { levels } from '@/services/defaults.js';
 
 const toast = useToast();
 const { can } = useAbility();
@@ -92,7 +82,7 @@ const showSharebility = ref(false);
 const loading = ref({
     save: false,
     remove: false
-})
+});
 
 const save = () => {
     loading.value.save = true;

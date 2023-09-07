@@ -8,7 +8,10 @@ const getDefaultExercise = (userId) => ({
     editorIds: [userId],
     constructor: { modelName: 'shareable' },
     tags: [],
-    sharingLevel: '3'
+    sharingLevel: '3',
+    level: 0
 });
 
-export { getDefaultExercise };
+const levels = ['0', '1', '2', '3', '4'].map(l => ({ title: l, value: l }))
+
+export { getDefaultExercise, levels };
