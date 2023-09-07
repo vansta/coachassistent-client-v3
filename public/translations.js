@@ -72,6 +72,7 @@ const messages = {
         attachments: 'Bijlagen',
         member: 'Lid',
         tags: 'Tags',
+        level: 'Niveau',
         permissions: 'Rechten',
         subgroup: 'Subgroepen'
       },
@@ -108,7 +109,13 @@ const messages = {
         session_expired: 'Sessie is afgelopen'
       },
       search: 'Zoeken',
-
+      level: {
+        '0': 'Alle niveaus',
+        '1': 'Beginners',
+        '2': 'Gemiddeld',
+        '3': 'Ervaren',
+        '4': 'Expert'
+      },
       validate: {
         username: { 
           unique: 'Gebruikersnaam al in gebruik'

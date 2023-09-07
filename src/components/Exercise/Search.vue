@@ -11,11 +11,14 @@
                     <v-icon v-else>mdi-account-wrench-outline</v-icon>
                 </v-btn>
             </v-col>
-            <v-col>
+            <v-col cols="10" md="4">
                 <v-text-field v-model="modelValue.search" :label="t('search')" @update:model-value="emitSearch" clearable hide-details="auto" prepend-inner-icon="mdi-magnify"></v-text-field>
             </v-col>
-            <v-col cols="5">
+            <v-col cols="6" md="4">
                 <v-autocomplete v-model="modelValue.tags" :label="t('field.tags')" :items="tags" multiple append-inner-icon="mdi-refresh" @click:appendInner="getTags" @update:modelValue="emitSearch" clearable hide-details="auto" chips></v-autocomplete>
+            </v-col>
+            <v-col cols="6" md="3" class="mt-n3">
+                <v-select v-model="modelValue.level" :label="t('field.level')" :items="levels" class="mt-3" :item-title="(option) => t(`level.${option.title}`)" hide-details="auto" @update:model-value="emitSearch" clearable></v-select>
             </v-col>
         </v-row>
     </v-form>
@@ -24,6 +27,8 @@
 <script setup>
 import { ref, inject } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { levels } from '@/services/defaults.js';
+
 const { t } = useI18n();
 
 var searchTimeOut;

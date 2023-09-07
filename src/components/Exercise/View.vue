@@ -18,9 +18,18 @@
                 </v-btn>
                 <v-btn v-if="mode == 'select'" :icon="collapse ? 'mdi-chevron-down' : 'mdi-chevron-up'" variant="text" @click="collapse = !collapse"></v-btn>
             </div>
-            <div class="d-flex">
-                <v-chip v-for="tag in exercise.tags" :key="tag" class="mr-1">{{ tag }}</v-chip>
-            </div>
+            <v-row dense>
+                <v-col cols="8">
+                    <div class="d-flex">
+                        <v-chip v-for="tag in exercise.tags" :key="tag" class="mr-1">{{ tag }}</v-chip>
+                    </div>
+                </v-col>
+                <v-col class="d-flex justify-end">
+                    <v-chip color="info">
+                        {{ t(`level.${exercise.level}`) }}
+                    </v-chip>
+                </v-col>
+            </v-row>
         </template>
         <template #description>
             <div v-show="!collapse">

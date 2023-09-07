@@ -8,7 +8,8 @@ const getDefaultExercise = (userId) => ({
     editorIds: [userId],
     constructor: { modelName: 'shareable' },
     tags: [],
-    sharingLevel: '3'
+    sharingLevel: '3',
+    level: 0
 });
 
 const getDefaultGroup = (userId, parentGroupId) => ({
@@ -18,6 +19,8 @@ const getDefaultGroup = (userId, parentGroupId) => ({
         { userId: userId }
     ],
     parentGroupId: parentGroupId
-})
+});
 
-export { getDefaultExercise, getDefaultGroup };
+const levels = ['0', '1', '2', '3', '4'].map(l => ({ title: l, value: l }));
+
+export { getDefaultExercise, getDefaultGroup, levels };

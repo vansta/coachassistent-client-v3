@@ -28,7 +28,14 @@
                 <quill-editor v-if="(can('update', training, 'description') || can('create', training, 'description'))" v-model:content="training.description" theme="snow" contentType="html" :placeholder="t('field.description')"></quill-editor>
                 <div v-else v-html="training.description"></div>
 
-                <v-combobox v-model="training.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3"></v-combobox>
+                <v-row no-gutters dense>
+                    <v-col cols="12" sm="6">
+                        <v-combobox v-model="training.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3" hide-details="auto"></v-combobox>
+                    </v-col>
+                    <v-col cols="12" sm="6">
+                        <v-select v-model="training.level" :label="t('field.level')" :items="levels" class="mt-3" :item-title="(option) => t(`level.${option.title}`)" hide-details="auto"></v-select>
+                    </v-col>
+                </v-row>
             </v-card-text>
             <v-card-text v-if="showSharebility">
                 <shareability v-model="training"></shareability>
@@ -140,6 +147,7 @@ import { useAuthenticationStore } from '@/plugins/pinia.js';
 import { useConfirmDialog } from '@vueuse/core';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+import { levels } from '@/services/defaults.js';
 
 const api = inject('api');
 
