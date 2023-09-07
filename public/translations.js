@@ -112,7 +112,7 @@ const messages = {
       level: {
         '0': 'Alle niveaus',
         '1': 'Beginners',
-        '2': 'Regelmatig',
+        '2': 'Gemiddeld',
         '3': 'Ervaren',
         '4': 'Expert'
       }
