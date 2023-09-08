@@ -2,9 +2,13 @@
   <v-app>
     <v-app-bar color="primary">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-app-bar-title>Coach Assistent</v-app-bar-title>
-      <v-spacer></v-spacer>
-      <v-btn v-if="!authenticationStore.isAuthenticated" :to="{ name: 'Login' }">{{ t('login') }}</v-btn>
+      <v-app-bar-title text="Coach Assistent" class="flex-grow-1"></v-app-bar-title>
+      <!-- <v-spacer></v-spacer> -->
+      <v-btn v-if="!authenticationStore.isAuthenticated" :to="{ name: 'Login' }">
+        <v-icon start>mdi-login</v-icon>
+        <v-tooltip activator="parent" location="bottom" :text="t('login')"></v-tooltip>
+        {{ t('login') }}
+      </v-btn>
       <div v-else class="d-flex">
         <v-chip class="flex-grow-1 mt-1 mr-4" :to="{ name: 'Profile', params: { id: authenticationStore.user.id } }" size="x-large" prepend-icon="mdi-account" variant="outlined">{{ smAndUp ? authenticationStore.user.name : '' }}</v-chip>
         <v-btn icon="mdi-logout" @click="logout">

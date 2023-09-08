@@ -1,5 +1,14 @@
 <template>
     <v-container>
+        <v-system-bar window>
+            
+            <v-chip>
+                <v-icon class="mr-3">mdi-account-group</v-icon>
+                {{ group.name }}
+            </v-chip>
+            <v-spacer></v-spacer>
+            <v-btn v-if="can(action, group)" icon="mdi-content-save" variant="text" round @click="save" :loading="loading.save"></v-btn>
+        </v-system-bar>
         <v-card>
             <v-card-title v-if="!group.id">
                 {{ t('create_new_group') }}
@@ -8,16 +17,17 @@
                 <v-form>
                     <div class="d-flex">
                         <v-text-field v-model="group.name" :readonly="!can(action, group, 'name')" :label="t('field.name')" class="flex-grow-1"></v-text-field>
-                        <v-btn v-if="can(action, group)" icon="mdi-content-save" flat round @click="save" :loading="loading.save"></v-btn>
+                        <!-- <v-btn v-if="can(action, group)" icon="mdi-content-save" flat round @click="save" :loading="loading.save"></v-btn> -->
                     </div>
                     
                     <v-text-field v-model="group.description" :readonly="!can(action, group, 'description')" :label="t('field.description')"></v-text-field>
-                    <v-select v-model="group.tags" :readonly="!can(action, group, 'tags')" :label="t('field.tags')" :items="tags" multiple chips></v-select>
+                    <v-select v-model="group.tags" :readonly="!can(action, group, 'tags')" :label="t('field.tags')" :items="tags" multiple chips prepend-icon="mdi-tag"></v-select>
                 </v-form>
             </v-card-text>
             <v-card-subtitle>
                 {{ t('members') }}
             </v-card-subtitle>
+            <v-divider></v-divider>
             <v-card-text>
                 <v-row v-for="(member, index) in group.members" :key="index">
                     <v-col>
@@ -33,6 +43,7 @@
             <v-card-subtitle v-if="can('update', group, 'member')">
                 {{ t('membership_requests') }}
             </v-card-subtitle>
+            <v-divider></v-divider>
             <v-card-text v-if="can('update', group, 'member')">
                 <v-row v-for="(member, index) in group.membershipRequests" :key="index">
                     <v-col>
@@ -43,6 +54,7 @@
             <v-card-subtitle v-if="can('update', group, 'subgroup')">
                 {{ t('field.subgroup') }}
             </v-card-subtitle>
+            <v-divider></v-divider>
             <v-card-text v-if="can('update', group, 'subgroup')">
                 <v-table>
                     <thead>
@@ -66,16 +78,17 @@
                             </td>
                         </tr>
                     </tbody>
+                    <template #bottom v-if="can('update', group, 'subgroup')">
+                        <v-select :label="t('add_existing_group')" :items="availableGroups" hide-details="auto" @update:modelValue="onGroupSelect" return-object>
+                            <template #prepend>
+                                <v-btn icon @click="addSubGroup" color="primary">
+                                    <v-icon>mdi-plus</v-icon>
+                                    <v-tooltip activator="parent" location="bottom" :text="t('create_new_group')"></v-tooltip>
+                                </v-btn>
+                            </template>
+                        </v-select>
+                    </template>
                 </v-table>
-                <v-row v-if="can('create', 'group', 'subgroup')">
-                    <v-col v-if="group.id">
-                        <v-btn block @click="addSubGroup" size="large">{{ t('create_new_group') }}</v-btn>
-                    </v-col>
-                    <v-col>
-                        <v-select :label="t('add_existing_group')" :items="availableGroups" hide-details="auto" @update:modelValue="onGroupSelect" return-object></v-select>
-                        <!-- <v-btn block @click="addGroup = !addGroup">{{ t('add_existing_group') }}</v-btn> -->
-                    </v-col>
-                </v-row>
             </v-card-text>
         </v-card>
     </v-container>

@@ -1,5 +1,5 @@
 <template>
-    <v-row>
+    <v-row dense>
         <v-col>
             <v-autocomplete v-model="modelValue.userId" :readonly="readonly" :label="t('user')" :items="availableUsers" @update:search="getUsers"></v-autocomplete>
         </v-col>

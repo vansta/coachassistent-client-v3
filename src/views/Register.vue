@@ -5,21 +5,23 @@
                 {{ t('welcome') }}
             </v-card-title>
             <v-card-text>
-                <v-text-field v-model="user.userName" :label="t('username')" :rules="[required, unique]" validate-on="input"></v-text-field>
-                <v-text-field v-model="user.email" :label="t('email')" :rules="[required, email]"></v-text-field>
-                <v-text-field v-model="user.password" :label="t('password')" type="password" :rules="[required, password]"></v-text-field>
+                <v-text-field v-model="user.userName" :label="t('username')" :rules="[required, unique]" validate-on="input" prepend-icon="mdi-account-circle"></v-text-field>
+                <v-text-field v-model="user.email" :label="t('email')" :rules="[required, email]" prepend-icon="mdi-email"></v-text-field>
+                <v-text-field v-model="user.password" :label="t('password')" type="password" :rules="[required, password]" prepend-icon="mdi-lock"></v-text-field>
             </v-card-text>
             <v-card-subtitle>
                 {{ t('request_membership') }}
             </v-card-subtitle>
+            <v-divider></v-divider>
             <v-card-text>
                 <v-switch v-model="newGroup" :label="t('register_with_new_group')" color="primary"></v-switch>
                 <div v-show="!newGroup">
-                    <v-autocomplete v-model="user.groupIds" :items="availableGroups" multiple :label="t('request_membership')" chips @update:search="getAvailableGroups"></v-autocomplete>
+                    <v-autocomplete v-model="user.groupIds" :items="availableGroups" multiple :label="t('request_membership')" chips @update:search="getAvailableGroups" prepend-icon="mdi-account-group"></v-autocomplete>
                 </div>
             </v-card-text>
             <v-card-actions>
-                <v-btn @click="register" :loading="loading">
+                <v-btn @click="register" :loading="loading" color="primary">
+                    <v-icon start>mdi-account-plus</v-icon>
                     {{ t('register') }}
                 </v-btn>
             </v-card-actions>

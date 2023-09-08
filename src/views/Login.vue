@@ -5,15 +5,17 @@
         </v-card-title>
         <v-card-text>
             <v-form v-model="valid" ref="form" validate-on="blur">
-                <v-text-field v-model="credentials.userName" :label="t('username')" :rules="[required]"></v-text-field>
-                <v-text-field v-model="credentials.password" :label="t('password')" type="password" :rules="[required]"></v-text-field>
+                <v-text-field v-model="credentials.userName" :label="t('username')" :rules="[required]" prepend-icon="mdi-account-circle"></v-text-field>
+                <v-text-field v-model="credentials.password" :label="t('password')" type="password" :rules="[required]" prepend-icon="mdi-lock"></v-text-field>
             </v-form>
         </v-card-text>
         <v-card-actions>
-            <v-btn @click="login" :loading="loading">
+            <v-btn @click="login" :loading="loading" color="primary">
+                <v-icon start>mdi-login</v-icon>
                 {{ t('login') }}
             </v-btn>
-            <v-btn :to="{ name: 'Register' }">
+            <v-btn :to="{ name: 'Register' }" color="secondary">
+                <v-icon start>mdi-account-plus</v-icon>
                 {{ t('register') }}
             </v-btn>
         </v-card-actions>

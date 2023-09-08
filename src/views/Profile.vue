@@ -1,31 +1,30 @@
 <template>
     <v-form v-model="valid" ref="form" validate-on="blur">
         <v-system-bar window>
-            <v-chip class="ma-2">
-                <v-icon icon="mdi-account" class="me-2"></v-icon>
+            <v-chip>
+                <v-icon icon="mdi-account" class="mr-3"></v-icon>
                 {{ user.userName }}
             </v-chip>
-        <!-- <v-icon icon="mdi-account" class="me-2"></v-icon>
-
-        <span class="text-subtitle-1">{{ user.userName }}</span> -->
-        <v-spacer></v-spacer>
-        <span>{{ user.email }}</span>
-        <v-btn @click="save" :loading="loading.save" icon="mdi-content-save" variant="text" class="ms-2"></v-btn>
+            <v-spacer></v-spacer>
+            <span>{{ user.email }}</span>
+            <v-btn @click="save" :loading="loading.save" icon="mdi-content-save" variant="text" class="ms-2"></v-btn>
         </v-system-bar>
         <v-card :loading="loading.save">
             <v-card-text>
                 <!-- <v-text-field v-model="user.userName" :label="t('username')" readonly></v-text-field> -->
-                <v-text-field v-model="user.email" :label="t('email')" :rules="[required, email]"></v-text-field>
+                <v-text-field v-model="user.email" :label="t('email')" :rules="[required, email]" prepend-icon="mdi-email"></v-text-field>
             </v-card-text>
             <v-card-subtitle>
                 {{ t('preferences') }}
             </v-card-subtitle>
+            <v-divider></v-divider>
             <v-card-text>
                 <v-combobox v-model="user.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3" hide-details="auto" prepend-icon="mdi-tag" clearable></v-combobox>
             </v-card-text>
             <v-card-subtitle>
                 {{ t('groups') }}
             </v-card-subtitle>
+            <v-divider></v-divider>
             <v-card-text>
                 <v-table>
                     <thead>
@@ -51,12 +50,10 @@
                             </td>
                         </tr>
                     </tbody>
-                </v-table>
-                <v-row>
-                    <v-col>
+                    <template #bottom>
                         <v-autocomplete :items="availableGroups" :label="t('request_membership')" @update:modelValue="addMembership" :loading="loading.addMembership" @update:search="getAvailableGroups" prepend-icon="mdi-account-group"></v-autocomplete>
-                    </v-col>
-                </v-row>
+                    </template>
+                </v-table>
             </v-card-text>
             <v-card-actions>
                 
