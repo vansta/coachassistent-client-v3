@@ -38,7 +38,7 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-            <div v-html="training.description"></div>
+            <div class="ma-6" v-html="training.description"></div>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-text>

@@ -37,7 +37,7 @@
         </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
-            <div v-html="segment.description"></div>
+            <div class="ma-6" v-html="segment.description"></div>
             
         </v-card-text>
         <v-divider></v-divider>
