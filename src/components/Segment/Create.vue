@@ -25,7 +25,7 @@
                 
             </v-card-title>
             <v-card-text>
-                <quill-editor v-if="(can('update', segment, 'description') || can('create', segment, 'description'))" v-model:content="segment.description" theme="snow" contentType="html" :placeholder="t('field.description')"></quill-editor>
+                <quill-editor v-if="(can('update', segment, 'description') || can('create', segment, 'description'))" v-model:content="segment.description" theme="snow" contentType="html" :placeholder="t('field.description')" style="min-height: 120px;"></quill-editor>
                 <div v-else v-html="segment.description"></div>
                 <v-row no-gutters dense>
                     <v-col cols="12" sm="6">

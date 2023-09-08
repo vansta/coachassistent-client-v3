@@ -6,6 +6,11 @@
                 <v-icon class="mr-3">mdi-account-group</v-icon>
                 {{ group.name }}
             </v-chip>
+            <v-chip v-if="parentGroup.name" class="ml-2" @click="goToParent">
+                <v-icon class="mr-3">mdi-account-network</v-icon>
+                {{ parentGroup.name }}
+                <v-tooltip activator="parent" location="bottom" :text="parentGroup.description"></v-tooltip>
+            </v-chip>
             <v-spacer></v-spacer>
             <v-btn v-if="can(action, group)" icon="mdi-content-save" variant="text" round @click="save" :loading="loading.save"></v-btn>
         </v-system-bar>
@@ -114,16 +119,18 @@ const api = inject('api');
 const toast = useToast();
 
 const props = defineProps({
-    id: [Number, String]
+    id: [Number, String],
+    parentGroupId: [Number, String]
 });
 
-const group = ref(props.id ? {} : getDefaultGroup(authenticationStore.user.id, route.params.parentGroupId));
+const group = ref(props.id ? {} : getDefaultGroup(authenticationStore.user.id, props.parentGroupId));
 const tags = ref([]);
 const roles = ref([]);
 const members = ref([]);
 const action = ref('create');
 const loading = ref({ save: false });
 const groups = ref([]);
+const parentGroup = ref({});
 
 api.getTags()
     .then(resp => tags.value = resp.data);
@@ -139,9 +146,12 @@ api.getRoles()
 api.getAvailableGroups('', 'update')
     .then(resp => groups.value = resp.data);
 
-const getGroup = () => {
-    api.getGroup(props.id)
-        .then(resp => group.value = resp.data);
+const getGroup = async () => {
+    var { data } = await api.getGroup(props.id);
+    group.value = data;
+    if (data.parentGroupId) {
+        getParentGroup(data.parentGroupId);
+    }
 }
 const addMember = () => {
     group.value.members.push({});
@@ -176,10 +186,25 @@ const onGroupSelect = (value) => {
         name: value.title
     });
 }
-
+const getParentGroup = (id) => {
+    api.getGroupMinimal(id)
+        .then(({ data }) => parentGroup.value = data);
+}
+const goToParent = async () => {
+    await router.push({ name: 'EditGroup', params: { id: parentGroup.value.id }});
+    router.go(0);
+}
 if (props.id) {
     action.value = 'update';
     getGroup();
+}
+else if (props.parentGroupId){
+    getParentGroup(props.parentGroupId);
+}
+
+if (props.parentGroupId || group.value.parentGroupId) {
+    api.getGroupMinimal(props.parentGroupId ?? group.value.parentGroupId)
+        .then(({ data }) => parentGroup.value = data);
 }
 
 const availableGroups = computed(() => {

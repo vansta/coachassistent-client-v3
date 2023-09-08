@@ -28,6 +28,7 @@ import { useI18n } from 'vue-i18n';
 import { useAbility } from '@casl/vue';
 import { useWindowSize } from '@vueuse/core';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
+import { getDefaultSearch } from '@/services/defaults.js';
 
 const { can } = useAbility();
 const { t } = useI18n();
@@ -37,7 +38,7 @@ const authStore = useAuthenticationStore();
 const api = inject('api');
 
 const trainings = ref([]);
-const search = ref({ search: '', tags: [], onlyFavorites: false });
+const search = ref(getDefaultSearch(authStore.user));
 const pageInfo = ref({ itemsPerPage: 6, currentPage: 1, totalCount: 0, loading: false });
 
 const getTrainings = () => {

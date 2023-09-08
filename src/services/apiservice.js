@@ -180,6 +180,9 @@ const createApiService = (apiClient) => {
         getMembersForGroup(groupId) {
           return apiClient.get('Group/Members', { params: { groupId }})
         },
+        getGroupMinimal (id) {
+          return apiClient.get('Group/Minimal', { params: { id }});
+        },
         async refreshToken() {
           try {
             const { data } = await apiClient.get('Authentication/RefreshToken');

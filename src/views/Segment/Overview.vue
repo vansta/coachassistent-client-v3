@@ -31,6 +31,7 @@ import { useI18n } from 'vue-i18n';
 import { useAbility } from '@casl/vue';
 import { useWindowSize } from '@vueuse/core';
 import { useAuthenticationStore } from '@/plugins/pinia.js';
+import { getDefaultSearch } from '@/services/defaults.js';
 
 const { t } = useI18n();
 const { can } = useAbility();
@@ -38,7 +39,7 @@ const { width } = useWindowSize();
 const authStore = useAuthenticationStore();
 
 const segments = ref([]);
-const search = ref({ search: '', tags: [], onlyFavorites: false });
+const search = ref(getDefaultSearch(authStore.user));
 const pageInfo = ref({ itemsPerPage: 6, currentPage: 1, totalCount: 0, loading: false });
 
 const getSegments = () => {
