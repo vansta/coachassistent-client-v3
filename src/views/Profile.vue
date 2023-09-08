@@ -1,12 +1,27 @@
 <template>
-    <v-form>
+    <v-form v-model="valid" ref="form" validate-on="blur">
+        <v-system-bar window>
+            <v-chip class="ma-2">
+                <v-icon icon="mdi-account" class="me-2"></v-icon>
+                {{ user.userName }}
+            </v-chip>
+        <!-- <v-icon icon="mdi-account" class="me-2"></v-icon>
+
+        <span class="text-subtitle-1">{{ user.userName }}</span> -->
+        <v-spacer></v-spacer>
+        <span>{{ user.email }}</span>
+        <v-btn @click="save" :loading="loading.save" icon="mdi-content-save" variant="text" class="ms-2"></v-btn>
+        </v-system-bar>
         <v-card :loading="loading.save">
-            <v-card-title>
-                {{ t('profile') }}
-            </v-card-title>
             <v-card-text>
-                <v-text-field v-model="user.userName" :label="t('username')"></v-text-field>
-                <v-text-field v-model="user.email" :label="t('email')"></v-text-field>
+                <!-- <v-text-field v-model="user.userName" :label="t('username')" readonly></v-text-field> -->
+                <v-text-field v-model="user.email" :label="t('email')" :rules="[required, email]"></v-text-field>
+            </v-card-text>
+            <v-card-subtitle>
+                {{ t('preferences') }}
+            </v-card-subtitle>
+            <v-card-text>
+                <v-combobox v-model="user.tags" :label="t('field.tags')" :items="tags" multiple chips class="mt-3" hide-details="auto" prepend-icon="mdi-tag" clearable></v-combobox>
             </v-card-text>
             <v-card-subtitle>
                 {{ t('groups') }}
@@ -62,24 +77,37 @@ import { useToast } from 'vue-toastification';
 import { useI18n } from 'vue-i18n';
 import { computed, inject, ref } from 'vue';
 import { useConfirmDialog } from '@vueuse/core';
+import { useValidation } from '@/services/validation.js';
 
 const api = inject('api');
 const authenticationStore = useAuthenticationStore();
 const toast = useToast();
 const { t } = useI18n();
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
+const { required, email } = useValidation(t);
 
 const loading = ref({ get: true, save: false, addMembership: false });
 const user = ref({
     memberships: []
 });
 const groups = ref([]);
+const tags = ref([]);
+const valid = ref(false);
+const form = ref(null);
 
 const save = async () => {
+    await form.value.validate();
+    if (!valid.value){
+        return;
+    }
+
     loading.value.save = true;
     await api.putUser(user.value);
     loading.value.save = false;
     toast.success(t('saved'));
+
+    var { data } = await api.refreshToken();
+    authenticationStore.login(data);
 }
 
 const getUser = () => {
@@ -117,4 +145,6 @@ const availableGroups = computed(() => {
 })
 
 getUser();
+api.getTags()
+    .then(resp => tags.value = resp.data);
 </script>

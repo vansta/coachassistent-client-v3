@@ -33,7 +33,7 @@ import { useWindowSize } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { useAbility } from '@casl/vue';
 import { ref, inject } from 'vue';
-import { getDefaultExercise } from '@/services/defaults.js';
+import { getDefaultExercise, getDefaultSearch } from '@/services/defaults.js';
 
 const authStore = useAuthenticationStore();
 const { width } = useWindowSize();
@@ -43,7 +43,7 @@ const api = inject('api');
 
 const exercises = ref([]);
 const tags = ref([]);
-const search = ref({ search: '', tags: [], onlyFavorites: false });
+const search = ref(getDefaultSearch(authStore.user));
 const pageInfo = ref({ itemsPerPage: 6, currentPage: 1, totalCount: 0, loading: false });
 
 const getTags = () => {

@@ -180,6 +180,19 @@ const createApiService = (apiClient) => {
         getMembersForGroup(groupId) {
           return apiClient.get('Group/Members', { params: { groupId }})
         },
+        async refreshToken() {
+          try {
+            const { data } = await apiClient.get('Authentication/RefreshToken');
+            setToken(data);
+            apiClient.defaults.headers.common["Authorization"] = 'Bearer ' + data;
+            return data;
+          } 
+          catch (err) {
+            setToken('');
+            apiClient.defaults.headers.common["Authorization"] = null;
+            throw err;
+          }
+        },
     
         //POST
         async postExercise (exercise) {

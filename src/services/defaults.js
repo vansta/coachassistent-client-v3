@@ -41,6 +41,11 @@ const getDefaultGroup = (userId, parentGroupId) => ({
     parentGroupId: parentGroupId
 });
 
+const getDefaultSearch = (user) => ({ 
+    search: '', 
+    tags: user?.Tags ?? [], 
+    onlyFavorites: false });
+
 const levels = ['0', '1', '2', '3', '4'].map(l => ({ title: l, value: l }));
 
-export { getDefaultExercise, getDefaultSegment, getDefaultTraining, getDefaultGroup, levels };
+export { getDefaultExercise, getDefaultSegment, getDefaultTraining, getDefaultGroup, getDefaultSearch, levels };

@@ -42,7 +42,6 @@ const props = defineProps({
     }
 });
 const emit = defineEmits(['update:modelValue']);
-// const search = ref({ search: '', tags: [], onlyFavorites: false });
 const tags = ref([]);
 
 const emitSearch = () => {

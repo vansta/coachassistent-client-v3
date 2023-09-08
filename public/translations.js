@@ -127,7 +127,9 @@ const messages = {
         email: 'Email ongeldig'
       },
 
-      select_all: 'Alles selecteren'
+      select_all: 'Alles selecteren',
+
+      preferences: 'Voorkeuren'
     }
   };
 
