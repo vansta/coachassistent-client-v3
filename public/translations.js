@@ -82,6 +82,10 @@ const messages = {
       logout: 'Uitloggen',
       register: 'Registreren',
       request_membership: 'Lidmaatschap aanvragen',
+      forgot_password: 'Wachtwoord vergeten?',
+      reset_password: 'Wachtwoord opnieuw instellen',
+      password_reset: 'Wachtwoord opnieuw ingesteld',
+      password_reset_sent: 'Link is verzonden',
 
       username: 'Gebruikersnaam',
       password: 'Wachtwoord',
