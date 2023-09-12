@@ -92,6 +92,8 @@ const messages = {
 
       membership_requests: 'Lidaanvragen',
       requested: 'In aanvraag',
+      membership_requested: 'Lidmaatschap aangevraagd. Wacht op goedkeuring van uw beheerder',
+      wait_for_admission: 'Na registratie zal een beheerder uw aanvraag beoordelen',
 
       create_new_group: 'Nieuwe groep aanmaken',
       add_existing_group: 'Bestaande group toevoegen',

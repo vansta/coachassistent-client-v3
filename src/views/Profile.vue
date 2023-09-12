@@ -37,7 +37,11 @@
                     <tbody>
                         <tr v-for="(membership, index) in user.memberships" :key="index">
                             <td>{{ membership.group }}</td>
-                            <td>{{ membership.id ? membership.role : t('requested') }}</td>
+                            <td v-if="membership.id">{{ membership.role }}</td>
+                            <td v-else>
+                                {{ t('requested') }}
+                                <v-tooltip activator="parent" location="bottom">{{ t('membership_requested') }}</v-tooltip>
+                            </td>
                             <td class="d-flex justify-end">
                                 <v-btn v-if="membership.id" icon="mdi-eye" variant="text" :to="{ name: 'EditGroup', params: { id: membership.groupId }}">
                                     <v-icon>mdi-eye</v-icon>
@@ -47,11 +51,16 @@
                                     <v-icon>mdi-exit-run</v-icon>
                                     <v-tooltip activator="parent">{{ t('tooltip.leave_group') }}</v-tooltip>
                                 </v-btn>
+                                <span v-if="!membership.id">
+                                    <v-progress-circular indeterminate size="30" class="ma-3" width="3"></v-progress-circular>
+                                    <v-tooltip activator="parent" location="bottom">{{ t('membership_requested') }}</v-tooltip>
+                                </span>
+                                
                             </td>
                         </tr>
                     </tbody>
                     <template #bottom>
-                        <v-autocomplete :items="availableGroups" :label="t('request_membership')" @update:modelValue="addMembership" :loading="loading.addMembership" @update:search="getAvailableGroups" prepend-icon="mdi-account-group"></v-autocomplete>
+                        <v-autocomplete v-model="groupId" :items="availableGroups" :label="t('request_membership')" @update:modelValue="addMembership" :loading="loading.addMembership" @update:search="getAvailableGroups" prepend-icon="mdi-account-group"></v-autocomplete>
                     </template>
                 </v-table>
             </v-card-text>
@@ -91,6 +100,7 @@ const groups = ref([]);
 const tags = ref([]);
 const valid = ref(false);
 const form = ref(null);
+const groupId = ref(null);
 
 const save = async () => {
     await form.value.validate();
@@ -134,6 +144,8 @@ const addMembership = async (value) => {
     loading.value.addMembership = true;
     await api.requestMembership(value);
     loading.value.addMembership = false;
+    toast.success(t('membership_requested'));
+    groupId.value = null;
     getUser();
 }
 

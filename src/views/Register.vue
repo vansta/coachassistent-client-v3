@@ -16,7 +16,7 @@
             <v-card-text>
                 <v-switch v-model="newGroup" :label="t('register_with_new_group')" color="primary"></v-switch>
                 <div v-show="!newGroup">
-                    <v-autocomplete v-model="user.groupIds" :items="availableGroups" multiple :label="t('request_membership')" chips @update:search="getAvailableGroups" prepend-icon="mdi-account-group"></v-autocomplete>
+                    <v-autocomplete v-model="user.groupIds" :items="availableGroups" multiple :label="t('request_membership')" chips @update:search="getAvailableGroups" prepend-icon="mdi-account-group" :hint="t('wait_for_admission')" persistent-hint></v-autocomplete>
                 </div>
             </v-card-text>
             <v-card-actions>
