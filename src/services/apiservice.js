@@ -196,6 +196,9 @@ const createApiService = (apiClient) => {
             throw err;
           }
         },
+        getCredentialsForResetRequest (id) {
+          return apiClient.get('Authentication/ResetRequest', { params: { id }});
+        },
     
         //POST
         async postExercise (exercise) {
@@ -256,6 +259,22 @@ const createApiService = (apiClient) => {
             setToken(resp.data);
             apiClient.defaults.headers.common["Authorization"] = 'Bearer ' + resp.data;
             return resp.data;
+        },
+        requestPasswordReset(userName) {
+          return apiClient.post('Authentication/RequestResetPassword', userName);
+        },
+        async resetPassword({ id, userName, password }) {
+            const passwordHash = sha256(password).toString();
+    
+            const { data } = await apiClient.post('Authentication/ResetPassword', {
+                id, 
+                userName,
+                passwordHash
+            });
+    
+            setToken(data);
+            apiClient.defaults.headers.common["Authorization"] = 'Bearer ' + data;
+            return data;
         },
     
         //PUT
