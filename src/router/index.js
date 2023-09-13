@@ -198,6 +198,11 @@ const routes = [
     path: '/profile/:id',
     name: 'Profile',
     component: () => import('../views/Profile.vue')
+  },
+  {
+    path: '/board',
+    name: 'Board',
+    component: () => import ('@/components/Drawing/KonvaBoard.vue')
   }
 ];
 
