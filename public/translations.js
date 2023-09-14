@@ -146,7 +146,24 @@ const messages = {
         fill: 'Opvullen',
         delete: 'Verwijderen',
 
-        stroke: 'Rand'
+        stroke: 'Rand',
+
+        vector: 'Lijn',
+        arrow: 'Pijl',
+        polygon: 'Veelhoek',
+
+        rect: 'Rechthoek',
+        circle: 'Cirkel',
+        ellipse: 'Ellipse',
+
+        bring_forward: 'Naar boven brengen',
+        send_backward: 'Naar onder brengen',
+        bring_front: 'Bovenaan plaatsen',
+        bring_back: 'Onderaan plaatsen'
+      },
+
+      notificationType: {
+        MembershipRequest: 'vraagt toegang tot'
       }
     }
   };

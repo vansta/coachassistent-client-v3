@@ -43,25 +43,54 @@
                     </v-card-title>
                     <v-card-text v-if="options.action === 'draw'">
                         <v-btn-toggle v-model="options.lineType" mandatory @update:model-value="clearCurrentLine" variant="outlined" divided>
-                            <v-btn icon="mdi-vector-polyline" value="vector"></v-btn>
-                            <v-btn icon="mdi-arrow-top-right-thin" value="arrow"></v-btn>
-                            <v-btn icon="mdi-vector-polygon" value="polygon"></v-btn>
+                            <v-btn icon="mdi-vector-polyline" value="vector">
+                                <v-icon>mdi-vector-polyline</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.vector')"></v-tooltip>
+                            </v-btn>
+                            <v-btn icon="mdi-arrow-top-right-thin" value="arrow">
+                                <v-icon>mdi-arrow-top-right-thin</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.arrow')"></v-tooltip>
+                            </v-btn>
+                            <v-btn icon="mdi-vector-polygon" value="polygon">
+                                <v-icon>mdi-vector-polygon</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.polygon')"></v-tooltip>
+                            </v-btn>
                         </v-btn-toggle>
                     </v-card-text>
                     <v-card-text v-else-if="options.action === 'shape'">
                         <v-btn-toggle v-model="options.shapeType" mandatory variant="outlined" divided>
-                            <v-btn icon="mdi-square" value="rect"></v-btn>
-                            <v-btn icon="mdi-circle" value="circle"></v-btn>
-                            <v-btn icon="mdi-ellipse" value="ellipse"></v-btn>
-                            <v-btn icon="mdi-arrow-top-right-thin" value="arrow"></v-btn>
+                            <v-btn icon="mdi-square" value="rect">
+                                <v-icon>mdi-square</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.rect')"></v-tooltip>
+                            </v-btn>
+                            <v-btn icon="mdi-circle" value="circle">
+                                <v-icon>mdi-circle</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.circle')"></v-tooltip>
+                            </v-btn>
+                            <v-btn icon="mdi-ellipse" value="ellipse">
+                                <v-icon>mdi-ellipse</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.ellipse')"></v-tooltip>
+                            </v-btn>
                         </v-btn-toggle>
                     </v-card-text>
                     <v-card-text v-else-if="options.action === 'transform'">
                         <v-btn-group variant="outlined" divided>
-                            <v-btn icon="mdi-arrange-bring-forward" @click="moveUp"></v-btn>
-                            <v-btn icon="mdi-arrange-send-backward" @click="moveDown"></v-btn>
-                            <v-btn icon="mdi-arrange-bring-to-front" @click="moveToTop"></v-btn>
-                            <v-btn icon="mdi-arrange-send-to-back" @click="moveToBottom"></v-btn>
+                            <v-btn icon="mdi-arrange-bring-forward" @click="moveUp">
+                                <v-icon>mdi-arrange-bring-forward</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.bring_forward')"></v-tooltip>
+                            </v-btn>
+                            <v-btn icon="mdi-arrange-send-backward" @click="moveDown">
+                                <v-icon>mdi-arrange-send-backward</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.send_backward')"></v-tooltip>
+                            </v-btn>
+                            <v-btn icon="mdi-arrange-bring-to-front" @click="moveToTop">
+                                <v-icon>mdi-arrange-bring-to-front</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.bring_front')"></v-tooltip>
+                            </v-btn>
+                            <v-btn icon="mdi-arrange-send-to-back" @click="moveToBottom">
+                                <v-icon>mdi-arrange-send-to-back</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.send_back')"></v-tooltip>
+                            </v-btn>
                         </v-btn-group>
                     </v-card-text>
                     <v-card-text v-else-if="options.action === 'text'">
@@ -93,6 +122,7 @@
                     </v-card-text>
 
                     <v-card-text>
+                        <v-icon start>mdi-palette</v-icon>
                         <v-btn-group variant="outlined" divided>
                             <v-menu :close-on-content-click="false">
                                 <template v-slot:activator="{ props }">
