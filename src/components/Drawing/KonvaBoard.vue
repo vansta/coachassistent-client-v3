@@ -2,108 +2,126 @@
     <v-container>
         <v-row>
             <v-col>
-                <v-card>
-                    <v-stage ref="stage" :config="configKonva" @mousedown="handleStageMouseDown">
+                <v-card height="350" width="350">
+                    <v-stage ref="stage" :config="configKonva" @mousedown="handleStageMouseDown" style="border: 15px solid black;">
                         <v-layer ref="layer">
                             <v-transformer ref="transformer"></v-transformer>
                         </v-layer>
                     </v-stage>
                 </v-card>
+                <v-card width="350">
+                    <v-card-actions>
+                        <v-btn @click="save">
+                            <v-icon start>mdi-content-save</v-icon>
+                            {{ t('save') }}
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
             </v-col>
             <v-col>
-                <v-row>
-                    <v-col>
+                <v-card>
+                    <v-card-title>
                         <v-btn-toggle v-model="options.action" mandatory @update:model-value="clearCurrentLine">
-                            <v-btn icon="mdi-draw" value="draw"></v-btn>
-                            <v-btn icon="mdi-shape-plus" value="shape"></v-btn>
-                            <v-btn icon="mdi-cursor-move" value="transform"></v-btn>
-                            <v-btn icon="mdi-form-textbox" value="text"></v-btn>
-                            <v-btn icon="mdi-delete" value="delete"></v-btn>
-                            <v-btn icon="mdi-format-color-fill" value="fill"></v-btn>
+                            <v-btn icon="mdi-draw" value="draw">
+                                <v-icon>mdi-draw</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.draw')"></v-tooltip>
+                            </v-btn>
+                            <v-btn icon="mdi-shape-plus" value="shape">
+                                <v-icon>mdi-shape-plus</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.shape')"></v-tooltip>
+                            </v-btn>
+                            <v-btn icon="mdi-cursor-move" value="transform">
+                                <v-icon>mdi-cursor-move</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.transform')"></v-tooltip>
+                            </v-btn>
+                            <v-btn icon="mdi-form-textbox" value="text">
+                                <v-icon>mdi-form-textbox</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.text')"></v-tooltip>
+                            </v-btn>
+                            <v-btn icon="mdi-format-color-fill" value="fill">
+                                <v-icon>mdi-format-color-fill</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.fill')"></v-tooltip>
+                            </v-btn>
+                            <v-btn icon="mdi-delete" value="delete">
+                                <v-icon>mdi-delete</v-icon>
+                                <v-tooltip activator="parent" location="bottom" :text="t('konva.delete')"></v-tooltip>
+                            </v-btn>
                         </v-btn-toggle>
-                    </v-col>
-                </v-row>
-                <v-row v-if="options.action === 'draw'">
-                    <v-col>
+                    </v-card-title>
+                    <v-card-text v-if="options.action === 'draw'">
                         <v-btn-toggle v-model="options.lineType" mandatory @update:model-value="clearCurrentLine">
                             <v-btn icon="mdi-vector-polyline" value="vector"></v-btn>
                             <v-btn icon="mdi-arrow-top-right-thin" value="arrow"></v-btn>
                             <v-btn icon="mdi-vector-polygon" value="polygon"></v-btn>
                         </v-btn-toggle>
-                    </v-col>
-                </v-row>
-                <v-row v-else-if="options.action === 'shape'">
-                    <v-col>
+                    </v-card-text>
+                    <v-card-text v-else-if="options.action === 'shape'">
                         <v-btn-toggle v-model="options.shapeType" mandatory>
                             <v-btn icon="mdi-square" value="rect"></v-btn>
                             <v-btn icon="mdi-circle" value="circle"></v-btn>
                             <v-btn icon="mdi-ellipse" value="ellipse"></v-btn>
                             <v-btn icon="mdi-arrow-top-right-thin" value="arrow"></v-btn>
                         </v-btn-toggle>
-                    </v-col>
-                </v-row>
-                <v-row v-else-if="options.action === 'text'">
-                    <v-col>
-                        <v-textarea v-model="textOptions.text" @update:model-value="redrawText"></v-textarea>
-                        <v-text-field v-model="textOptions.fontSize" type="number" @update:model-value="redrawText"></v-text-field>
-                        <v-btn-toggle v-model="textOptions.align" mandatory @update:model-value="redrawText">
-                            <v-btn icon="mdi-format-align-left" value="left"></v-btn>
-                            <v-btn icon="mdi-format-align-center" value="center"></v-btn>
-                            <v-btn icon="mdi-format-align-right" value="right"></v-btn>
-                        </v-btn-toggle>
-                        
-                    </v-col>
-                    <v-col>
-                        <v-btn-toggle v-model="textOptions.fontStyle" mandatory @update:model-value="redrawText">
-                            <v-btn icon="mdi-format-text" value="normal"></v-btn>
-                            <v-btn icon="mdi-format-bold" value="bold"></v-btn>
-                            <v-btn icon="mdi-format-italic" value="italic"></v-btn>
-                        </v-btn-toggle>
-                    </v-col>
-                </v-row>
-                <v-row v-else-if="options.action === 'transform'">
-                    <v-col>
+                    </v-card-text>
+                    <v-card-text v-else-if="options.action === 'transform'">
                         <v-btn-group>
                             <v-btn icon="mdi-arrange-bring-forward" @click="moveUp"></v-btn>
                             <v-btn icon="mdi-arrange-send-backward" @click="moveDown"></v-btn>
                             <v-btn icon="mdi-arrange-bring-to-front" @click="moveToTop"></v-btn>
                             <v-btn icon="mdi-arrange-send-to-back" @click="moveToBottom"></v-btn>
                         </v-btn-group>
-                    </v-col>
-                </v-row>
-                <v-row>
-                        <v-col cols="1">
-                            <v-icon>mdi-palette</v-icon>
-                        </v-col>
-                        <v-col>
-                            <v-menu :close-on-content-click="false">
+                    </v-card-text>
+                    <v-card-text v-else-if="options.action === 'text'">
+                        <v-row>
+                            <v-col cols="12">
+                                <v-textarea v-model="textOptions.text" @update:model-value="redrawText" :label="t('konva.text')" auto-grow rows="2"></v-textarea>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field v-model="textOptions.fontSize" type="number" @update:model-value="redrawText" :label="t('konva.fontSize')"></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-btn-toggle v-model="textOptions.align" mandatory @update:model-value="redrawText">
+                                    <v-btn icon="mdi-format-align-left" value="left"></v-btn>
+                                    <v-btn icon="mdi-format-align-center" value="center"></v-btn>
+                                    <v-btn icon="mdi-format-align-right" value="right"></v-btn>
+                                </v-btn-toggle>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-btn-toggle v-model="textOptions.fontStyle" mandatory @update:model-value="redrawText">
+                                    <v-btn icon="mdi-format-text" value="normal"></v-btn>
+                                    <v-btn icon="mdi-format-bold" value="bold"></v-btn>
+                                    <v-btn icon="mdi-format-italic" value="italic"></v-btn>
+                                </v-btn-toggle>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                    <v-card-text v-else>
+                        
+                    </v-card-text>
+
+                    <v-card-actions>
+                        <!-- <v-icon>mdi-palette</v-icon> -->
+                        <v-menu :close-on-content-click="false">
                                 <template v-slot:activator="{ props }">
-                                    <v-btn
-                                    icon="mdi-square"
-                                    
-                                    v-bind="props"
-                                    >
+                                    <v-btn icon="mdi-square" v-bind="props">
                                         <v-icon :color="options.fillColor">mdi-square</v-icon>
+                                        <v-tooltip activator="parent" location="bottom" :text="t('konva.fill')"></v-tooltip>
                                     </v-btn>
                                 </template>
-                                <v-color-picker v-model="options.fillColor" hide-inputs></v-color-picker>
+                                <v-color-picker v-model="options.fillColor" hide-inputs show-swatches :swatches="swatches"></v-color-picker>
                             </v-menu>
 
                             <v-menu :close-on-content-click="false">
                                 <template v-slot:activator="{ props }">
-                                    <v-btn
-                                    icon="mdi-square-outline"
-                                    
-                                    v-bind="props"
-                                    
-                                    >
+                                    <v-btn icon="mdi-square-outline" v-bind="props">
                                         <v-icon :color="options.color">mdi-square-outline</v-icon>
+                                        <v-tooltip activator="parent" location="bottom" :text="t('konva.stroke')"></v-tooltip>
                                     </v-btn>
                                 </template>
-                                <v-color-picker v-model="options.color" hide-inputs></v-color-picker>
+                                <v-color-picker v-model="options.color" hide-inputs show-swatches :swatches="swatches"></v-color-picker>
                             </v-menu>
-                        </v-col>
-                    </v-row>
+                    </v-card-actions>
+                </v-card>
             </v-col>
         </v-row>
     </v-container>
@@ -113,12 +131,20 @@
 <script setup>
 import { ref } from 'vue';
 import Konva from 'konva';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+
+const emit = defineEmits(['save']);
+
 const stage = ref(null);
 const layer = ref(null);
 const transformer = ref(null);
 const configKonva = ref({
-        width: 400,
-        height: 400
+        width: 340,
+        height: 340,
+        offsetX: 5,
+        offsetY: 5
       });
 const options = ref({
     action: 'draw',
@@ -139,8 +165,16 @@ const currentText = ref();
 const textOptions = ref({
     fontSize: 18,
     text: null,
-    align: 'center'
-})
+    align: 'left',
+    fontStyle: 'normal'
+});
+const swatches = ref([
+    ['#000000'],
+    ['#FFFFFF'],
+    ['#FF0000'],
+    ['#00FF00'],
+    ['#0000FF'],
+])
 
 const addShape = (x, y) => {
     console.log(options.value.shapeType);
@@ -289,6 +323,7 @@ const handleStageMouseDown = (e) => {
             return;
         }
         e.target.fill(options.value.fillColor);
+        e.target.stroke(options.value.color);
     }
 }
 
@@ -315,6 +350,12 @@ const moveToTop = () => {
 }
 const moveToBottom = () => {
     transformer.value.getNode().nodes().forEach(n => n.moveToBottom());
+}
+
+const save = () => {
+    var uri = stage.value.getNode().toDataURL();
+    // var uri = stage.value.getNode().toImage();
+    emit('save', uri);
 }
 
 </script>

@@ -135,7 +135,18 @@ const messages = {
 
       select_all: 'Alles selecteren',
 
-      preferences: 'Voorkeuren'
+      preferences: 'Voorkeuren',
+
+      konva: {
+        draw: 'Tekenen',
+        shape: 'Vormen',
+        transform: 'Transformeren',
+        text: 'Tekst',
+        fill: 'Opvullen',
+        delete: 'Verwijderen',
+
+        stroke: 'Rand'
+      }
     }
   };
 

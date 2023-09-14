@@ -44,6 +44,7 @@
         
     </layout>
     <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>
+    
 </template>
 
 <script setup>
@@ -52,6 +53,7 @@ import { useToast } from 'vue-toastification'
 import Layout from '@/components/Exercise/Layout.vue';
 import Sharebility from '@/components/common/Sharebility.vue';
 import AttachmentSelector from '@/components/Attachment/Selector.vue';
+
 import { useAbility } from '@casl/vue';
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog } from '@vueuse/core';
