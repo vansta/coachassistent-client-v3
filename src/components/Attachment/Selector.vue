@@ -1,16 +1,6 @@
 <template>
     <div>
-        <div class="d-flex justify-space-around mt-2">
-            <v-btn @click="open" variant="text">
-                <v-icon start>mdi-attachment-plus</v-icon>
-                <div>{{ t('add_attachment') }}</div>
-            </v-btn>
-            <v-btn variant="text" @click="konvaDialog = !konvaDialog">
-                <v-icon start>mdi-draw</v-icon>
-                <div>{{ t('draw_attachment') }}</div>
-
-            </v-btn>
-        </div>
+        
         
         <v-carousel v-model="current" @click.stop height="320" show-arrows="hover" cycle continuous hide-delimiter-background>
             <v-carousel-item max-height="250" v-for="(attachment, index) in modelValue.attachments" :key="index" :name="attachment" :src="api.getAttachmentLink(attachment)">
@@ -32,6 +22,19 @@
                 </v-btn>
             </v-carousel-item>
         </v-carousel>
+        <div class="d-flex">
+            <v-btn-group divided variant="outlined">
+                <v-btn @click="open" icon>
+                    <v-icon>mdi-upload</v-icon>
+                    <v-tooltip activator="parent" location="bottom" :text="t('add_attachment')"></v-tooltip>
+                </v-btn>
+                <v-btn @click="konvaDialog = !konvaDialog" icon>
+                    <v-icon>mdi-artboard</v-icon>
+                    <v-tooltip activator="parent" location="bottom" :text="t('konva.draw')"></v-tooltip>
+                </v-btn>
+            </v-btn-group>
+            
+        </div>
 
         <v-dialog v-model="konvaDialog" fullscreen>
             <konva-board @save="onDrawSave" @close="konvaDialog = false"></konva-board>

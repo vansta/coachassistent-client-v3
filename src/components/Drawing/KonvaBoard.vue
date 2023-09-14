@@ -14,7 +14,7 @@
             <v-col cols="12" md="6">
                 <v-card :width="stageWidth">
                     <v-card-title>
-                        <v-btn-toggle v-model="options.action" mandatory @update:model-value="clearCurrentLine">
+                        <v-btn-toggle v-model="options.action" mandatory @update:model-value="clearCurrentLine" variant="outlined" divided>
                             <v-btn icon="mdi-draw" value="draw">
                                 <v-icon>mdi-draw</v-icon>
                                 <v-tooltip activator="parent" location="bottom" :text="t('konva.draw')"></v-tooltip>
@@ -42,14 +42,14 @@
                         </v-btn-toggle>
                     </v-card-title>
                     <v-card-text v-if="options.action === 'draw'">
-                        <v-btn-toggle v-model="options.lineType" mandatory @update:model-value="clearCurrentLine">
+                        <v-btn-toggle v-model="options.lineType" mandatory @update:model-value="clearCurrentLine" variant="outlined" divided>
                             <v-btn icon="mdi-vector-polyline" value="vector"></v-btn>
                             <v-btn icon="mdi-arrow-top-right-thin" value="arrow"></v-btn>
                             <v-btn icon="mdi-vector-polygon" value="polygon"></v-btn>
                         </v-btn-toggle>
                     </v-card-text>
                     <v-card-text v-else-if="options.action === 'shape'">
-                        <v-btn-toggle v-model="options.shapeType" mandatory>
+                        <v-btn-toggle v-model="options.shapeType" mandatory variant="outlined" divided>
                             <v-btn icon="mdi-square" value="rect"></v-btn>
                             <v-btn icon="mdi-circle" value="circle"></v-btn>
                             <v-btn icon="mdi-ellipse" value="ellipse"></v-btn>
@@ -57,7 +57,7 @@
                         </v-btn-toggle>
                     </v-card-text>
                     <v-card-text v-else-if="options.action === 'transform'">
-                        <v-btn-group>
+                        <v-btn-group variant="outlined" divided>
                             <v-btn icon="mdi-arrange-bring-forward" @click="moveUp"></v-btn>
                             <v-btn icon="mdi-arrange-send-backward" @click="moveDown"></v-btn>
                             <v-btn icon="mdi-arrange-bring-to-front" @click="moveToTop"></v-btn>
@@ -73,14 +73,14 @@
                                 <v-text-field v-model="textOptions.fontSize" type="number" @update:model-value="redrawText" :label="t('konva.fontSize')"></v-text-field>
                             </v-col>
                             <v-col cols="6">
-                                <v-btn-toggle v-model="textOptions.align" mandatory @update:model-value="redrawText">
+                                <v-btn-toggle v-model="textOptions.align" mandatory @update:model-value="redrawText" variant="outlined" divided>
                                     <v-btn icon="mdi-format-align-left" value="left"></v-btn>
                                     <v-btn icon="mdi-format-align-center" value="center"></v-btn>
                                     <v-btn icon="mdi-format-align-right" value="right"></v-btn>
                                 </v-btn-toggle>
                             </v-col>
                             <v-col cols="12">
-                                <v-btn-toggle v-model="textOptions.fontStyle" mandatory @update:model-value="redrawText">
+                                <v-btn-toggle v-model="textOptions.fontStyle" mandatory @update:model-value="redrawText" variant="outlined" divided>
                                     <v-btn icon="mdi-format-text" value="normal"></v-btn>
                                     <v-btn icon="mdi-format-bold" value="bold"></v-btn>
                                     <v-btn icon="mdi-format-italic" value="italic"></v-btn>
@@ -93,7 +93,7 @@
                     </v-card-text>
 
                     <v-card-text>
-                        <v-btn-group>
+                        <v-btn-group variant="outlined" divided>
                             <v-menu :close-on-content-click="false">
                                 <template v-slot:activator="{ props }">
                                     <v-btn icon="mdi-square" v-bind="props">

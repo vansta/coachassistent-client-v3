@@ -107,6 +107,7 @@ const messages = {
 
       add_attachment: 'Bijlage toevoegen',
       remove_attachment: 'Bijlage verwijderen',
+      draw_attachment: 'Tekenen',
 
       create_segment: 'Nieuw onderdeel aanmaken',
       select_segment: 'Onderdeel selecteren',
