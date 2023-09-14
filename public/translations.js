@@ -131,7 +131,11 @@ const messages = {
 
       select_all: 'Alles selecteren',
 
-      preferences: 'Voorkeuren'
+      preferences: 'Voorkeuren', 
+      mark_all_read: 'Markeer alles als gelezen',
+      notificationType: {
+        MembershipRequest: 'vraagt toegang tot'
+      }
     }
   };
 

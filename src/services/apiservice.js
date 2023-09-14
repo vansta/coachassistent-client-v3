@@ -196,6 +196,12 @@ const createApiService = (apiClient) => {
             throw err;
           }
         },
+        getCredentialsForResetRequest (id) {
+          return apiClient.get('Authentication/ResetRequest', { params: { id }});
+        },
+        getNotifications (lastCheck) {
+          return apiClient.get('Notification', { params: { lastCheck }})
+        },
     
         //POST
         async postExercise (exercise) {
@@ -293,6 +299,9 @@ const createApiService = (apiClient) => {
         },
         putFavorite(shareableId) {
           return apiClient.put('Favorite', shareableId);
+        },
+        markNotificationAsRead(id) {
+          return apiClient.put('Notification', id)
         },
     
         //DELETE

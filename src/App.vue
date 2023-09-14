@@ -10,7 +10,16 @@
         {{ t('login') }}
       </v-btn>
       <div v-else class="d-flex">
+        
         <v-chip class="flex-grow-1 mt-1 mr-4" :to="{ name: 'Profile', params: { id: authenticationStore.user.id } }" size="x-large" prepend-icon="mdi-account" variant="outlined">{{ smAndUp ? authenticationStore.user.name : '' }}</v-chip>
+        <v-btn icon @click="notificationsDrawer = !notificationsDrawer">
+          <v-badge :content="notifications.filter(n => !n.readDateTime).length">
+            <v-icon>mdi-bell</v-icon>
+          </v-badge>
+        </v-btn>
+        <!-- <v-badge :content="notifications.length">
+          <v-btn icon="mdi-bell"></v-btn>
+        </v-badge> -->
         <v-btn icon="mdi-logout" @click="logout">
           <v-icon>mdi-logout</v-icon>
           <v-tooltip activator="parent" location="bottom" :text="t('logout')"></v-tooltip>
@@ -20,6 +29,25 @@
 
     <v-navigation-drawer v-model="drawer" rail expand-on-hover="">
       <v-list :items="filteredNavbar" nav></v-list>
+    </v-navigation-drawer>
+
+    <v-navigation-drawer v-model="notificationsDrawer" location="right">
+      <v-list>
+        <v-list-item @click="markAllRead">
+          <v-list-item-title>
+            <v-icon start>mdi-notification-clear-all</v-icon>
+            {{ t('mark_all_read') }}
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item v-for="(notification, index) in notifications" :key="index" @click="notificationClicked(notification)" :disabled="notification.readDateTime" lines="two">
+          <v-list-item-subtitle>
+            <strong>{{ notification.fromUser }}</strong> {{ t(`notificationType.${notification.notificationType}`)}} <strong>{{ notification.group }}</strong>
+          </v-list-item-subtitle>
+          <v-list-item-action>
+            <v-btn v-if="!notification.readDateTime" icon="mdi-message-check" variant="text"></v-btn>
+          </v-list-item-action>
+        </v-list-item>
+      </v-list>
     </v-navigation-drawer>
 
     <v-main>
@@ -51,7 +79,9 @@ const { smAndUp } = useDisplay();
 
 const api = inject('api');
 
+const notifications = ref([]);
 const drawer = ref(true);
+const notificationsDrawer = ref(false);
 const navDrawerItems = ref([
       {
         title: t('drafts'),
@@ -169,6 +199,20 @@ const checkToken = async () => {
     }
   }
 }
+const getNotifications = () => {
+  if (authenticationStore.isAuthenticated){
+    var lastCheck = notifications.value.at(-1)?.readDateTime;
+    api.getNotifications(lastCheck)
+      .then(({ data }) => notifications.value.push(...data));
+  }
+}
+const notificationClicked = (notification) => {
+  api.markNotificationAsRead(notification.id);
+  router.push({ name: 'EditGroup', params: { id: notification.groupId }});
+}
+const markAllRead = () => {
+  api.markNotificationAsRead();
+}
 const filterItems = (items) => {
   return items.filter(i => {
     if (i.children){
@@ -194,6 +238,10 @@ if (!import.meta.env.VITE_PREVENT_REFRESH)
       checkToken();
   }, 60000);
 }
+getNotifications();
+setInterval(() => {
+  getNotifications();
+}, 5000);
 </script>
 
 <style>

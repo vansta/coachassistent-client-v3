@@ -1,16 +1,16 @@
 <template>
     <v-form v-model="valid" ref="form">
-        <v-row>
+        <v-row dense>
             <v-col>
                 <v-text-field v-model="modelValue.userName" readonly :label="t('user')" :rules="[required]"></v-text-field>
             </v-col>
             <v-col>
                 <v-select v-model="modelValue.roleId" :readonly="readonly" :label="t('role')" :items="roles" :rules="[required]"></v-select>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="4" sm="2" xl="1">
                 <div class="d-flex justify-end">
-                    <v-btn icon="mdi-check" color="negative" flat round @click="accept"></v-btn>
-                    <v-btn icon="mdi-cancel" color="negative" flat round @click="decline"></v-btn>
+                    <v-btn icon="mdi-check" color="primary" variant="text" @click="accept"></v-btn>
+                    <v-btn icon="mdi-cancel" color="error" variant="text" @click="decline"></v-btn>
                 </div>
             </v-col>
         </v-row>

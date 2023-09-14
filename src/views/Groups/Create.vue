@@ -41,7 +41,7 @@
                 </v-row>
                 <v-row v-if="can(action, group, 'member')">
                     <v-col>
-                        <v-btn block @click="addMember">{{ t('add') }}</v-btn>
+                        <v-btn block @click="addMember"><v-icon start>mdi-account-multiple-plus</v-icon>{{ t('add') }}</v-btn>
                     </v-col>
                 </v-row>
             </v-card-text>
