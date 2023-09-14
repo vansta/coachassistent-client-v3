@@ -17,6 +17,7 @@
                             <v-btn icon="mdi-draw" value="draw"></v-btn>
                             <v-btn icon="mdi-shape-plus" value="shape"></v-btn>
                             <v-btn icon="mdi-cursor-move" value="transform"></v-btn>
+                            <v-btn icon="mdi-form-textbox" value="text"></v-btn>
                             <v-btn icon="mdi-delete" value="delete"></v-btn>
                             <v-btn icon="mdi-format-color-fill" value="fill"></v-btn>
                         </v-btn-toggle>
@@ -39,6 +40,35 @@
                             <v-btn icon="mdi-ellipse" value="ellipse"></v-btn>
                             <v-btn icon="mdi-arrow-top-right-thin" value="arrow"></v-btn>
                         </v-btn-toggle>
+                    </v-col>
+                </v-row>
+                <v-row v-else-if="options.action === 'text'">
+                    <v-col>
+                        <v-textarea v-model="textOptions.text" @update:model-value="redrawText"></v-textarea>
+                        <v-text-field v-model="textOptions.fontSize" type="number" @update:model-value="redrawText"></v-text-field>
+                        <v-btn-toggle v-model="textOptions.align" mandatory @update:model-value="redrawText">
+                            <v-btn icon="mdi-format-align-left" value="left"></v-btn>
+                            <v-btn icon="mdi-format-align-center" value="center"></v-btn>
+                            <v-btn icon="mdi-format-align-right" value="right"></v-btn>
+                        </v-btn-toggle>
+                        
+                    </v-col>
+                    <v-col>
+                        <v-btn-toggle v-model="textOptions.fontStyle" mandatory @update:model-value="redrawText">
+                            <v-btn icon="mdi-format-text" value="normal"></v-btn>
+                            <v-btn icon="mdi-format-bold" value="bold"></v-btn>
+                            <v-btn icon="mdi-format-italic" value="italic"></v-btn>
+                        </v-btn-toggle>
+                    </v-col>
+                </v-row>
+                <v-row v-else-if="options.action === 'transform'">
+                    <v-col>
+                        <v-btn-group>
+                            <v-btn icon="mdi-arrange-bring-forward" @click="moveUp"></v-btn>
+                            <v-btn icon="mdi-arrange-send-backward" @click="moveDown"></v-btn>
+                            <v-btn icon="mdi-arrange-bring-to-front" @click="moveToTop"></v-btn>
+                            <v-btn icon="mdi-arrange-send-to-back" @click="moveToBottom"></v-btn>
+                        </v-btn-group>
                     </v-col>
                 </v-row>
                 <v-row>
@@ -105,6 +135,12 @@ const options = ref({
 });
 
 const currentLine = ref(null);
+const currentText = ref();
+const textOptions = ref({
+    fontSize: 18,
+    text: null,
+    align: 'center'
+})
 
 const addShape = (x, y) => {
     console.log(options.value.shapeType);
@@ -182,6 +218,23 @@ const addLine = (x, y) => {
     layer.value.getNode().draw();
 }
 
+const addText = (x, y) => {
+    var textElement = new Konva.Text({
+        x,
+        y,
+        text: textOptions.value.text,
+        fontSize: textOptions.value.fontSize,
+        fontFamily: 'Calibri',
+        fill: options.value.fillColor,
+        align: textOptions.value.align,
+        draggable: true,
+        fontStyle: textOptions.value.fontStyle
+      });
+
+    layer.value.getNode().add(textElement);
+    layer.value.getNode().draw();
+}
+
 const handleStageMouseDown = (e) => {
     console.log(e);
 
@@ -196,6 +249,18 @@ const handleStageMouseDown = (e) => {
     else if (options.value.action === 'shape'){
         const mousePos = stage.value.getNode().getPointerPosition();
         addShape(mousePos.x, mousePos.y);
+    }
+    else if (options.value.action === 'text'){
+        if (e.target.className === 'Text'){
+            // transformer.value.getNode().nodes([e.target]);
+            currentText.value = e.target;
+            textOptions.value = Object.assign({}, e.target.attrs);
+        }
+        else if (textOptions.value.text) {
+            const mousePos = stage.value.getNode().getPointerPosition();
+            addText(mousePos.x, mousePos.y);
+        }
+        
     }
     else if (options.value.action === 'transform') {
         // clicked on stage - clear selection
@@ -229,6 +294,27 @@ const handleStageMouseDown = (e) => {
 
 const clearCurrentLine = () => {
     currentLine.value = null;
+    transformer.value.getNode().nodes([]);
+}
+
+const redrawText = () => {
+    if (currentText.value) {
+        textOptions.value.fontSize = parseInt(textOptions.value.fontSize);
+        currentText.value.setAttrs(textOptions.value);
+    }
+}
+
+const moveUp = () => {
+    transformer.value.getNode().nodes().forEach(n => n.moveUp());
+}
+const moveDown = () => {
+    transformer.value.getNode().nodes().forEach(n => n.moveDown());
+}
+const moveToTop = () => {
+    transformer.value.getNode().nodes().forEach(n => n.moveToTop());
+}
+const moveToBottom = () => {
+    transformer.value.getNode().nodes().forEach(n => n.moveToBottom());
 }
 
 </script>
