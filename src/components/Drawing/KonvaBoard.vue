@@ -1,25 +1,18 @@
 <template>
     <v-container>
         <v-row>
-            <v-col>
-                <v-card height="350" width="350">
+            <v-col cols="12" md="6">
+                
+                <v-card :height="stageWidth" :width="stageWidth">
                     <v-stage ref="stage" :config="configKonva" @mousedown="handleStageMouseDown" style="border: 15px solid black;">
                         <v-layer ref="layer">
                             <v-transformer ref="transformer"></v-transformer>
                         </v-layer>
                     </v-stage>
                 </v-card>
-                <v-card width="350">
-                    <v-card-actions>
-                        <v-btn @click="save">
-                            <v-icon start>mdi-content-save</v-icon>
-                            {{ t('save') }}
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
             </v-col>
-            <v-col>
-                <v-card>
+            <v-col cols="12" md="6">
+                <v-card :width="stageWidth">
                     <v-card-title>
                         <v-btn-toggle v-model="options.action" mandatory @update:model-value="clearCurrentLine">
                             <v-btn icon="mdi-draw" value="draw">
@@ -99,9 +92,9 @@
                         
                     </v-card-text>
 
-                    <v-card-actions>
-                        <!-- <v-icon>mdi-palette</v-icon> -->
-                        <v-menu :close-on-content-click="false">
+                    <v-card-text>
+                        <v-btn-group>
+                            <v-menu :close-on-content-click="false">
                                 <template v-slot:activator="{ props }">
                                     <v-btn icon="mdi-square" v-bind="props">
                                         <v-icon :color="options.fillColor">mdi-square</v-icon>
@@ -120,6 +113,20 @@
                                 </template>
                                 <v-color-picker v-model="options.color" hide-inputs show-swatches :swatches="swatches"></v-color-picker>
                             </v-menu>
+                        </v-btn-group>
+                        <!-- <v-icon>mdi-palette</v-icon> -->
+                        
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn @click="save">
+                            <v-icon start>mdi-content-save</v-icon>
+                            {{ t('save') }}
+                        </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn @click="emit('close')">
+                            <v-icon start>mdi-cancel</v-icon>
+                            {{ t('close') }}
+                        </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -129,20 +136,25 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import Konva from 'konva';
 import { useI18n } from 'vue-i18n';
+import { useWindowSize } from '@vueuse/core';
+import { useDisplay } from 'vuetify';
 
 const { t } = useI18n();
+const { width, height } = useWindowSize();
+const { mdAndUp } = useDisplay();
+const stageWidth = computed(() => mdAndUp.value ? 590 : width.value - 30);
 
-const emit = defineEmits(['save']);
+const emit = defineEmits(['save', 'close']);
 
 const stage = ref(null);
 const layer = ref(null);
 const transformer = ref(null);
 const configKonva = ref({
-        width: 340,
-        height: 340,
+        width: stageWidth.value,
+        height: stageWidth.value,
         offsetX: 5,
         offsetY: 5
       });

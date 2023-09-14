@@ -33,8 +33,8 @@
             </v-carousel-item>
         </v-carousel>
 
-        <v-dialog v-model="konvaDialog">
-            <konva-board @save="onDrawSave"></konva-board>
+        <v-dialog v-model="konvaDialog" fullscreen>
+            <konva-board @save="onDrawSave" @close="konvaDialog = false"></konva-board>
         </v-dialog>
     </div>
 </template>
@@ -79,11 +79,10 @@ const onRemove = (attachments, index) => {
     }
 }
 
-const onDrawSave = (uri) => {
-    console.log('save', uri);
+const onDrawSave = async (uri) => {
     drawings.value.push(uri);
     current.value = addedAttachments.value.length + props.modelValue.attachments.length + drawings.value.length - 1;
-    props.modelValue.addedAttachments = addedAttachments.value;
+    props.modelValue.drawings = drawings.value;
     emit('update:modelValue', props.modelValue);
 
     konvaDialog.value = false;

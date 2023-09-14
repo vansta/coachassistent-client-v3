@@ -9,7 +9,7 @@ const getDefaultExercise = (userId) => ({
     constructor: { modelName: 'shareable' },
     tags: [],
     sharingLevel: '3',
-    level: 0
+    level: '0'
 });
 
 const getDefaultSegment = (userId) => ({

@@ -279,11 +279,26 @@ const createApiService = (apiClient) => {
     
         //PUT
         async putExercise (exercise) {
-          const formData = toFormData(exercise);
-    
+            var drawings = [];
+            if (exercise.drawings) {
+              drawings = await Promise.all(exercise.drawings.map(async d => {
+                var resp = await fetch(d);
+                var blobObject = await resp.blob();
+                console.log(blobObject);
+                return blobObject;
+              }));
+              exercise.drawings = null;
+            }
+            
+            const formData = toFormData(exercise);
+            drawings.forEach(d => {
+              formData.append('addedAttachments', d, Date.now().toString());
+            });
+            
+      
             const resp = await apiClient.put('Exercise', formData, {
-              headers: {
-              'Content-type': 'multipart/form-date'
+                headers: {
+                'Content-type': 'multipart/form-date'
             }})
             return resp.data
         },
