@@ -61,6 +61,17 @@ const routes = [
     component: () => import('@/views/Register.vue')
   },
   {
+    path: '/resetpassword',
+    name: 'RequestPasswordReset',
+    component: () => import('@/views/RequestPasswordReset.vue')
+  },
+  {
+    path:'/resetpassword/:id',
+    name: 'ResetPassword',
+    props: true,
+    component: () => import('@/views/ResetPassword.vue')
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import('@/views/About.vue')
@@ -187,6 +198,11 @@ const routes = [
     path: '/profile/:id',
     name: 'Profile',
     component: () => import('../views/Profile.vue')
+  },
+  {
+    path: '/board',
+    name: 'Board',
+    component: () => import ('@/components/Drawing/KonvaBoard.vue')
   }
 ];
 

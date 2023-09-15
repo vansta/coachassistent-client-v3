@@ -35,15 +35,14 @@
                     <v-select v-model="editExercise.level" :label="t('field.level')" :items="levels" class="mt-3" :item-title="(option) => t(`level.${option.title}`)" hide-details="auto" prepend-icon="mdi-star-settings"></v-select>
                 </v-col>
             </v-row>
-
             <attachment-selector v-model="editExercise" :readonly="!(can('update', editExercise, 'attachments') || can('create', editExercise, 'attachments'))"></attachment-selector>
             
             <sharebility v-if="showSharebility" v-model="editExercise"></sharebility>
         </template>
-
         
     </layout>
     <confirm-dialog :isRevealed="isRevealed" @confirm="confirm" @cancel="cancel"></confirm-dialog>
+    
 </template>
 
 <script setup>
@@ -52,6 +51,7 @@ import { useToast } from 'vue-toastification'
 import Layout from '@/components/Exercise/Layout.vue';
 import Sharebility from '@/components/common/Sharebility.vue';
 import AttachmentSelector from '@/components/Attachment/Selector.vue';
+
 import { useAbility } from '@casl/vue';
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog } from '@vueuse/core';

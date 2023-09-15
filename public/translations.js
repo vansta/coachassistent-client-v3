@@ -82,6 +82,10 @@ const messages = {
       logout: 'Uitloggen',
       register: 'Registreren',
       request_membership: 'Lidmaatschap aanvragen',
+      forgot_password: 'Wachtwoord vergeten?',
+      reset_password: 'Wachtwoord opnieuw instellen',
+      password_reset: 'Wachtwoord opnieuw ingesteld',
+      password_reset_sent: 'Link is verzonden',
 
       username: 'Gebruikersnaam',
       password: 'Wachtwoord',
@@ -103,6 +107,7 @@ const messages = {
 
       add_attachment: 'Bijlage toevoegen',
       remove_attachment: 'Bijlage verwijderen',
+      draw_attachment: 'Tekenen',
 
       create_segment: 'Nieuw onderdeel aanmaken',
       select_segment: 'Onderdeel selecteren',
@@ -135,6 +140,30 @@ const messages = {
       mark_all_read: 'Markeer alles als gelezen',
       notificationType: {
         MembershipRequest: 'vraagt toegang tot'
+      },
+
+      konva: {
+        draw: 'Tekenen',
+        shape: 'Vormen',
+        transform: 'Transformeren',
+        text: 'Tekst',
+        fill: 'Opvullen',
+        delete: 'Verwijderen',
+
+        stroke: 'Rand',
+
+        vector: 'Lijn',
+        arrow: 'Pijl',
+        polygon: 'Veelhoek',
+
+        rect: 'Rechthoek',
+        circle: 'Cirkel',
+        ellipse: 'Ellipse',
+
+        bring_forward: 'Naar boven brengen',
+        send_backward: 'Naar onder brengen',
+        bring_front: 'Bovenaan plaatsen',
+        bring_back: 'Onderaan plaatsen'
       }
     }
   };

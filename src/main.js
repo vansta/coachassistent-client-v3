@@ -48,7 +48,8 @@ const i18n = createI18n({
 Vue.use(i18n);
 Vue.use(vuetify);
 
-
+import VueKonva from 'vue-konva';
+Vue.use(VueKonva);
 
 Vue
   .mount('#app');

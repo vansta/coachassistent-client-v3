@@ -263,14 +263,45 @@ const createApiService = (apiClient) => {
             apiClient.defaults.headers.common["Authorization"] = 'Bearer ' + resp.data;
             return resp.data;
         },
+        requestPasswordReset(userName) {
+          return apiClient.post('Authentication/RequestResetPassword', userName);
+        },
+        async resetPassword({ id, userName, password }) {
+            const passwordHash = sha256(password).toString();
+    
+            const { data } = await apiClient.post('Authentication/ResetPassword', {
+                id, 
+                userName,
+                passwordHash
+            });
+    
+            setToken(data);
+            apiClient.defaults.headers.common["Authorization"] = 'Bearer ' + data;
+            return data;
+        },
     
         //PUT
         async putExercise (exercise) {
-          const formData = toFormData(exercise);
-    
+            var drawings = [];
+            if (exercise.drawings) {
+              drawings = await Promise.all(exercise.drawings.map(async d => {
+                var resp = await fetch(d);
+                var blobObject = await resp.blob();
+                console.log(blobObject);
+                return blobObject;
+              }));
+              exercise.drawings = null;
+            }
+            
+            const formData = toFormData(exercise);
+            drawings.forEach(d => {
+              formData.append('addedAttachments', d, Date.now().toString());
+            });
+            
+      
             const resp = await apiClient.put('Exercise', formData, {
-              headers: {
-              'Content-type': 'multipart/form-date'
+                headers: {
+                'Content-type': 'multipart/form-date'
             }})
             return resp.data
         },

@@ -1,26 +1,18 @@
 <template>
     <v-card>
         <v-card-title>
-            {{ t('welcome') }}
+            {{ t('reset_password') }}
         </v-card-title>
         <v-card-text>
             <v-form v-model="valid" ref="form" validate-on="blur">
-                <v-text-field v-model="credentials.userName" :label="t('username')" :rules="[required]" prepend-icon="mdi-account-circle"></v-text-field>
-                <v-text-field v-model="credentials.password" :label="t('password')" type="password" :rules="[required]" prepend-icon="mdi-lock"></v-text-field>
+                <v-text-field v-model="credentials.userName" :label="t('username')" prepend-icon="mdi-account-circle" disabled></v-text-field>
+                <v-text-field v-model="credentials.password" :label="t('password')" :rules="[required, password]" prepend-icon="mdi-lock" type="password"></v-text-field>
             </v-form>
         </v-card-text>
         <v-card-actions>
-            <v-btn @click="login" :loading="loading" color="primary">
+            <v-btn color="primary" @click="resetPassword">
                 <v-icon start>mdi-login</v-icon>
-                {{ t('login') }}
-            </v-btn>
-            <v-btn :to="{ name: 'Register' }" color="secondary">
-                <v-icon start>mdi-account-plus</v-icon>
-                {{ t('register') }}
-            </v-btn>
-            <v-btn color="secondary" :to="{ name: 'RequestPasswordReset' }">
-                <v-icon start>mdi-lock-question</v-icon>
-                {{ t('forgot_password') }}
+                {{ t('reset_password') }}
             </v-btn>
         </v-card-actions>
     </v-card>
@@ -40,21 +32,31 @@ const authenticationStore = useAuthenticationStore();
 const toast = useToast();
 const ability = useAbility();
 const { t } = useI18n();
-const { required } = useValidation(t);
+const { required, password } = useValidation(t);
 const router = useRouter();
 
 const api = inject('api');
+
+const props = defineProps({
+    id: String
+});
 
 const loading = ref(false);
 const valid = ref(false);
 const credentials = ref({});
 const form = ref(null);
 
-const login = async () => {
+api.getCredentialsForResetRequest(props.id)
+    .then(({ data }) => {
+        credentials.value.userName = data.userName;
+        credentials.value.id = data.id;
+    });
+
+const resetPassword = async () => {
     await form.value.validate();
     if (valid.value){
         loading.value = true;
-        api.login(credentials.value)
+        api.resetPassword(credentials.value)
             .then(token => {
                 getPermissions();
                 authenticationStore.login(token);
