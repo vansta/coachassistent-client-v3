@@ -3,23 +3,18 @@
     <v-app-bar color="primary">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-app-bar-title text="Coach Assistent" class="flex-grow-1"></v-app-bar-title>
-      <!-- <v-spacer></v-spacer> -->
       <v-btn v-if="!authenticationStore.isAuthenticated" :to="{ name: 'Login' }">
         <v-icon start>mdi-login</v-icon>
         <v-tooltip activator="parent" location="bottom" :text="t('login')"></v-tooltip>
         {{ t('login') }}
       </v-btn>
       <div v-else class="d-flex">
-        
         <v-chip class="flex-grow-1 mt-1 mr-4" :to="{ name: 'Profile', params: { id: authenticationStore.user.id } }" size="x-large" prepend-icon="mdi-account" variant="outlined">{{ smAndUp ? authenticationStore.user.name : '' }}</v-chip>
         <v-btn icon @click="notificationsDrawer = !notificationsDrawer">
           <v-badge :content="notifications.filter(n => !n.readDateTime).length">
             <v-icon>mdi-bell</v-icon>
           </v-badge>
         </v-btn>
-        <!-- <v-badge :content="notifications.length">
-          <v-btn icon="mdi-bell"></v-btn>
-        </v-badge> -->
         <v-btn icon="mdi-logout" @click="logout">
           <v-icon>mdi-logout</v-icon>
           <v-tooltip activator="parent" location="bottom" :text="t('logout')"></v-tooltip>
@@ -49,7 +44,6 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-
     <v-main>
       <v-container>
         <router-view :key="route.url" />
@@ -77,6 +71,7 @@ const ability = useAbility();
 const toast = useToast();
 const { smAndUp } = useDisplay();
 
+//todo #31 something
 const api = inject('api');
 
 const notifications = ref([]);
