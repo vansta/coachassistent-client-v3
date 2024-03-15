@@ -6,8 +6,9 @@
             </v-col>
         </v-row>
         <v-row v-if="modelValue.loading">
-            <v-col>
-                <v-progress-linear indeterminate></v-progress-linear>
+            <v-col v-for="n in itemsPerRow" :key="`skeleton-${n}`">
+                <v-skeleton-loader type="subtitle, chip, list-item-three-line, image"></v-skeleton-loader>
+                <!-- <v-progress-linear indeterminate></v-progress-linear> -->
             </v-col>
         </v-row>
         <v-row v-else v-for="n in items.length" :key="'row' + n">
